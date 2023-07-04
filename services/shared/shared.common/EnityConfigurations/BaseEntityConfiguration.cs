@@ -12,6 +12,7 @@ public abstract class BaseEntityConfiguration<TBase> : IEntityTypeConfiguration<
             .HasDefaultValueSql("gen_random_uuid()");
 
         builder.Property(e => e.CreatedAt)
+            .HasDefaultValueSql("now()")
             .IsRequired();
     }
 }

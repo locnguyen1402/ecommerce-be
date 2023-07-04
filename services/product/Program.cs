@@ -6,7 +6,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<ProductDbContext>(option =>
 {
-    option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnectionString"));
+    option.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnectionString"))
+        .UseSnakeCaseNamingConvention();
 });
 
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
