@@ -2,8 +2,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
-using ECommerce.Shared.Common;
-
 namespace ECommerce.Shared.Common;
 
 public class EntityRepository<TEntity> : IEntityRepository<TEntity> where TEntity : Entity
