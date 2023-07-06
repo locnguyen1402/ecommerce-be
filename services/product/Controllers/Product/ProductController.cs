@@ -3,6 +3,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using AutoMapper;
 using ECommerce.Shared.Common;
+using ECommerce.Shared.Libs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -91,7 +92,7 @@ public class ProductController : BaseController
 
         if (!string.IsNullOrEmpty(listQuery.keyword))
         {
-            query = query.Where(BuildSearchPredicate<Product>(listQuery.keyword, new string[] { "Title", "Author" }));
+            query = query.Where(FilterHelpers.BuildSearchPredicate<Product>(listQuery.keyword, new string[] { "Title", "Author" }));
         }
 
         query = query.OrderBy(p => p.CreatedAt);
@@ -106,57 +107,5 @@ public class ProductController : BaseController
         return Ok(list);
     }
 
-    private object? GetPropertyValue(object obj, string propertyName)
-    {
-        return obj.GetType().GetProperty(propertyName, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance)?.GetValue(obj);
-    }
 
-    private bool FilterProduct(Product product, string keyword)
-    {
-        var searchProperties = new string[] { "Title", "Author" };
-
-        foreach (var property in searchProperties)
-        {
-            var propertyValue = GetPropertyValue(product, property);
-            if (propertyValue != null && propertyValue.ToString()!.ToLower().Contains(keyword.ToLower()))
-            {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    private Expression<Func<TEntity, bool>> BuildSearchPredicate<TEntity>(string keyword, string[] searchProperties)
-    {
-        var parameter = Expression.Parameter(typeof(TEntity), nameof(TEntity));
-        var predicate = (Expression)(Expression.Constant(false));
-
-        var lowerCaseMethod = typeof(string).GetMethod("ToLower", System.Type.EmptyTypes)!;
-        var compareMethod = typeof(string).GetMethod("Contains", new[] { typeof(string) })!;
-
-        foreach (var property in searchProperties)
-        {
-            var propertyInfo = typeof(TEntity).GetProperty(property, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
-            if (propertyInfo != null)
-            {
-
-                var propertyExpression = Expression.Property(parameter, propertyInfo);
-
-                var lowerCasePropertyExpression = Expression.Call(propertyExpression, lowerCaseMethod);
-                var lowerCaseKeywordExpression = Expression.Call(
-                                                    Expression.Constant(
-                                                        keyword, typeof(string)
-                                                    ),
-                                                    lowerCaseMethod
-                                                );
-
-                var compareExpression = Expression.Call(lowerCasePropertyExpression, compareMethod, lowerCaseKeywordExpression);
-
-                predicate = Expression.OrElse(compareExpression, predicate);
-            }
-        }
-
-        return Expression.Lambda<Func<TEntity, bool>>(predicate, parameter);
-    }
 }
