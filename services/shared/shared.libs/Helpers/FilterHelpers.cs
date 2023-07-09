@@ -13,9 +13,8 @@ public static class FilterHelpers
         var dbFunctionsParameter = Expression.Parameter(typeof(DbFunctions), nameof(DbFunctions));
         var predicate = (Expression)(Expression.Constant(false));
 
-        var compareMethod = typeof(string).GetMethod("Contains", new[] { typeof(string) })!;
-
-        var keywordExpression = ExpressionHelpers.NormalizeString(Expression.Constant(keyword, typeof(string)));
+        var compareMethod = typeof(string).GetMethod(nameof(string.Contains), new[] { typeof(string) })!;
+        var toStringMethod = typeof(object).GetMethod(nameof(object.ToString))!;
 
         foreach (var property in searchProperties)
         {
@@ -24,10 +23,9 @@ public static class FilterHelpers
             {
 
                 var propertyExpression = Expression.Property(parameter, propertyInfo);
-                var propValue = ExpressionHelpers.NormalizeString(propertyExpression);
+                var compareExpression = ExpressionHelpers.ILike(propertyExpression, keyword);
 
-                var compareExpression = Expression.Call(propValue, compareMethod, keywordExpression);
-                predicate = Expression.OrElse(compareExpression, predicate);
+                predicate = Expression.OrElse(predicate, compareExpression);
             }
         }
 
