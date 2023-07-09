@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using ECommerce.Services.Product;
 using ECommerce.Shared.Libs;
 using Microsoft.EntityFrameworkCore;
@@ -10,9 +11,17 @@ builder.Services.AddDbContext<ProductDbContext>(option =>
         .UseSnakeCaseNamingConvention();
 });
 
+builder.Services.AddHttpContextAccessor();
+
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 
-builder.Services.AddControllers();
+builder.Services
+    .AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+        options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+    }); ;
 
 builder.Services.AddAutoMapper();
 
