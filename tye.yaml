@@ -1,0 +1,17 @@
+name: ebook-services
+extensions:
+- name: dapr
+
+services:
+- name: order
+  project: services/order/order.csproj
+  bindings:
+  - protocol: http
+    name: http
+    port: 5097
+- name: product
+  project: services/product/product.csproj
+  bindings:
+  - protocol: http
+    name: http
+    port: 5096
