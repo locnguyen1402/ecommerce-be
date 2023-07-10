@@ -29,5 +29,9 @@ public class ProductConfiguration : BaseEntityConfiguration<Product>
 
         builder.Property(e => e.ImageUrlL)
             .HasColumnType("text");
+
+        builder.HasOne(p => p.ProductSaleInfo)
+            .WithOne(p => p.Product)
+            .HasForeignKey<ProductSaleInfo>(p => p.ProductId);
     }
 }

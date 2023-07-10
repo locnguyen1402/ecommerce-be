@@ -9,7 +9,7 @@ namespace ECommerce.Shared.Common;
 public abstract class BaseController : ControllerBase
 {
     protected readonly ILogger<BaseController> _logger;
-    protected readonly private IMapper _mapper;
+    protected readonly IMapper _mapper;
     protected BaseController(ILogger<BaseController> logger, IMapper mapper)
     {
         _logger = logger;

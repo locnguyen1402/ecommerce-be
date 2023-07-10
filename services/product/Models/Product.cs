@@ -11,7 +11,8 @@ public class Product : Entity
     public string? ImageUrlS { get; set; }
     public string? ImageUrlM { get; set; }
     public string? ImageUrlL { get; set; }
-
+    public Guid? ProductSaleInfoId { get; set; }
+    public ProductSaleInfo? ProductSaleInfo { get; set; }
     public Product(string title) : base()
     {
         Title = title;

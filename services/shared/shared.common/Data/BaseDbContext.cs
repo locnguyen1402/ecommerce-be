@@ -1,3 +1,4 @@
+using System;
 using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 
@@ -12,6 +13,8 @@ public abstract class BaseDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetCallingAssembly()!);
+        var entryAssembly = Assembly.GetCallingAssembly() ?? throw new NullReferenceException("entryAssembly");
+        
+        modelBuilder.ApplyConfigurationsFromAssembly(entryAssembly);
     }
 }
