@@ -17,4 +17,16 @@ public class Product : Entity
     {
         Title = title;
     }
+
+    public void AddSaleInfo(int quantity, decimal price)
+    {
+        var saleInfo = ProductSaleInfo ?? new ProductSaleInfo { ProductId = Id };
+
+        saleInfo.UpdateQuantity(quantity);
+        saleInfo.UpdatePrice(price);
+
+        if(ProductSaleInfo == null) {
+            ProductSaleInfo = saleInfo;
+        }
+    }
 }

@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace product.Migrations
 {
     [DbContext(typeof(ProductDbContext))]
-    [Migration("20230710152553_AddProductSaleInfo")]
+    [Migration("20230711072207_AddProductSaleInfo")]
     partial class AddProductSaleInfo
     {
         /// <inheritdoc />
@@ -118,13 +118,13 @@ namespace product.Migrations
                         .HasColumnName("quantity");
 
                     b.HasKey("Id")
-                        .HasName("pk_product_sale_info");
+                        .HasName("pk_product_sale_infos");
 
                     b.HasIndex("ProductId")
                         .IsUnique()
-                        .HasDatabaseName("ix_product_sale_info_product_id");
+                        .HasDatabaseName("ix_product_sale_infos_product_id");
 
-                    b.ToTable("product_sale_info", (string)null);
+                    b.ToTable("product_sale_infos", (string)null);
                 });
 
             modelBuilder.Entity("ECommerce.Services.Product.ProductSaleInfo", b =>
@@ -134,7 +134,7 @@ namespace product.Migrations
                         .HasForeignKey("ECommerce.Services.Product.ProductSaleInfo", "ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("fk_product_sale_info_products_product_id");
+                        .HasConstraintName("fk_product_sale_infos_products_product_id");
 
                     b.Navigation("Product");
                 });

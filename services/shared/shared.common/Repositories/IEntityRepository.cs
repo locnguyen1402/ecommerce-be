@@ -8,8 +8,8 @@ public interface IEntityRepository<TEntity> where TEntity : Entity
     IQueryable<TEntity> Query { get; }
     ValueTask<TEntity?> FindAsync(object[] keyValues);
     ValueTask<TEntity?> FindAsync(object keyValues);
-    ValueTask<TEntity> AddAsync(TEntity entity);
-    ValueTask<TEntity> UpdateAsync(TEntity entity);
-    Task RemoveAsync(TEntity entity);
+    TEntity Add(TEntity entity);
+    TEntity Update(TEntity entity);
+    void Remove(TEntity entity);
     Task<int> SaveChangesAsync();
 }

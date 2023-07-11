@@ -18,7 +18,7 @@ namespace product.Migrations
                 nullable: true);
 
             migrationBuilder.CreateTable(
-                name: "product_sale_info",
+                name: "product_sale_infos",
                 columns: table => new
                 {
                     id = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
@@ -29,9 +29,9 @@ namespace product.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("pk_product_sale_info", x => x.id);
+                    table.PrimaryKey("pk_product_sale_infos", x => x.id);
                     table.ForeignKey(
-                        name: "fk_product_sale_info_products_product_id",
+                        name: "fk_product_sale_infos_products_product_id",
                         column: x => x.product_id,
                         principalTable: "products",
                         principalColumn: "id",
@@ -39,8 +39,8 @@ namespace product.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "ix_product_sale_info_product_id",
-                table: "product_sale_info",
+                name: "ix_product_sale_infos_product_id",
+                table: "product_sale_infos",
                 column: "product_id",
                 unique: true);
         }
@@ -49,7 +49,7 @@ namespace product.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "product_sale_info");
+                name: "product_sale_infos");
 
             migrationBuilder.DropColumn(
                 name: "product_sale_info_id",

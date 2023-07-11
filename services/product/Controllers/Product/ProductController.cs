@@ -43,17 +43,17 @@ public class ProductController : BaseController
     }
 
     [HttpGet("{id:guid}")]
-    [ProducesResponseType(typeof(Product), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProductDetailResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetProductDetail(Guid id)
     {
-        var product = await _productRepository.FindAsync(id);
+        var product = await _productRepository.GetProductDetail(id);
 
         if (product == null)
         {
             return NotFound();
         }
 
-        return Ok(product);
+        return Ok(_mapper.Map<ProductDetailResponse>(product));
     }
 }
