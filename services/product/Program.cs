@@ -5,11 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddDbContext<ProductDbContext>(option =>
-{
-    option.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnectionString"))
-        .UseSnakeCaseNamingConvention();
-});
+builder.Services.ConfigDbContext<ProductDbContext>(builder.Configuration.GetConnectionString("DefaultConnectionString")!);
 
 builder.Services.AddHttpContextAccessor();
 
@@ -21,7 +17,7 @@ builder.Services
     {
         options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
         options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
-    }); ;
+    });
 
 builder.Services.AddAutoMapper();
 
