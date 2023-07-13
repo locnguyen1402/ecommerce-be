@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using AutoMapper;
 using ECommerce.Shared.Common;
 using ECommerce.Shared.Libs;
@@ -32,12 +31,9 @@ public class ProductController : BaseController
 
         query = query.OrderBy(p => p.CreatedAt);
 
-        var sw = Stopwatch.StartNew();
-        var list = await PaginationInfo.ToPaginatedListAsync(listQuery.Page, listQuery.PageSize, query);
-        Console.WriteLine($"Performance test {sw.ElapsedMilliseconds}ms");
-        sw.Stop();
+        var list = await PaginatedList.ToListAsync(query, listQuery.Page, listQuery.PageSize);
 
-        await PaginationInfo.AttachPaginationInfoToHeader(listQuery.Page, listQuery.PageSize, query);
+        await PaginatedList.AttachToHeader(query, listQuery.Page, listQuery.PageSize);
 
         return Ok(_mapper.Map<List<ProductItemResponse>>(list));
     }
