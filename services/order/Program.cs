@@ -10,6 +10,11 @@ builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 
+builder.Services.AddScoped<IProductRestClient>(serviceProvider =>
+{
+    return new ProductRestClient("http://localhost:5096/");
+});
+
 builder.Services
     .AddControllers()
     .AddJsonOptions(options =>

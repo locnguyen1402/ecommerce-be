@@ -11,13 +11,24 @@ namespace ECommerce.Services.Orders;
 public class OrderController : BaseController
 {
     private readonly IOrderRepository _orderRepository;
+    private readonly IProductRestClient _productRestClient;
     public OrderController(
             ILogger<OrderController> logger,
             IMapper mapper,
-            IOrderRepository orderRepository
+            IOrderRepository orderRepository,
+            IProductRestClient productRestClient
         ) : base(logger, mapper)
     {
         _orderRepository = orderRepository;
+        _productRestClient = productRestClient;
+    }
+
+    [HttpGet("products/{id:guid}")]
+    public async Task<IActionResult> GetProductDetail(Guid id)
+    {
+        var product = await _productRestClient.GetProductInfo(id);
+
+        return Ok(product);
     }
 
     [HttpGet("{id:guid}")]
