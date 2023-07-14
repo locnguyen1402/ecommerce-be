@@ -1,6 +1,8 @@
+using RestSharp;
+
 namespace ECommerce.Services.Orders;
 
 public interface IProductRestClient
 {
-    Task<ProductInfo?> GetProductInfo(Guid id);
+    Task<RestResponse<ProductInfo[]>> GetProductInfos(List<Guid> ids);
 }

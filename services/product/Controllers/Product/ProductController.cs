@@ -52,4 +52,24 @@ public class ProductController : BaseController
 
         return Ok(_mapper.Map<ProductDetailResponse>(product));
     }
+
+    [HttpPost("order")]
+    public async Task<IActionResult> GetProductDetail([FromBody] OrderProductsRequest requestInfo)
+    {
+        if (requestInfo.Ids.Count() == 0)
+        {
+            return BadRequest();
+        }
+
+        var products = await _productRepository.Query
+                                .Include(p => p.ProductSaleInfo)
+                                .Where(x => requestInfo.Ids.Contains(x.Id)).ToListAsync();
+
+        if (products.Count != requestInfo.Ids.Count)
+        {
+            return BadRequest();
+        }
+
+        return Ok(_mapper.Map<List<ProductItemResponse>>(products));
+    }
 }
