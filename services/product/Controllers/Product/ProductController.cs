@@ -1,8 +1,8 @@
-using System.Diagnostics;
 using AutoMapper;
 using ECommerce.Shared.Common;
 using ECommerce.Shared.Libs;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace ECommerce.Services.Product;
 
@@ -19,9 +19,10 @@ public class ProductController : BaseController
     }
 
     [HttpGet]
+    [ProducesResponseType(typeof(List<ProductItemResponse>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetProducts([FromQuery] ProductListQuery listQuery)
     {
-        var query = _productRepository.Query;
+        var query = _productRepository.Query.Include(p => p.ProductSaleInfo).AsQueryable();
 
         if (!string.IsNullOrEmpty(listQuery.keyword))
         {
@@ -30,15 +31,45 @@ public class ProductController : BaseController
 
         query = query.OrderBy(p => p.CreatedAt);
 
-        var sw = Stopwatch.StartNew();
-        var list = await PaginationInfo.ToPaginatedListAsync(listQuery.Page, listQuery.PageSize, query);
-        Console.WriteLine($"Performance test {sw.ElapsedMilliseconds}ms");
-        sw.Stop();
+        var list = await PaginatedList.ToListAsync(query, listQuery.Page, listQuery.PageSize);
 
-        await PaginationInfo.AttachPaginationInfoToHeader(listQuery.Page, listQuery.PageSize, query);
+        await PaginatedList.AttachToHeader(query, listQuery.Page, listQuery.PageSize);
 
-        return Ok(list);
+        return Ok(_mapper.Map<List<ProductItemResponse>>(list));
     }
 
+    [HttpGet("{id:guid}")]
+    [ProducesResponseType(typeof(ProductDetailResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetProductDetail(Guid id)
+    {
+        var product = await _productRepository.GetProductDetail(id);
 
+        if (product == null)
+        {
+            return NotFound();
+        }
+
+        return Ok(_mapper.Map<ProductDetailResponse>(product));
+    }
+
+    [HttpPost("order")]
+    public async Task<IActionResult> GetProductDetail([FromBody] OrderProductsRequest requestInfo)
+    {
+        if (requestInfo.Ids.Count() == 0)
+        {
+            return BadRequest();
+        }
+
+        var products = await _productRepository.Query
+                                .Include(p => p.ProductSaleInfo)
+                                .Where(x => requestInfo.Ids.Contains(x.Id)).ToListAsync();
+
+        if (products.Count != requestInfo.Ids.Count)
+        {
+            return BadRequest();
+        }
+
+        return Ok(_mapper.Map<List<ProductItemResponse>>(products));
+    }
 }

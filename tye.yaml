@@ -1,0 +1,25 @@
+name: ebook-services
+
+# ingress:
+#   - name: ingress
+#     bindings:
+#       - port: 5096
+#     rules:
+#       - path: /order
+#         service: order
+#       - path: /product
+#         service: product
+
+services:
+  - name: order
+    project: services/order/order.csproj
+    bindings:
+    - protocol: http
+      port: 5097
+      
+  - name: product
+    project: services/product/product.csproj
+    bindings:
+    - protocol: http
+      port: 5096
+    

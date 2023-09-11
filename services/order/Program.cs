@@ -1,15 +1,19 @@
 using System.Text.Json.Serialization;
-using ECommerce.Services.Product;
+using ECommerce.Services.Orders;
 using ECommerce.Shared.Libs;
-using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.ConfigDbContext<ProductDbContext>(builder.Configuration.GetConnectionString("DefaultConnectionString")!);
+builder.Services.ConfigDbContext<OrderDbContext>(builder.Configuration.GetConnectionString("DefaultConnectionString")!);
 
 builder.Services.AddHttpContextAccessor();
 
-builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+
+builder.Services.AddScoped<IProductRestClient>(serviceProvider =>
+{
+    return new ProductRestClient("http://localhost:5096/");
+});
 
 builder.Services
     .AddControllers()
