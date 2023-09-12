@@ -1,71 +1,40 @@
+
+
+using ECommerce.Shared.Integration.Application.Queries;
+
 namespace ECommerce.Products.Api.Controllers;
 
 public class ProductsController : BaseController
 {
     private readonly IProductRepository _productRepository;
+    private IWorkRestClient _bookRestClient;
     public ProductsController(
             ILogger<ProductsController> logger,
             IMapper mapper,
-            IProductRepository productRepository
+            IProductRepository productRepository,
+            IWorkRestClient bookRestClient
         ) : base(logger, mapper)
     {
         _productRepository = productRepository;
+        _bookRestClient = bookRestClient;
     }
 
     [HttpGet]
-    // [ProducesResponseType(typeof(List<ProductItemResponse>), StatusCodes.Status200OK)]
-    public IActionResult GetProducts()
+    [ProducesResponseType(typeof(List<Work>), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetProduct()
     {
-        // var query = _productRepository.Query.Include(p => p.ProductSaleInfo).AsQueryable();
+        var res = await _bookRestClient.GetWorks(new WorkListQuery());
 
-        // if (!string.IsNullOrEmpty(listQuery.keyword))
-        // {
-        //     query = query.Where(FilterHelpers.BuildSearchPredicate<Product>(listQuery.keyword, new string[] { "Title", "Author", "PublicationYear", "CreatedAt" }));
-        // }
-
-        // query = query.OrderBy(p => p.CreatedAt);
-
-        // var list = await PaginatedList.ToListAsync(query, listQuery.Page, listQuery.PageSize);
-
-        // await PaginatedList.AttachToHeader(query, listQuery.Page, listQuery.PageSize);
-
-        // return Ok(_mapper.Map<List<ProductItemResponse>>(list));
-
-        return Ok();
+        return Ok(res);
     }
 
-    // [HttpGet("{id:guid}")]
-    // [ProducesResponseType(typeof(ProductDetailResponse), StatusCodes.Status200OK)]
-    // [ProducesResponseType(StatusCodes.Status404NotFound)]
-    // public async Task<IActionResult> GetProductDetail(Guid id)
-    // {
-    //     var product = await _productRepository.GetProductDetail(id);
 
-    //     if (product == null)
-    //     {
-    //         return NotFound();
-    //     }
+    [HttpGet("{id}")]
+    [ProducesResponseType(typeof(Work), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetProducts(string id)
+    {
+        var res = await _bookRestClient.GetWorkDetail(id);
 
-    //     return Ok(_mapper.Map<ProductDetailResponse>(product));
-    // }
-
-    // [HttpPost("order")]
-    // public async Task<IActionResult> GetProductDetail([FromBody] OrderProductsRequest requestInfo)
-    // {
-    //     if (requestInfo.Ids.Count() == 0)
-    //     {
-    //         return BadRequest();
-    //     }
-
-    //     var products = await _productRepository.Query
-    //                             .Include(p => p.ProductSaleInfo)
-    //                             .Where(x => requestInfo.Ids.Contains(x.Id)).ToListAsync();
-
-    //     if (products.Count != requestInfo.Ids.Count)
-    //     {
-    //         return BadRequest();
-    //     }
-
-    //     return Ok(_mapper.Map<List<ProductItemResponse>>(products));
-    // }
+        return Ok(res);
+    }
 }

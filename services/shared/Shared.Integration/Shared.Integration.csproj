@@ -1,12 +1,13 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
     <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="EFCore.NamingConventions" />
+
     <PackageReference Include="AutoMapper" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" />
 
@@ -26,16 +27,10 @@
 
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" />
     <PackageReference Include="Swashbuckle.AspNetCore" />
-
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../../shared/Shared.Common/Shared.Common.csproj" />
-    <ProjectReference Include="../../shared/Shared.Libs/Shared.Libs.csproj" />
-    <ProjectReference Include="../../shared/Shared.Integration/Shared.Integration.csproj" />
-
-    <ProjectReference Include="../PRODUCTS.Domain/PRODUCTS.Domain.csproj" />
-    <ProjectReference Include="../PRODUCTS.Infrastructure/PRODUCTS.Infrastructure.csproj" />
+    <ProjectReference Include="../Shared.Common/Shared.Common.csproj" />
   </ItemGroup>
-
 </Project>
+

@@ -1,6 +1,8 @@
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.ConfigDbContext<ProductDbContext>(builder.Configuration.GetConnectionString("DefaultConnectionString")!);
+var configuration = builder.Configuration;
+
+builder.Services.ConfigDbContext<ProductDbContext>(configuration.GetConnectionString("DefaultConnectionString")!);
 
 builder.Services.AddHttpContextAccessor();
 
@@ -15,6 +17,8 @@ builder.Services
     });
 
 builder.Services.AddAutoMapper();
+
+builder.Services.RegisterBookRestClient(configuration.GetSection("Integration:OpenLibrary").Get<Integration>()!.BaseUrl);
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

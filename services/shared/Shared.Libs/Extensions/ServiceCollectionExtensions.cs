@@ -4,9 +4,9 @@ public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddAutoMapper(this IServiceCollection services)
     {
-        var entryAssembly = Assembly.GetEntryAssembly() ?? throw new NullReferenceException("entryAssembly");
+        var assemblies = GetAssemblies();
 
-        return services.AddAutoMapper(entryAssembly);
+        return services.AddAutoMapper(assemblies);
     }
 
     public static IServiceCollection ConfigDbContext<TDbContext>(this IServiceCollection services, string connectionString) where TDbContext : DbContext
@@ -19,5 +19,23 @@ public static class ServiceCollectionExtensions
         });
 
         return services;
+    }
+
+    private static Assembly[] GetAssemblies()
+    {
+        var entryAssembly = Assembly.GetEntryAssembly() ?? throw new NullReferenceException("entryAssembly");
+
+        var assemblyNames = entryAssembly
+            .GetReferencedAssemblies()
+            .Append(entryAssembly.GetName());
+
+        var assemblies = assemblyNames.Select(t =>
+        {
+            var assembly = Assembly.Load(t);
+
+            return assembly;
+        }).Where(t => t != null).ToArray();
+
+        return assemblies;
     }
 }
