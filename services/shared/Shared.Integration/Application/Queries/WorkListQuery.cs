@@ -1,5 +1,5 @@
 namespace ECommerce.Shared.Integration.Application.Queries;
-public class WorkListQuery
+public class WorkListQuery : PaginationQuery
 {
-    public string Query { get; set; } = "the+lord+of+the+rings";
+    public string? Keyword { get; set; }
 }

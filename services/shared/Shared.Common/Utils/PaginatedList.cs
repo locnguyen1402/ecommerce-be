@@ -15,7 +15,7 @@ public class PaginatedList
 
     public string ToPaginationString()
     {
-        return JsonSerializer.Serialize(this, JsonConstant.jsonSerializerOptions);
+        return JsonSerializer.Serialize(this, JsonConstant.JsonSerializerOptions);
     }
 
     public static async Task AttachToHeader<TEntity>(IQueryable<TEntity> query, int page, int pageSize)

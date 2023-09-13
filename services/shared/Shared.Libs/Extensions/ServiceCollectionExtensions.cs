@@ -1,5 +1,4 @@
 namespace ECommerce.Shared.Libs.Extensions;
-
 public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddAutoMapper(this IServiceCollection services)
@@ -7,6 +6,14 @@ public static class ServiceCollectionExtensions
         var assemblies = GetAssemblies();
 
         return services.AddAutoMapper(assemblies);
+    }
+
+    public static IMvcBuilder ConfigController(this IServiceCollection services)
+    {
+        return services.AddControllers(opt =>
+        {
+            opt.Conventions.Add(new RouteTokenTransformerConvention(new SlugifyParameterTransformer()));
+        });
     }
 
     public static IServiceCollection ConfigDbContext<TDbContext>(this IServiceCollection services, string connectionString) where TDbContext : DbContext

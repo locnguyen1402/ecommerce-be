@@ -11,7 +11,7 @@ public class WorkRestClient : IWorkRestClient
 
     public async ValueTask<List<Work>> GetWorks(WorkListQuery query)
     {
-        var restRequest = new RestRequest($"/search?q={query.Query}");
+        var restRequest = new RestRequest($"/search?q={query.Keyword}");
 
         var response = await _client.ExecuteGetAsync<OLWorkListResponse>(restRequest);
 
@@ -27,16 +27,16 @@ public class WorkRestClient : IWorkRestClient
 
     public async ValueTask<Work?> GetWorkDetail(string id)
     {
-        var restRequest = new RestRequest($"/books/{id}.json");
+        var restRequest = new RestRequest($"/works/{id}.json");
 
-        var response = await _client.ExecuteGetAsync<OLWorkResponse>(restRequest);
+        var response = await _client.ExecuteGetAsync<OLWork>(restRequest);
 
         if (response.Data == null)
         {
             return null;
         }
 
-        var mappedVal = _mapper.Map<OLWorkResponse, Work>(response.Data);
+        var mappedVal = _mapper.Map<OLWork, Work>(response.Data);
 
         return mappedVal;
     }

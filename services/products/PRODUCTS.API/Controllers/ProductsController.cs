@@ -7,7 +7,7 @@ namespace ECommerce.Products.Api.Controllers;
 public class ProductsController : BaseController
 {
     private readonly IProductRepository _productRepository;
-    private IWorkRestClient _bookRestClient;
+    private readonly IWorkRestClient _bookRestClient;
     public ProductsController(
             ILogger<ProductsController> logger,
             IMapper mapper,
@@ -21,9 +21,9 @@ public class ProductsController : BaseController
 
     [HttpGet]
     [ProducesResponseType(typeof(List<Work>), StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetProduct()
+    public async Task<IActionResult> GetProducts(WorkListQuery query)
     {
-        var res = await _bookRestClient.GetWorks(new WorkListQuery());
+        var res = await _bookRestClient.GetWorks(query);
 
         return Ok(res);
     }
@@ -31,9 +31,14 @@ public class ProductsController : BaseController
 
     [HttpGet("{id}")]
     [ProducesResponseType(typeof(Work), StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetProducts(string id)
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetProduct(string id)
     {
         var res = await _bookRestClient.GetWorkDetail(id);
+
+        if(res is null) {
+            return NotFound();
+        }
 
         return Ok(res);
     }

@@ -8,23 +8,8 @@ public class Product : Entity
     public string? ImageUrlS { get; set; }
     public string? ImageUrlM { get; set; }
     public string? ImageUrlL { get; set; }
-    public Guid? ProductSaleInfoId { get; set; }
-    // public ProductSaleInfo? ProductSaleInfo { get; set; }
     public Product(string title) : base()
     {
         Title = title;
     }
-
-    // public void AddSaleInfo(int quantity, decimal price)
-    // {
-    //     var saleInfo = ProductSaleInfo ?? new ProductSaleInfo { ProductId = Id };
-
-    //     saleInfo.UpdateQuantity(quantity);
-    //     saleInfo.UpdatePrice(price);
-
-    //     if (ProductSaleInfo == null)
-    //     {
-    //         ProductSaleInfo = saleInfo;
-    //     }
-    // }
 }

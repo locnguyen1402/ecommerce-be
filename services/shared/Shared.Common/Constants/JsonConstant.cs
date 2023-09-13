@@ -1,7 +1,7 @@
 namespace ECommerce.Shared.Common.Constants;
 public class JsonConstant
 {
-    public static JsonSerializerOptions jsonSerializerOptions
+    public static JsonSerializerOptions JsonSerializerOptions
     {
         get
         {
