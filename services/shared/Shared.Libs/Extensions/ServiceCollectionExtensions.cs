@@ -16,6 +16,22 @@ public static class ServiceCollectionExtensions
         });
     }
 
+    public static IServiceCollection ConfigureJson(this IServiceCollection services)
+    {
+        services
+            .Configure<JsonOptions>(options =>
+            {
+                options.SerializerOptions.PropertyNamingPolicy = JsonConstant.JsonSerializerOptions.PropertyNamingPolicy;
+                options.SerializerOptions.DefaultIgnoreCondition = JsonConstant.JsonSerializerOptions.DefaultIgnoreCondition;
+                options.SerializerOptions.ReferenceHandler = JsonConstant.JsonSerializerOptions.ReferenceHandler;
+
+                foreach (var converter in JsonConstant.JsonSerializerOptions.Converters)
+                    options.SerializerOptions.Converters.Add(converter);
+            });
+
+        return services;
+    }
+
     public static IServiceCollection ConfigDbContext<TDbContext>(this IServiceCollection services, string connectionString) where TDbContext : DbContext
     {
         services.AddDbContext<TDbContext>(option =>

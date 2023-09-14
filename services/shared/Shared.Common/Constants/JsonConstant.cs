@@ -5,12 +5,16 @@ public class JsonConstant
     {
         get
         {
-            return new JsonSerializerOptions
+            var options = new JsonSerializerOptions
             {
                 PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
                 DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
                 ReferenceHandler = ReferenceHandler.IgnoreCycles,
             };
+
+            options.Converters.Add(new JsonStringEnumConverter());
+
+            return options;
         }
     }
 }

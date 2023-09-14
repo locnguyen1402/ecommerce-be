@@ -39,8 +39,8 @@ public class OLEntityMapperProfile : Profile
                 opt.PreCondition(o => o.Created is not null);
                 opt.MapFrom(ol => ol.Created!.Value);
             })
-            .ForMember(b => b.ImageUrlS, opt => opt.MapFrom((source) => OLMapperUtils.BuildImageSource(source, OLImageSize.S)))
-            .ForMember(b => b.ImageUrlM, opt => opt.MapFrom((source) => OLMapperUtils.BuildImageSource(source, OLImageSize.M)));
+            .ForMember(be => be.ImageUrlS, opt => opt.MapFrom((source) => OLMapperUtils.BuildImageSource(source, OLImageSize.S)))
+            .ForMember(be => be.ImageUrlM, opt => opt.MapFrom((source) => OLMapperUtils.BuildImageSource(source, OLImageSize.M)));
     }
 }
 

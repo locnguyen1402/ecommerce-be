@@ -8,17 +8,12 @@ builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 
-builder.Services
-    .ConfigController()
-    .AddJsonOptions(options =>
-    {
-        options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
-        options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
-    });
+builder.Services.ConfigController();
+builder.Services.ConfigureJson();    
 
 builder.Services.AddAutoMapper();
 
-builder.Services.RegisterBookRestClient(configuration.GetSection("Integration:OpenLibrary").Get<Integration>()!.BaseUrl);
+builder.Services.RegisterOLRestClient(configuration.GetSection("Integration:OpenLibrary").Get<Integration>()!.BaseUrl);
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

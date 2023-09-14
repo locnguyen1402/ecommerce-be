@@ -8,12 +8,15 @@ global using Microsoft.EntityFrameworkCore;
 global using ECommerce.Shared.Common.Controllers;
 global using ECommerce.Shared.Common.Domain.AggregatesModels;
 global using ECommerce.Shared.Common.AppSettings;
+global using ECommerce.Shared.Common.Constants;
 
 global using ECommerce.Shared.Libs.Extensions;
 
 global using ECommerce.Shared.Integration.Extensions;
 global using ECommerce.Shared.Integration.RestClients;
+global using ECommerce.Shared.Integration.Application.Queries;
 
 global using ECommerce.Products.Infrastructure.IRepositories;
 global using ECommerce.Products.Infrastructure.DbContexts;
 global using ECommerce.Products.Infrastructure.Repositories;
+

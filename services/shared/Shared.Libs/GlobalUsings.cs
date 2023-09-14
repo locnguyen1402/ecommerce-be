@@ -7,6 +7,10 @@ global using AutoMapper.Internal;
 
 global using Microsoft.EntityFrameworkCore;
 
+global using Microsoft.AspNetCore.Http.Json;
+
 global using Microsoft.Extensions.DependencyInjection;
 
 global using Microsoft.AspNetCore.Mvc.ApplicationModels;
+
+global using ECommerce.Shared.Common.Constants;

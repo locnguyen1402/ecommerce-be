@@ -28,5 +28,9 @@
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" />
     <PackageReference Include="Swashbuckle.AspNetCore" />
   </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../Shared.Common/Shared.Common.csproj" />
+  </ItemGroup>
 </Project>
 

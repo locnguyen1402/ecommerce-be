@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Mvc;
+
 namespace ECommerce.Shared.Integration.RestClients;
 public class WorkRestClient : IWorkRestClient
 {
@@ -11,7 +13,7 @@ public class WorkRestClient : IWorkRestClient
 
     public async ValueTask<List<Work>> GetWorks(WorkListQuery query)
     {
-        var restRequest = new RestRequest($"/search?q={query.Keyword}");
+        var restRequest = new RestRequest($"/search.json?q={query.Keyword}");
 
         var response = await _client.ExecuteGetAsync<OLWorkListResponse>(restRequest);
 

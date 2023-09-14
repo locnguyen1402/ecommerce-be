@@ -1,5 +1,5 @@
 namespace ECommerce.Shared.Integration.Application.Responses;
-public class OLWorkListResponse
+public class OLWorkListResponse: OLPaginationResponse
 {
     public List<OLWorkItemResponse> Docs { get; set; } = new List<OLWorkItemResponse>();
 }
