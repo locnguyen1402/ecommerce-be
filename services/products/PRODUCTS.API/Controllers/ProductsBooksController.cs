@@ -1,5 +1,3 @@
-using Microsoft.IdentityModel.Tokens;
-
 namespace ECommerce.Products.Api.Controllers;
 
 public class ProductsBooksController : BaseController
@@ -15,7 +13,7 @@ public class ProductsBooksController : BaseController
     }
 
     [HttpGet("{id}")]
-    [ProducesResponseType(typeof(Work), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(Book), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetProductBookDetail(string id)
     {

@@ -5,10 +5,11 @@ global using System.Text.Json.Serialization;
 global using Microsoft.AspNetCore.Mvc;
 global using Microsoft.EntityFrameworkCore;
 
+global using ECommerce.Products.Api.Application.Queries;
+
 global using ECommerce.Shared.Common.Controllers;
 global using ECommerce.Shared.Common.Domain.AggregatesModels;
 global using ECommerce.Shared.Common.AppSettings;
-global using ECommerce.Shared.Common.Constants;
 
 global using ECommerce.Shared.Libs.Extensions;
 

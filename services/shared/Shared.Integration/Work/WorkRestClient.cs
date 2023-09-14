@@ -13,7 +13,9 @@ public class WorkRestClient : IWorkRestClient
 
     public async ValueTask<List<Work>> GetWorks(WorkListQuery query)
     {
-        var restRequest = new RestRequest($"/search.json?q={query.Keyword}");
+        var queryString = $"q={query.Keyword}&page={query.Page}";
+
+        var restRequest = new RestRequest($"/search.json?{queryString}");
 
         var response = await _client.ExecuteGetAsync<OLWorkListResponse>(restRequest);
 

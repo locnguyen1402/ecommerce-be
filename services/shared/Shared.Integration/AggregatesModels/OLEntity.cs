@@ -31,6 +31,7 @@ public class OLEntityMapperProfile : Profile
     {
         CreateMap<OLEntity, BaseEntity>()
             .ForMember(be => be.Id, opt => opt.MapFrom(ol => OLMapperUtils.GetEntityId(ol)))
+            .ForMember(be => be.RefType, opt => opt.MapFrom(ol => OLMapperUtils.GetEntityType(ol)))
             .ForMember(be => be.Description, opt => opt.MapFrom(ol => OLMapperUtils.GetEntityDescription(ol)))
             .ForMember(be => be.SubjectPeople, opt => opt.MapFrom(ol => ol.Subject_people))
             .ForMember(be => be.SubjectTimes, opt => opt.MapFrom(ol => ol.Subject_times))
@@ -54,6 +55,17 @@ public class OLMapperUtils
         olKey = olKey.Replace("/books/", "");
 
         return olKey;
+    }
+    public static RefType GetEntityType(OLEntity source)
+    {
+        string olKey = source.Key;
+
+        return olKey switch
+        {
+            string a when a.Contains("books", StringComparison.OrdinalIgnoreCase) => RefType.BOOK,
+            string b when b.Contains("works", StringComparison.OrdinalIgnoreCase) => RefType.WORK,
+            _ => RefType.OTHER,
+        };
     }
     public static string? GetEntityDescription(OLEntity source)
     {

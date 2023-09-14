@@ -11,4 +11,12 @@ public class BaseEntity
     public List<string> SubjectTimes { get; set; } = new List<string>();
     public string? ImageUrlS { get; set; }
     public string? ImageUrlM { get; set; }
+    public RefType RefType { get; set; } = RefType.OTHER;
+}
+
+public enum RefType
+{
+    BOOK,
+    WORK,
+    OTHER
 }

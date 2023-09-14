@@ -11,16 +11,6 @@ public class ProductsWorksController : BaseController
         _workRestClient = workRestClient;
     }
 
-    [HttpGet]
-    [ProducesResponseType(typeof(List<Work>), StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetProductWorks([FromQuery] WorkListQuery query)
-    {
-        var res = await _workRestClient.GetWorks(query);
-
-        return Ok(res);
-    }
-
-
     [HttpGet("{id}")]
     [ProducesResponseType(typeof(Work), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
