@@ -9,9 +9,10 @@ public class WorkRestClient : IWorkRestClient
         _mapper = mapper;
     }
 
-    public async ValueTask<List<SearchResultItem>> GetWorks(WorkListQuery query)
+    public async ValueTask<PaginatedList<SearchResultItem>> GetWorks(WorkListQuery query)
     {
-        var queryString = $"q={query.Keyword}&page={query.Page}&offset={query.Page * query.PageSize}&limit={query.PageSize}";
+        var page = query.Page - 1;
+        var queryString = $"q={query.Keyword}&offset={page * query.PageSize}&limit={query.PageSize}";
 
         var restRequest = new RestRequest($"/search.json?{queryString}");
 
@@ -19,12 +20,12 @@ public class WorkRestClient : IWorkRestClient
 
         if (response.Data == null)
         {
-            return new List<SearchResultItem>();
+            return PaginatedList<SearchResultItem>.CreateEmpty(query.Page, query.PageSize);
         }
 
         var mappedVal = _mapper.Map<List<OLSearchResultItem>, List<SearchResultItem>>(response.Data.Docs);
 
-        return mappedVal;
+        return new PaginatedList<SearchResultItem>(mappedVal, query.Page, query.PageSize, response.Data.TotalItems);
     }
 
     public async ValueTask<Work?> GetWorkDetail(string id)

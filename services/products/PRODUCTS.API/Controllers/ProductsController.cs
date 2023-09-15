@@ -20,7 +20,9 @@ public class ProductsController : BaseController
     {
         var res = await _workRestClient.GetWorks(query);
 
-        return Ok(res);
+        PaginatedList<SearchResultItem>.AttachToHeader(res.PaginationData);
+
+        return Ok(res.Items);
     }
 
     [HttpGet("books/{id}")]

@@ -1,7 +1,7 @@
 namespace ECommerce.Shared.Integration.Application.Responses;
 public class OLPaginationResponse
 {
-    public int NumFound { get; set; }
-    public int Start { get; set; }
-    public int? Offset { get; set; }
+    [JsonPropertyName("NumFound")]
+    public int TotalItems { get; set; }
+    public int Offset { get; set; } = 0;
 }

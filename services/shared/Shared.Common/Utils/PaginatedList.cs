@@ -1,40 +1,40 @@
-namespace ECommerce.Shared.Common.Utils;
+// namespace ECommerce.Shared.Common.Utils;
 
-public class PaginatedList
-{
-    public int Page { get; private set; }
-    public int PageSize { get; private set; }
-    public int TotalItems { get; private set; }
-    public PaginatedList(int page, int pageSize, int totalItems)
-    {
-        Page = page;
-        PageSize = pageSize;
+// public class PaginatedList
+// {
+//     public int Page { get; private set; }
+//     public int PageSize { get; private set; }
+//     public int TotalItems { get; private set; }
+//     public PaginatedList(int page, int pageSize, int totalItems)
+//     {
+//         Page = page;
+//         PageSize = pageSize;
 
-        TotalItems = totalItems;
-    }
+//         TotalItems = totalItems;
+//     }
 
-    public string ToPaginationString()
-    {
-        return JsonSerializer.Serialize(this, JsonConstant.JsonSerializerOptions);
-    }
+//     public string ToPaginationString()
+//     {
+//         return JsonSerializer.Serialize(this, JsonConstant.JsonSerializerOptions);
+//     }
 
-    public static async Task AttachToHeader<TEntity>(IQueryable<TEntity> query, int page, int pageSize)
-    {
-        var httpContext = new HttpContextAccessor().HttpContext;
+//     public static async Task AttachToHeader<TEntity>(IQueryable<TEntity> query, int page, int pageSize)
+//     {
+//         var httpContext = new HttpContextAccessor().HttpContext;
 
-        var totalItems = await query.CountAsync();
+//         var totalItems = await query.CountAsync();
 
-        PaginatedList paginatedList = new(page, pageSize, totalItems);
+//         PaginatedList paginatedList = new(page, pageSize, totalItems);
 
-        httpContext?.Response.Headers.Add("X-Pagination", paginatedList.ToPaginationString());
-    }
+//         httpContext?.Response.Headers.Add("X-Pagination", paginatedList.ToPaginationString());
+//     }
 
-    public static async Task<List<TEntity>> ToListAsync<TEntity>(IQueryable<TEntity> query, int page, int pageSize)
-    {
-        var items = await query.Skip((page - 1) * pageSize)
-                        .Take(pageSize)
-                        .ToListAsync();
+//     public static async Task<List<TEntity>> ToListAsync<TEntity>(IQueryable<TEntity> query, int page, int pageSize)
+//     {
+//         var items = await query.Skip((page - 1) * pageSize)
+//                         .Take(pageSize)
+//                         .ToListAsync();
 
-        return items;
-    }
-}
+//         return items;
+//     }
+// }
