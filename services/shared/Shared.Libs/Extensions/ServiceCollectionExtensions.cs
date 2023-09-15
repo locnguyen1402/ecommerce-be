@@ -7,6 +7,15 @@ public static class ServiceCollectionExtensions
 
         return services.AddAutoMapper(assemblies);
     }
+    public static IServiceCollection AddValidation(this IServiceCollection services)
+    {
+        var assemblies = GetAssemblies();
+
+        services.AddValidatorsFromAssemblies(assemblies);
+        services.AddFluentValidationAutoValidation();
+
+        return services;
+    }
 
     public static IMvcBuilder ConfigController(this IServiceCollection services)
     {

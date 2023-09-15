@@ -5,6 +5,9 @@ global using System.Linq;
 
 global using AutoMapper.Internal;
 
+global using FluentValidation;
+global using FluentValidation.AspNetCore;
+
 global using Microsoft.EntityFrameworkCore;
 
 global using Microsoft.AspNetCore.Http.Json;

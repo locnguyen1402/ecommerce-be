@@ -9,9 +9,11 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 
 builder.Services.ConfigController();
-builder.Services.ConfigureJson();    
+builder.Services.ConfigureJson();
 
-builder.Services.AddAutoMapper();
+builder.Services
+    .AddAutoMapper()
+    .AddValidation();
 
 builder.Services.RegisterOLRestClient(configuration.GetSection("Integration:OpenLibrary").Get<Integration>()!.BaseUrl);
 
