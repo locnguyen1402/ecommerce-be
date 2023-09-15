@@ -1,21 +1,26 @@
 namespace ECommerce.Shared.Common.Constants;
 public class JsonConstant
 {
+    private static JsonSerializerOptions? _jsonSerializerOptions;
     public static JsonSerializerOptions JsonSerializerOptions
     {
         get
         {
-            var options = new JsonSerializerOptions
+            if (_jsonSerializerOptions == null)
             {
-                DictionaryKeyPolicy = JsonNamingPolicy.CamelCase,
-                PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
-                ReferenceHandler = ReferenceHandler.IgnoreCycles,
-            };
+                _jsonSerializerOptions = new JsonSerializerOptions
+                {
+                    DictionaryKeyPolicy = JsonNamingPolicy.CamelCase,
+                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                    DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
+                    ReferenceHandler = ReferenceHandler.IgnoreCycles,
+                };
 
-            options.Converters.Add(new JsonStringEnumConverter());
+                _jsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+            }
 
-            return options;
+            return _jsonSerializerOptions;
         }
     }
+
 }

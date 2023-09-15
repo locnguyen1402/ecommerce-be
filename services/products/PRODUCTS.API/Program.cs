@@ -9,7 +9,6 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 
 builder.Services.ConfigController();
-builder.Services.ConfigureJson();
 
 builder.Services
     .AddAutoMapper()
