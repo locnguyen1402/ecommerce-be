@@ -17,26 +17,22 @@ public static class ServiceCollectionExtensions
         return services;
     }
 
-    public static IMvcBuilder ConfigController(this IServiceCollection services)
-    {
-        return services.AddControllers(opt =>
-        {
-            opt.Conventions.Add(new RouteTokenTransformerConvention(new SlugifyParameterTransformer()));
-        });
-    }
-
-    public static IServiceCollection ConfigureJson(this IServiceCollection services)
+    public static IServiceCollection ConfigController(this IServiceCollection services)
     {
         services
-            .Configure<JsonOptions>(options =>
+            .AddControllers(opt =>
             {
-                options.SerializerOptions.PropertyNamingPolicy = JsonConstant.JsonSerializerOptions.PropertyNamingPolicy;
-                options.SerializerOptions.DefaultIgnoreCondition = JsonConstant.JsonSerializerOptions.DefaultIgnoreCondition;
-                options.SerializerOptions.ReferenceHandler = JsonConstant.JsonSerializerOptions.ReferenceHandler;
-                options.SerializerOptions.DictionaryKeyPolicy = JsonConstant.JsonSerializerOptions.DictionaryKeyPolicy;
+                opt.Conventions.Add(new RouteTokenTransformerConvention(new SlugifyParameterTransformer()));
+            })
+            .AddJsonOptions(opt =>
+            {
+                opt.JsonSerializerOptions.PropertyNamingPolicy = JsonConstant.JsonSerializerOptions.PropertyNamingPolicy;
+                opt.JsonSerializerOptions.DefaultIgnoreCondition = JsonConstant.JsonSerializerOptions.DefaultIgnoreCondition;
+                opt.JsonSerializerOptions.ReferenceHandler = JsonConstant.JsonSerializerOptions.ReferenceHandler;
+                opt.JsonSerializerOptions.DictionaryKeyPolicy = JsonConstant.JsonSerializerOptions.DictionaryKeyPolicy;
 
                 foreach (var converter in JsonConstant.JsonSerializerOptions.Converters)
-                    options.SerializerOptions.Converters.Add(converter);
+                    opt.JsonSerializerOptions.Converters.Add(converter);
             });
 
         return services;
