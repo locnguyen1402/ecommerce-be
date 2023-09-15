@@ -1,5 +1,3 @@
-using System.Data;
-
 namespace ECommerce.Shared.Common.Domain.AggregatesModels;
 public class Book : BaseEntity
 {

@@ -1,5 +1,3 @@
-using Microsoft.AspNetCore.Mvc;
-
 namespace ECommerce.Shared.Integration.RestClients;
 public class WorkRestClient : IWorkRestClient
 {
@@ -11,9 +9,9 @@ public class WorkRestClient : IWorkRestClient
         _mapper = mapper;
     }
 
-    public async ValueTask<List<Work>> GetWorks(WorkListQuery query)
+    public async ValueTask<List<SearchResultItem>> GetWorks(WorkListQuery query)
     {
-        var queryString = $"q={query.Keyword}&page={query.Page}";
+        var queryString = $"q={query.Keyword}&page={query.Page}&offset={query.Page * query.PageSize}&limit={query.PageSize}";
 
         var restRequest = new RestRequest($"/search.json?{queryString}");
 
@@ -21,10 +19,10 @@ public class WorkRestClient : IWorkRestClient
 
         if (response.Data == null)
         {
-            return new List<Work>();
+            return new List<SearchResultItem>();
         }
 
-        var mappedVal = _mapper.Map<List<OLWorkItemResponse>, List<Work>>(response.Data.Docs);
+        var mappedVal = _mapper.Map<List<OLSearchResultItem>, List<SearchResultItem>>(response.Data.Docs);
 
         return mappedVal;
     }
@@ -35,7 +33,7 @@ public class WorkRestClient : IWorkRestClient
 
         var response = await _client.ExecuteGetAsync<OLWork>(restRequest);
 
-        if (response.Data == null)
+        if (response.Data == null || !response.Data.Error.IsNullOrEmpty())
         {
             return null;
         }

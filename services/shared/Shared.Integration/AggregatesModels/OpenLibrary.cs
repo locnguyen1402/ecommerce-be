@@ -1,5 +1,3 @@
-using System.ComponentModel;
-
 namespace ECommerce.Shared.Integration.AggregatesModels;
 
 public enum OLImageSize
@@ -15,4 +13,6 @@ public enum OLImageSize
 public sealed partial class OLConstants
 {
     public const string IMAGE_BASE_URL = "https://covers.openlibrary.org";
+    public const string INTERNET_ARCHIVE_URL = "https://archive.org";
+    public const string INTERNET_ARCHIVE_IMAGE_BASE_URL = $"{INTERNET_ARCHIVE_URL}/services/img";
 }

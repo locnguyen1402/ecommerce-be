@@ -16,7 +16,7 @@ builder.Services.AddAutoMapper();
 builder.Services.RegisterOLRestClient(configuration.GetSection("Integration:OpenLibrary").Get<Integration>()!.BaseUrl);
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.ConfigureSwaggerGen();
 
 var app = builder.Build();
 

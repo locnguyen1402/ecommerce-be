@@ -1,7 +1,3 @@
-using System.Linq;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
-
 namespace ECommerce.Shared.Integration.RestClients;
 public class BookRestClient : IBookRestClient
 {

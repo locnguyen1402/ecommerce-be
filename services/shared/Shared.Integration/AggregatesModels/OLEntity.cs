@@ -1,9 +1,8 @@
-using Microsoft.IdentityModel.Tokens;
-
 namespace ECommerce.Shared.Integration.AggregatesModels;
 public class OLEntity
 {
     public string Key { get; set; } = string.Empty;
+    public string? Error { get; set; }
     public string Title { get; set; } = string.Empty;
     public string? Subtitle { get; set; }
     public dynamic? Description { get; set; }
@@ -30,8 +29,8 @@ public class OLEntityMapperProfile : Profile
     public OLEntityMapperProfile()
     {
         CreateMap<OLEntity, BaseEntity>()
-            .ForMember(be => be.Id, opt => opt.MapFrom(ol => OLMapperUtils.GetEntityId(ol)))
-            .ForMember(be => be.RefType, opt => opt.MapFrom(ol => OLMapperUtils.GetEntityType(ol)))
+            .ForMember(be => be.Id, opt => opt.MapFrom(ol => OLMapperUtils.GetEntityId(ol.Key)))
+            .ForMember(be => be.RefType, opt => opt.MapFrom(ol => OLMapperUtils.GetEntityType(ol.Key)))
             .ForMember(be => be.Description, opt => opt.MapFrom(ol => OLMapperUtils.GetEntityDescription(ol)))
             .ForMember(be => be.SubjectPeople, opt => opt.MapFrom(ol => ol.Subject_people))
             .ForMember(be => be.SubjectTimes, opt => opt.MapFrom(ol => ol.Subject_times))
@@ -40,25 +39,25 @@ public class OLEntityMapperProfile : Profile
                 opt.PreCondition(o => o.Created is not null);
                 opt.MapFrom(ol => ol.Created!.Value);
             })
-            .ForMember(be => be.ImageUrlS, opt => opt.MapFrom((source) => OLMapperUtils.BuildImageSource(source, OLImageSize.S)))
-            .ForMember(be => be.ImageUrlM, opt => opt.MapFrom((source) => OLMapperUtils.BuildImageSource(source, OLImageSize.M)));
+            .ForMember(be => be.ImageUrlS, opt => opt.MapFrom((source) => (OLMapperUtils.BuildOLImageSources(source.Covers, OLImageSize.S) ?? new List<string>()).FirstOrDefault()))
+            .ForMember(be => be.ImageUrlM, opt => opt.MapFrom((source) => (OLMapperUtils.BuildOLImageSources(source.Covers, OLImageSize.M) ?? new List<string>()).FirstOrDefault()));
     }
 }
 
 public class OLMapperUtils
 {
-    public static string GetEntityId(OLEntity source)
+    public static string GetEntityId(string olEntityKey)
     {
-        string olKey = source.Key;
+        string olKey = olEntityKey;
 
         olKey = olKey.Replace("/works/", "");
         olKey = olKey.Replace("/books/", "");
 
         return olKey;
     }
-    public static RefType GetEntityType(OLEntity source)
+    public static RefType GetEntityType(string olEntityKey)
     {
-        string olKey = source.Key;
+        string olKey = olEntityKey;
 
         return olKey switch
         {
@@ -89,15 +88,57 @@ public class OLMapperUtils
 
         return result;
     }
-    public static string? BuildImageSource(OLEntity source, OLImageSize imgSize)
+    public static List<string>? BuildOLImageSources(List<int>? ids, OLImageSize imgSize)
     {
-        if (source.Covers.IsNullOrEmpty())
+        if (ids.IsNullOrEmpty())
         {
             return null;
         }
 
-        string imgSrc = $"{OLConstants.IMAGE_BASE_URL}/b/id/{source.Covers[0]}-{imgSize}.jpg";
+        var sources = new List<string>();
+
+
+        foreach (var id in ids!)
+        {
+            sources.Add(BuildOLImageSource(id, imgSize)!);
+        }
+
+        return sources;
+    }
+    public static string? BuildOLImageSource(int? id, OLImageSize imgSize)
+    {
+        if (id is null)
+        {
+            return null;
+        }
+
+        string imgSrc = $"{OLConstants.IMAGE_BASE_URL}/b/id/{id}-{imgSize}.jpg";
 
         return imgSrc;
+    }
+    public static string? BuildArchiveImageSource(string? id)
+    {
+        if (id.IsNullOrEmpty())
+        {
+            return null;
+        }
+
+        return $"{OLConstants.INTERNET_ARCHIVE_IMAGE_BASE_URL}/{id}";
+    }
+    public static List<string>? BuildArchiveImageSources(List<string>? ids)
+    {
+        if (ids.IsNullOrEmpty())
+        {
+            return null;
+        }
+
+        var sources = new List<string>();
+
+        foreach (var id in ids!)
+        {
+            sources.Add(BuildArchiveImageSource(id)!);
+        }
+
+        return sources;
     }
 }

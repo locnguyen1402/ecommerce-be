@@ -24,6 +24,7 @@ public static class ServiceCollectionExtensions
                 options.SerializerOptions.PropertyNamingPolicy = JsonConstant.JsonSerializerOptions.PropertyNamingPolicy;
                 options.SerializerOptions.DefaultIgnoreCondition = JsonConstant.JsonSerializerOptions.DefaultIgnoreCondition;
                 options.SerializerOptions.ReferenceHandler = JsonConstant.JsonSerializerOptions.ReferenceHandler;
+                options.SerializerOptions.DictionaryKeyPolicy = JsonConstant.JsonSerializerOptions.DictionaryKeyPolicy;
 
                 foreach (var converter in JsonConstant.JsonSerializerOptions.Converters)
                     options.SerializerOptions.Converters.Add(converter);
@@ -40,6 +41,18 @@ public static class ServiceCollectionExtensions
                 .UseNpgsql(connectionString)
                 .UseSnakeCaseNamingConvention();
         });
+
+        return services;
+    }
+
+    public static IServiceCollection ConfigureSwaggerGen(this IServiceCollection services)
+    {
+        services.AddSwaggerGen(
+            options =>
+            {
+                options.DescribeAllParametersInCamelCase();
+                options.UseOneOfForPolymorphism();
+            });
 
         return services;
     }
