@@ -7,6 +7,9 @@ services:
     build:
       context: services/bookstore-web
       dockerfile: ./Dockerfile.${ENV}
+    volumes:
+      - ./services/bookstore-web:/app
+      - ./services/bookstore-web/node_modules:/app/node_modules
     ports:
       - 3000:3000
 
