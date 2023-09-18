@@ -1,0 +1,9 @@
+version: "3.8"
+
+services:
+  products.api:
+    build:
+      context: .
+      dockerfile: services/products/PRODUCTS.API/Dockerfile
+    ports:
+      - 5012:5012
