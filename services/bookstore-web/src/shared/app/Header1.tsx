@@ -21,6 +21,7 @@ import {
 
 import { ThemeContext } from "@/theme/ThemeContext";
 import LogoIcon from "../common/LogoIcon";
+import ThemeModeSwitch from "../common/ThemeModeSwitch";
 
 const Header1 = () => {
   const { toggleTheme } = useContext(ThemeContext);
@@ -70,9 +71,7 @@ const Header1 = () => {
               <IconButton onClick={() => {}}>
                 <SearchIcon />
               </IconButton>
-              <IconButton onClick={toggleTheme}>
-                <SettingsIcon />
-              </IconButton>
+              <ThemeModeSwitch />
             </Stack>
 
             <Stack
@@ -86,9 +85,7 @@ const Header1 = () => {
               <IconButton onClick={() => {}}>
                 <SearchIcon />
               </IconButton>
-              <IconButton onClick={() => {}}>
-                <SettingsIcon />
-              </IconButton>
+              <ThemeModeSwitch />
               <Button variant="contained">Be a member</Button>
             </Stack>
             <IconButton
