@@ -1,7 +1,5 @@
 "use client";
 
-import { useContext } from "react";
-
 import {
   AppBar,
   Box,
@@ -13,19 +11,13 @@ import {
   alpha,
   useScrollTrigger,
 } from "@mui/material";
-import {
-  Menu as MenuIcon,
-  SearchOutlined as SearchIcon,
-  SettingsOutlined as SettingsIcon,
-} from "@mui/icons-material";
+import { Menu as MenuIcon } from "@mui/icons-material";
 
-import { ThemeContext } from "@/theme/ThemeContext";
 import LogoIcon from "../common/LogoIcon";
 import ThemeModeSwitch from "../common/ThemeModeSwitch";
 import HeaderSearchInput from "./HeaderSearchInput";
 
 const Header1 = () => {
-  const { toggleTheme } = useContext(ThemeContext);
   const isScrolled = useScrollTrigger({
     disableHysteresis: true,
     threshold: 0,
@@ -34,25 +26,34 @@ const Header1 = () => {
   return (
     <>
       <AppBar
-        color="default"
+        color="inherit"
         sx={{ backgroundColor: "transparent" }}
         elevation={0}
         position="fixed"
       >
         <Toolbar
           disableGutters
-          sx={
-            isScrolled
+          sx={{
+            transition:
+              "height 0.2s cubic-bezier(0.4, 0, 0.2, 1) 0s, background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1) 0s",
+            height: {
+              xs: 56,
+              sm: 64,
+              md: 80,
+            },
+            ...(isScrolled
               ? {
                   backdropFilter: "blur(6px)",
                   backgroundColor: (theme) =>
-                    alpha(theme.palette.background.default, 0.8),
+                    `rgba(${theme.vars.palette.background.default}, 0.8)`,
+                  height: {
+                    xs: 64,
+                  },
                 }
-              : undefined
-          }
+              : {}),
+          }}
         >
           <Container
-            maxWidth="lg"
             sx={{
               height: "100%",
               display: "flex",
@@ -97,7 +98,7 @@ const Header1 = () => {
         </Toolbar>
       </AppBar>
 
-      <Toolbar />
+      {/* <Toolbar /> */}
     </>
   );
 };

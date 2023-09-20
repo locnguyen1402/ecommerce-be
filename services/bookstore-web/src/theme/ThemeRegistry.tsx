@@ -6,27 +6,27 @@ import {
   CssBaseline,
   ThemeProvider as MuiThemeProvider,
   PaletteMode,
+  Experimental_CssVarsProvider as CssVarsProvider,
+  useColorScheme,
+  getInitColorSchemeScript,
 } from "@mui/material";
 
 import { ThemeContext } from "./ThemeContext";
-import { getTheme } from "./theme";
+import { getTheme, theme } from "./theme";
 
 type Props = { children: React.ReactNode };
 
 const ThemeRegistry = (props: Props) => {
-  const [mode, setMode] = useState<PaletteMode>("light");
-
-  const toggle = () => {
-    setMode((prev) => (prev === "dark" ? "light" : "dark"));
-  };
-
   return (
-    <ThemeContext.Provider value={{ toggleTheme: toggle, mode }}>
-      <MuiThemeProvider theme={getTheme(mode)}>
+    <>
+      {getInitColorSchemeScript({
+        defaultMode: "light",
+      })}
+      <CssVarsProvider theme={theme} defaultMode="light">
         <CssBaseline />
         {props.children}
-      </MuiThemeProvider>
-    </ThemeContext.Provider>
+      </CssVarsProvider>
+    </>
   );
 };
 

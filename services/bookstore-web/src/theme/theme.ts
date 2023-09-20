@@ -1,5 +1,11 @@
 import { PaletteMode, PaletteOptions } from "@mui/material";
-import { Components, alpha, createTheme, Theme } from "@mui/material/styles";
+import {
+  Components,
+  alpha,
+  createTheme,
+  Theme,
+  experimental_extendTheme as extendTheme,
+} from "@mui/material/styles";
 
 const { palette } = createTheme();
 const { augmentColor } = palette;
@@ -45,6 +51,7 @@ const lightPalette: PaletteOptions = {
   },
   divider: alpha(GreyPalette[500], 0.24),
   background: {
+    // default: "#fff",
     default: "#fff",
     paper: "#fff",
   },
@@ -101,3 +108,15 @@ export const getTheme = (mode: PaletteMode) => {
     components: componentOptions,
   });
 };
+
+export const theme = extendTheme({
+  colorSchemes: {
+    light: {
+      palette: lightPalette,
+    },
+    dark: {
+      palette: darkPalette,
+    },
+  },
+  components: componentOptions,
+});

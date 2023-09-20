@@ -1,5 +1,8 @@
-import ThemeRegistry from "@/theme/ThemeRegistry";
 import type { Metadata } from "next";
+
+import { getInitColorSchemeScript } from "@mui/material";
+
+import ThemeRegistry from "@/theme/ThemeRegistry";
 
 export const metadata: Metadata = {
   title: "Vi Books",

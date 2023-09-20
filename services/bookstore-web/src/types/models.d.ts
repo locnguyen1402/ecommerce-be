@@ -1,4 +1,5 @@
 import "@mui/material/styles";
+import "@mui/material/themeCssVarsAugmentation";
 
 declare module "@mui/material/styles" {
   interface Palette {

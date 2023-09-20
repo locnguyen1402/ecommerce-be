@@ -44,12 +44,11 @@ const HeaderSearchInput = () => {
               display: "flex",
               alignItems: "center",
               backgroundColor: (theme) =>
-                alpha(theme.palette.background.default, 0.72),
+                `rgba(${theme.vars.palette.background.default}, 0.72)`,
               backdropFilter: "blur(6px)",
             }}
           >
             <Container
-              maxWidth="lg"
               sx={{
                 display: "flex",
                 alignItems: "center",

@@ -22,7 +22,7 @@ const PageLayout = (props: Props) => {
     >
       {!!props.header && props.header}
 
-      <Container maxWidth="lg">
+      <Container>
         <Box component="main">{props.children}</Box>
       </Container>
 
