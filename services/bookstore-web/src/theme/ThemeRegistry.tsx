@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 
 import { ThemeContext } from "./ThemeContext";
-import { lightTheme, darkTheme } from "./theme";
+import { getTheme } from "./theme";
 
 type Props = { children: React.ReactNode };
 
@@ -22,7 +22,7 @@ const ThemeRegistry = (props: Props) => {
 
   return (
     <ThemeContext.Provider value={{ toggleTheme: toggle, mode }}>
-      <MuiThemeProvider theme={mode === "light" ? lightTheme : darkTheme}>
+      <MuiThemeProvider theme={getTheme(mode)}>
         <CssBaseline />
         {props.children}
       </MuiThemeProvider>

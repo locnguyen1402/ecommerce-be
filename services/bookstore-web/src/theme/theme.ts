@@ -1,4 +1,8 @@
-import { alpha, createTheme } from "@mui/material/styles";
+import { PaletteMode, PaletteOptions } from "@mui/material";
+import { Components, alpha, createTheme, Theme } from "@mui/material/styles";
+
+const { palette } = createTheme();
+const { augmentColor } = palette;
 
 const GreyPalette = {
   50: "#FCFCFD",
@@ -13,96 +17,87 @@ const GreyPalette = {
   900: "#161C24",
 };
 
-export const lightTheme = createTheme({
-  palette: {
-    mode: "light",
-    primary: {
-      main: "#03beff",
+const componentOptions: Components<Omit<Theme, "components">> = {
+  MuiButton: {
+    styleOverrides: {
+      root: () => ({
+        fontWeight: "bold",
+      }),
     },
-    grey: GreyPalette,
-    text: {
-      primary: GreyPalette[800],
-      secondary: GreyPalette[600],
-      disabled: GreyPalette[500],
-    },
-    divider: alpha(GreyPalette[500], 0.24),
-    background: {
-      default: "#fff",
-      paper: "#fff",
-    },
-    action: {
-      active: GreyPalette[600],
-      hover: alpha(GreyPalette[500], 0.08),
-      selected: alpha(GreyPalette[500], 0.12),
-      disabled: alpha(GreyPalette[500], 0.8),
-      disabledBackground: alpha(GreyPalette[500], 0.24),
-      focus: alpha(GreyPalette[500], 0.24),
-      hoverOpacity: 0.08,
-      selectedOpacity: 0.08,
-      disabledOpacity: 0.48,
-      focusOpacity: 0.12,
-      activatedOpacity: 0.12,
+    defaultProps: {
+      variant: "contained",
+      color: "custom",
     },
   },
-  components: {
-    MuiButton: {
-      styleOverrides: {
-        root: ({ ownerState }) => ({
-          fontWeight: "bold",
-          ...(ownerState.variant === "contained" &&
-            ownerState.color === "primary" && {
-              backgroundColor: GreyPalette[800],
-              color: "#fff",
-            }),
-        }),
-      },
-    },
-  },
-});
+};
 
-export const darkTheme = createTheme({
-  palette: {
-    mode: "dark",
-    primary: {
-      main: "#03beff",
-    },
-    grey: GreyPalette,
-    text: {
-      primary: "#fff",
-      secondary: GreyPalette[500],
-      disabled: GreyPalette[600],
-    },
-    divider: alpha(GreyPalette[500], 0.24),
-    background: {
-      default: GreyPalette[900],
-      paper: GreyPalette[800],
-    },
-    action: {
-      active: GreyPalette[500],
-      hover: alpha(GreyPalette[500], 0.08),
-      selected: alpha(GreyPalette[500], 0.12),
-      disabled: alpha(GreyPalette[500], 0.8),
-      disabledBackground: alpha(GreyPalette[500], 0.24),
-      focus: alpha(GreyPalette[500], 0.24),
-      hoverOpacity: 0.08,
-      selectedOpacity: 0.08,
-      disabledOpacity: 0.48,
-      focusOpacity: 0.12,
-      activatedOpacity: 0.12,
-    },
+const lightPalette: PaletteOptions = {
+  mode: "light",
+  primary: {
+    main: "#03beff",
   },
-  components: {
-    MuiButton: {
-      styleOverrides: {
-        root: ({ ownerState }) => ({
-          fontWeight: "bold",
-          ...(ownerState.variant === "contained" &&
-            ownerState.color === "primary" && {
-              backgroundColor: "#fff",
-              color: GreyPalette[800],
-            }),
-        }),
-      },
-    },
+  grey: GreyPalette,
+  custom: augmentColor({ color: { main: GreyPalette[800] } }),
+  text: {
+    primary: GreyPalette[800],
+    secondary: GreyPalette[600],
+    disabled: GreyPalette[500],
   },
-});
+  divider: alpha(GreyPalette[500], 0.24),
+  background: {
+    default: "#fff",
+    paper: "#fff",
+  },
+  action: {
+    active: GreyPalette[600],
+    hover: alpha(GreyPalette[500], 0.08),
+    selected: alpha(GreyPalette[500], 0.12),
+    disabled: alpha(GreyPalette[500], 0.8),
+    disabledBackground: alpha(GreyPalette[500], 0.24),
+    focus: alpha(GreyPalette[500], 0.24),
+    hoverOpacity: 0.08,
+    selectedOpacity: 0.08,
+    disabledOpacity: 0.48,
+    focusOpacity: 0.12,
+    activatedOpacity: 0.12,
+  },
+};
+
+const darkPalette: PaletteOptions = {
+  mode: "dark",
+  primary: {
+    main: "#03beff",
+  },
+  grey: GreyPalette,
+  custom: augmentColor({ color: { main: "#fff" } }),
+  text: {
+    primary: "#fff",
+    secondary: GreyPalette[500],
+    disabled: GreyPalette[600],
+  },
+  divider: alpha(GreyPalette[500], 0.24),
+  background: {
+    default: GreyPalette[900],
+    paper: GreyPalette[800],
+  },
+  action: {
+    active: GreyPalette[500],
+    hover: alpha(GreyPalette[500], 0.08),
+    selected: alpha(GreyPalette[500], 0.12),
+    disabled: alpha(GreyPalette[500], 0.8),
+    disabledBackground: alpha(GreyPalette[500], 0.24),
+    focus: alpha(GreyPalette[500], 0.24),
+    hoverOpacity: 0.08,
+    selectedOpacity: 0.08,
+    disabledOpacity: 0.48,
+    focusOpacity: 0.12,
+    activatedOpacity: 0.12,
+  },
+};
+
+export const getTheme = (mode: PaletteMode) => {
+  return createTheme({
+    palette: mode === "light" ? lightPalette : darkPalette,
+    components: componentOptions,
+  });
+};

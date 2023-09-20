@@ -22,6 +22,7 @@ import {
 import { ThemeContext } from "@/theme/ThemeContext";
 import LogoIcon from "../common/LogoIcon";
 import ThemeModeSwitch from "../common/ThemeModeSwitch";
+import HeaderSearchInput from "./HeaderSearchInput";
 
 const Header1 = () => {
   const { toggleTheme } = useContext(ThemeContext);
@@ -68,9 +69,7 @@ const Header1 = () => {
               direction="row"
               spacing={1}
             >
-              <IconButton onClick={() => {}}>
-                <SearchIcon />
-              </IconButton>
+              <HeaderSearchInput />
               <ThemeModeSwitch />
             </Stack>
 
@@ -79,14 +78,13 @@ const Header1 = () => {
                 xs: "none",
                 md: "flex",
               }}
+              alignItems="center"
               direction="row"
               spacing={1}
             >
-              <IconButton onClick={() => {}}>
-                <SearchIcon />
-              </IconButton>
+              <HeaderSearchInput />
               <ThemeModeSwitch />
-              <Button variant="contained">Be a member</Button>
+              <Button>Be a member</Button>
             </Stack>
             <IconButton
               edge="end"
