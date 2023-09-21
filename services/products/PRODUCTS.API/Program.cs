@@ -2,11 +2,10 @@ var builder = WebApplication.CreateBuilder(args);
 
 var configuration = builder.Configuration;
 
-builder.Services.ConfigDbContext<ProductDbContext>(configuration.GetConnectionString("DefaultConnectionString")!);
+var appSettings = configuration.GetSection(nameof(AppSettings)).Get<AppSettings>()!;
+builder.Services.Configure<AppSettings>(builder.Configuration.GetSection(nameof(AppSettings)));
 
 builder.Services.AddHttpContextAccessor();
-
-builder.Services.AddScoped<IProductRepository, ProductRepository>();
 
 builder.Services.ConfigController();
 
@@ -14,7 +13,8 @@ builder.Services
     .AddAutoMapper()
     .AddValidation();
 
-builder.Services.RegisterOLRestClient(configuration.GetSection("Integration:OpenLibrary").Get<Integration>()!.BaseUrl);
+builder.Services.RegisterOLRestClient(appSettings.Integration.OpenLibrary.RestClients.BaseUrl);
+// builder.Services.RegisterOLRestClient("https://openlibrary.org");
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.ConfigureSwaggerGen();

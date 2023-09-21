@@ -10,4 +10,3 @@ global using ECommerce.Shared.Common.Infrastructure.Repositories;
 global using ECommerce.Shared.Common.Infrastructure.EntityConfigurations;
 global using ECommerce.Shared.Common.Infrastructure.Data;
 global using ECommerce.Products.Infrastructure.DbContexts;
-global using ECommerce.Products.Infrastructure.IRepositories;

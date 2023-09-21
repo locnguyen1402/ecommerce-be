@@ -1,0 +1,16 @@
+version: "3.8"
+
+services:
+  bookstore-web:
+    build:
+      context: services/bookstore-web
+      dockerfile: ./Dockerfile.${ENV}
+    ports:
+      - 3000:3000
+
+  products.api:
+    build:
+      context: .
+      dockerfile: services/products/PRODUCTS.API/Dockerfile
+    ports:
+      - 5012:5012

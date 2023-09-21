@@ -478,6 +478,7 @@ $RECYCLE.BIN/
 
 # Other
 wwwwroot
+.yarn
 
 # vscode
 .vscode
