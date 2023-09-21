@@ -58,6 +58,7 @@ const lightPalette: PaletteOptions = {
   background: {
     // default: "#fff",
     default: "#fff",
+    defaultChannel: "255, 255, 255",
     paper: "#fff",
   },
   action: {
@@ -90,6 +91,7 @@ const darkPalette: PaletteOptions = {
   divider: alpha(GreyPalette[500], 0.24),
   background: {
     default: GreyPalette[900],
+    defaultChannel: '22, 28, 36',
     paper: GreyPalette[800],
   },
   action: {

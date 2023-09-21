@@ -1,16 +1,11 @@
 import { Container, Typography } from "@mui/material";
 
 import PageLayout from "@/shared/layout/PageLayout";
-import Header1 from "@/shared/app/Header1";
-import HomeBanner from "./(components)/HomeBanner";
+import HomeBanner from "./components/HomeBanner";
 
-type Props = {
-  toggleTheme: () => void;
-};
-
-const HomePage = (props: Props) => {
+const HomePage = () => {
   return (
-    <PageLayout header={<Header1 />} bodyWrapper={false}>
+    <PageLayout headerOverlap bodyWrapper={false}>
       <HomeBanner />
       <Container>
         <Typography>

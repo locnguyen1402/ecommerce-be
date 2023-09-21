@@ -1,6 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
+
+import { useRouter } from "next/navigation";
 
 import {
   Box,
@@ -11,71 +13,82 @@ import {
   InputAdornment,
   Slide,
   TextField,
-  alpha,
 } from "@mui/material";
 import { SearchOutlined as SearchIcon } from "@mui/icons-material";
 
 const HeaderSearchInput = () => {
+  const router = useRouter();
   const [visible, setVisible] = useState<boolean>(false);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const openSearchBar = () => setVisible(true);
 
   const closeSearchBar = () => setVisible(false);
+
+  const onSearch = () => {
+    const keyword = inputRef.current?.value;
+
+    closeSearchBar();
+    router.push(`/search?keyword=${keyword}`);
+  };
 
   return (
     <>
       <IconButton onClick={openSearchBar}>
         <SearchIcon />
       </IconButton>
-      <ClickAwayListener
-        mouseEvent="onMouseDown"
-        touchEvent="onTouchStart"
-        onClickAway={closeSearchBar}
-      >
-        <Slide direction="down" in={visible} mountOnEnter unmountOnExit>
-          <Box
-            sx={{
-              position: "fixed",
-              top: 0,
-              width: "100%",
-              left: 0,
-              zIndex: (theme) => theme.zIndex.appBar + 1,
-              height: 80,
-              display: "flex",
-              alignItems: "center",
-              backgroundColor: (theme) =>
-                `rgba(${theme.vars.palette.background.default}, 0.72)`,
-              backdropFilter: "blur(6px)",
-            }}
-          >
-            <Container
+      <div>
+        <ClickAwayListener
+          mouseEvent="onMouseDown"
+          touchEvent="onTouchStart"
+          onClickAway={closeSearchBar}
+        >
+          <Slide direction="down" in={visible} mountOnEnter unmountOnExit>
+            <Box
               sx={{
+                position: "absolute",
+                top: 0,
+                width: "100%",
+                left: 0,
+                zIndex: 1,
+                height: 80,
                 display: "flex",
                 alignItems: "center",
+                backgroundColor: (theme) =>
+                  `rgba(${theme.vars.palette.background.defaultChannel}, 0.8)`,
+                backdropFilter: "blur(6px)",
               }}
             >
-              <TextField
-                autoFocus
-                fullWidth
-                variant="standard"
-                placeholder="Search"
-                autoComplete="off"
-                InputProps={{
-                  disableUnderline: true,
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <SearchIcon />
-                    </InputAdornment>
-                  ),
+              <Container
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
                 }}
-              />
-              <Button sx={{ ml: 1 }} onClick={closeSearchBar}>
-                Search
-              </Button>
-            </Container>
-          </Box>
-        </Slide>
-      </ClickAwayListener>
+              >
+                <TextField
+                  autoFocus
+                  fullWidth
+                  variant="standard"
+                  placeholder="Search"
+                  autoComplete="off"
+                  InputProps={{
+                    disableUnderline: true,
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <SearchIcon />
+                      </InputAdornment>
+                    ),
+                  }}
+                  inputRef={inputRef}
+                />
+                <Button sx={{ ml: 1 }} onClick={onSearch}>
+                  Search
+                </Button>
+              </Container>
+            </Box>
+          </Slide>
+        </ClickAwayListener>
+      </div>
     </>
   );
 };

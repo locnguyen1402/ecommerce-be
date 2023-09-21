@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 
 import { Box, Button, Container, Grid, Stack, Typography } from "@mui/material";
 
@@ -11,8 +12,8 @@ const HomeBanner = () => {
     <Box
       paddingY={15}
       sx={{
-        backgroundColor: (theme) =>
-          `rgba(${theme.vars.palette.background.default}, 0.9)`,
+        background: (theme) =>
+          `linear-gradient(rgba(${theme.vars.palette.background.defaultChannel}, 0.9), rgba(${theme.vars.palette.background.defaultChannel}, 0.9)), url(/assets/overlay_1.jpg) no-repeat`,
       }}
     >
       <Container>
@@ -73,6 +74,8 @@ const HomeBanner = () => {
                 sx={{
                   maxWidth: "max-content",
                 }}
+                component={Link}
+                href="/search"
               >{`Let's read!`}</Button>
             </Stack>
           </Grid>

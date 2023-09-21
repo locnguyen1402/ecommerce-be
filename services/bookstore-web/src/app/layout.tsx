@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
 
-import { getInitColorSchemeScript } from "@mui/material";
-
 import ThemeRegistry from "@/theme/ThemeRegistry";
 
 export const metadata: Metadata = {
