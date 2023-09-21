@@ -1,13 +1,18 @@
-import { PaletteMode, PaletteOptions } from "@mui/material";
+import { PaletteOptions } from "@mui/material";
 import {
   Components,
   alpha,
   createTheme,
   Theme,
   experimental_extendTheme as extendTheme,
+  responsiveFontSizes,
 } from "@mui/material/styles";
 
-const { palette } = createTheme();
+const {
+  palette,
+  typography: { pxToRem },
+  breakpoints,
+} = createTheme();
 const { augmentColor } = palette;
 
 const GreyPalette = {
@@ -102,14 +107,8 @@ const darkPalette: PaletteOptions = {
   },
 };
 
-export const getTheme = (mode: PaletteMode) => {
-  return createTheme({
-    palette: mode === "light" ? lightPalette : darkPalette,
-    components: componentOptions,
-  });
-};
-
-export const theme = extendTheme({
+let temp = extendTheme({
+  cssVarPrefix: "vibooks",
   colorSchemes: {
     light: {
       palette: lightPalette,
@@ -119,4 +118,83 @@ export const theme = extendTheme({
     },
   },
   components: componentOptions,
+  typography: {
+    h1: {
+      fontSize: pxToRem(40),
+      [breakpoints.up("sm")]: {
+        fontSize: pxToRem(52),
+      },
+      [breakpoints.up("md")]: {
+        fontSize: pxToRem(58),
+      },
+      [breakpoints.up("lg")]: {
+        fontSize: pxToRem(64),
+      },
+    },
+    h2: {
+      fontSize: pxToRem(32),
+      [breakpoints.up("sm")]: {
+        fontSize: pxToRem(40),
+      },
+      [breakpoints.up("md")]: {
+        fontSize: pxToRem(44),
+      },
+      [breakpoints.up("lg")]: {
+        fontSize: pxToRem(48),
+      },
+    },
+    h3: {
+      fontSize: pxToRem(24),
+      [breakpoints.up("sm")]: {
+        fontSize: pxToRem(28),
+      },
+      [breakpoints.up("md")]: {
+        fontSize: pxToRem(30),
+      },
+      [breakpoints.up("lg")]: {
+        fontSize: pxToRem(32),
+      },
+    },
+    h4: {
+      fontSize: pxToRem(20),
+      [breakpoints.up("sm")]: {
+        fontSize: pxToRem(22),
+      },
+      [breakpoints.up("md")]: {
+        fontSize: pxToRem(23),
+      },
+      [breakpoints.up("lg")]: {
+        fontSize: pxToRem(24),
+      },
+    },
+    h5: {
+      fontSize: pxToRem(18),
+      [breakpoints.up("sm")]: {
+        fontSize: pxToRem(18),
+      },
+      [breakpoints.up("md")]: {
+        fontSize: pxToRem(18),
+      },
+      [breakpoints.up("lg")]: {
+        fontSize: pxToRem(20),
+      },
+    },
+    h6: {
+      fontSize: pxToRem(18),
+    },
+    subtitle2: {
+      fontSize: pxToRem(14),
+    },
+    body2: {
+      fontSize: pxToRem(14),
+    },
+    caption: {
+      fontSize: pxToRem(12),
+    },
+    overline: {
+      fontSize: pxToRem(12),
+    },
+  },
 });
+
+export const theme = temp;

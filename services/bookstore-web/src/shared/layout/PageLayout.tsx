@@ -1,3 +1,5 @@
+import { Fragment } from "react";
+
 import { Box, BoxProps, Container } from "@mui/material";
 
 type Props = {
@@ -5,9 +7,17 @@ type Props = {
   sx?: BoxProps["sx"];
   header?: React.ReactNode;
   footer?: React.ReactNode;
+
+  bodyWrapper?: React.PropsWithChildren<any> | false;
 };
 
 const PageLayout = (props: Props) => {
+  let BodyWrapper: React.PropsWithChildren<any> = Container;
+
+  if (props.bodyWrapper === false) {
+    BodyWrapper = Fragment;
+  }
+
   return (
     <Box
       component="div"
@@ -22,9 +32,9 @@ const PageLayout = (props: Props) => {
     >
       {!!props.header && props.header}
 
-      <Container>
+      <BodyWrapper>
         <Box component="main">{props.children}</Box>
-      </Container>
+      </BodyWrapper>
 
       {!!props.footer && props.footer}
     </Box>
