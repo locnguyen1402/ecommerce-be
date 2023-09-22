@@ -4,19 +4,20 @@ const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
   modularizeImports: {
-    '@mui/icons-material': {
-      transform: '@mui/icons-material/{{member}}',
+    "@mui/icons-material": {
+      transform: "@mui/icons-material/{{member}}",
     },
   },
   images: {
     remotePatterns: [
       {
-        protocol: 'https',
-        hostname: 'source.unsplash.com',
-        port: '',
-        pathname: '/random',
+        protocol: "https",
+        hostname: "source.unsplash.com",
+        port: "",
+        pathname: "/random",
       },
     ],
+    domains: ["covers.openlibrary.org"],
   },
 };
 

@@ -1,3 +1,5 @@
+import { RefType, BookStatus } from "./base";
+
 export type Book = {
   id: string;
   title: string;
@@ -23,17 +25,3 @@ export type Book = {
   isbn13: string[];
   isbn10: string[];
 };
-
-export enum BookStatus {
-  Borrow = "BORROW",
-  Full = "FULL",
-  Restricted = "RESTRICTED",
-  NoView = "NOVIEW",
-  Other = "OTHER",
-}
-
-export enum RefType {
-  Book = "BOOK",
-  Work = "WORK",
-  Other = "OTHER",
-}

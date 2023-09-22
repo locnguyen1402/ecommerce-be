@@ -1,25 +1,40 @@
 import { Box, GlobalStyles, Stack } from "@mui/material";
 
+import qs from "querystring";
+
+import { PRODUCTS_API } from "@/api";
 import { adaptPaginationQueryParams } from "@/utils/pagination";
 import PageTitle from "@/shared/app/PageTitle";
 import PageLayout from "@/shared/layout/PageLayout";
+import { SearchProductItem } from "@/models/search";
 
 import FilterSection from "./components/FilterSection";
 import FilterDrawerButton from "./components/FilterDrawerButton";
+import ProductCard from "./components/ProductCard";
 
-const getData = async (query: PaginationQuery) => {
-  const url = `https://jsonplaceholder.typicode.com/todos?_limit=${
-    query.pageSize
-  }&_start=${(query.page - 1) * query.pageSize} `;
+const getData = async (
+  query: PaginationQuery
+): Promise<SuccessResponse<SearchProductItem[]>> => {
+  const url = `${PRODUCTS_API.Search}?${qs.stringify(query)}`;
   const response = await fetch(url);
-  const data = response.json();
+  const data = await response.json();
 
-  return data;
+  let pagination: Nullable<PaginationInfo> = null;
+  if (!!response.headers.get("X-Pagination")) {
+    pagination = JSON.parse(response.headers.get("X-Pagination")!);
+  }
+
+  return {
+    data,
+    meta: {
+      pagination,
+    },
+  };
 };
 
 const SearchPage = async (props: PageProps<PaginationQuery>) => {
   const paginationQuery = adaptPaginationQueryParams(props.searchParams);
-  const data = await getData(paginationQuery);
+  const response = await getData(paginationQuery);
 
   return (
     <PageLayout>
@@ -62,14 +77,11 @@ const SearchPage = async (props: PageProps<PaginationQuery>) => {
             backgroundColor: "red",
           }}
         >
-          
+          {response.data.map((item) => {
+            return <ProductCard key={item.id} product={item} />;
+          })}
         </Stack>
       </Stack>
-
-      {/* {data.map((item: any) => (
-        <p key={item.id}>{item.id}</p>
-      ))}
-      <Link href={`/search?page=${paginationQuery.page + 1}`}>load more</Link> */}
     </PageLayout>
   );
 };

@@ -1,6 +1,10 @@
 declare global {
   type Nullable<T> = T | null;
 
+  interface Environment {
+    apiUrl: string;
+  }
+
   type PaginationQuery = {
     page: number;
     pageSize: number;
@@ -16,6 +20,27 @@ declare global {
   > = {
     params: TParams;
     searchParams: TSeachParams;
+  };
+
+  interface IdName {
+    id: string;
+    name: string;
+  }
+
+  interface PaginationInfo {
+    page: number;
+    pageSize: number;
+    totalItems: number;
+    totalPages: number;
+    hasPreviousPage: boolean;
+    hasNextPage: boolean;
+  }
+
+  type SuccessResponse<T extends any = any> = {
+    data: T;
+    meta: {
+      pagination?: Nullable<PaginationInfo>;
+    };
   };
 }
 
