@@ -17,8 +17,6 @@ const FilterSection = () => {
           ),
         }}
       />
-
-      <Typography>test</Typography>
     </Stack>
   );
 };
