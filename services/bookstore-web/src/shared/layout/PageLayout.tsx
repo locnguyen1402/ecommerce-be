@@ -1,7 +1,9 @@
 import { Fragment } from "react";
 
 import { Box, BoxProps, Container, Toolbar } from "@mui/material";
+
 import Header1 from "../app/Header1";
+import FloatingTopButton from "../app/FloatingTopButton";
 
 type Props = {
   children: React.ReactNode;
@@ -45,6 +47,8 @@ const PageLayout = (props: Props) => {
       </BodyWrapper>
 
       {!!props.footer && props.footer}
+
+      <FloatingTopButton />
     </Box>
   );
 };

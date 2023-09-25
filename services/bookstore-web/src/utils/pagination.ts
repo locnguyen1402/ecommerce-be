@@ -18,3 +18,10 @@ export const adaptPaginationQueryParams = <Q extends PaginationQuery>(
     keyword: query?.keyword,
   };
 };
+
+// export const adaptPaginationControl = (paginationInfo: PaginationInfo) => {
+//   return {
+//     count: paginationInfo.totalItems,
+//     page: paginationInfo.page
+//   }
+// }

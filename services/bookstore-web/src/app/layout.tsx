@@ -13,7 +13,12 @@ type Props = {
 
 const RootLayout = (props: Props) => {
   return (
-    <html lang="en">
+    <html
+      lang="en"
+      style={{
+        scrollBehavior: "smooth",
+      }}
+    >
       <body>
         <ThemeRegistry>{props.children}</ThemeRegistry>
       </body>

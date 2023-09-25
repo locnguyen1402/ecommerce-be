@@ -6,10 +6,11 @@ import { PRODUCTS_API } from "@/api";
 import { adaptPaginationQueryParams } from "@/utils/pagination";
 import PageTitle from "@/shared/app/PageTitle";
 import PageLayout from "@/shared/layout/PageLayout";
+import Pagination from "@/shared/common/Pagination";
 import { SearchProductItem } from "@/models/search";
 
-import FilterSection from "./components/FilterSection";
 import FilterDrawerButton from "./components/FilterDrawerButton";
+import FilterSection from "./components/FilterSection";
 import ProductCard from "./components/ProductCard";
 
 const getData = async (
@@ -66,20 +67,41 @@ const SearchPage = async (props: PageProps<PaginationQuery>) => {
         </Box>
 
         <Stack
-          direction="row"
           sx={{
-            paddingLeft: { md: 6 },
+            paddingLeft: { md: 4 },
             width: {
               xs: "100%",
               md: "calc(100% - var(--filter-section-width))",
             },
-            height: 24,
-            backgroundColor: "red",
+            paddingBottom: 8,
           }}
         >
-          {response.data.map((item) => {
-            return <ProductCard key={item.id} product={item} />;
-          })}
+          <Box
+            sx={{
+              width: "100%",
+              display: "grid",
+              gridTemplateColumns: {
+                xs: "repeat(2, 1fr)",
+                sm: "repeat(3, 1fr)",
+                md: "repeat(3, 1fr)",
+                lg: "repeat(4, 1fr)",
+              },
+              gap: {
+                xs: 2,
+                lg: 3,
+              },
+            }}
+          >
+            {response.data.map((item) => {
+              return <ProductCard key={item.id} product={item} />;
+            })}
+          </Box>
+
+          {!!response.meta?.pagination && (
+            <Box display="flex" justifyContent="center" mt={4}>
+              <Pagination info={response.meta?.pagination} />
+            </Box>
+          )}
         </Stack>
       </Stack>
     </PageLayout>

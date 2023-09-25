@@ -46,6 +46,7 @@ const Header1 = () => {
                 height: {
                   xs: 64,
                 },
+                boxShadow: 1,
               }
             : {}),
         }}
