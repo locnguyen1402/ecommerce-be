@@ -41,6 +41,7 @@ declare global {
     meta: {
       pagination?: Nullable<PaginationInfo>;
     };
+    statusCode: number;
   };
 }
 
