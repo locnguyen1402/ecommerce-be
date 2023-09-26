@@ -20,8 +20,14 @@ const ProductCardLikeButton = () => {
         right: 5,
         top: 180,
         borderRadius: "50%",
-        width: 40,
-        height: 40,
+        width: {
+          xs: 32,
+          md: 40,
+        },
+        height: {
+          xs: 32,
+          md: 40,
+        },
         color: "white",
       }}
       onClick={(evt) => {

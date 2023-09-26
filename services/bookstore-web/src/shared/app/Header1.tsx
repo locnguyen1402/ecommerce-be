@@ -66,7 +66,7 @@ const Header1 = () => {
               md: "none",
             }}
             direction="row"
-            spacing={1}
+            alignItems="center"
           >
             <HeaderSearchInput />
             <ThemeModeSwitch />

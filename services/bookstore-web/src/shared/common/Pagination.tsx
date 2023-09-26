@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useMemo } from "react";
+import { useMemo } from "react";
 
 import Link from "next/link";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 
 import { PaginationItem, Pagination as MuiPagination } from "@mui/material";
 
@@ -20,19 +20,10 @@ const Pagination = (props: Props) => {
     return new URLSearchParams(searchParams);
   }, [searchParams]);
 
-  const router = useRouter();
-
-  useEffect(() => {
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth",
-    });
-  }, [pathname, searchParams]);
-
   return (
     <MuiPagination
       color="primary"
-      count={info.totalItems}
+      count={info.totalPages}
       page={info.page}
       renderItem={(item) => {
         if (!!item.page) {
@@ -40,12 +31,21 @@ const Pagination = (props: Props) => {
         }
         const url = `${pathname}?${queryParams.toString()}`;
 
+        item.onClick;
         return (
           <PaginationItem
             component={Link}
             href={url}
             scroll={false}
             {...item}
+            onClick={(evt) => {
+              window.scrollTo({
+                top: 0,
+                behavior: "smooth",
+              });
+
+              !!item.onClick && item.onClick(evt);
+            }}
           />
         );
       }}

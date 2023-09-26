@@ -1,12 +1,26 @@
 "use client";
 
-import { InputAdornment, Stack, TextField, Typography } from "@mui/material";
+import { useState } from "react";
+
+import { useRouter } from "next/navigation";
+
+import { Button, InputAdornment, Stack, TextField } from "@mui/material";
 import { SearchOutlined as SearchIcon } from "@mui/icons-material";
 
 const FilterSection = () => {
+  const [searchText, setSearchText] = useState("");
+  const router = useRouter();
+
+  const onApply = () => {
+    router.push(`/search?keyword=${searchText}`);
+  };
+
   return (
-    <Stack width="var(--filter-section-width)">
+    <Stack width="var(--filter-section-width)" spacing={2}>
       <TextField
+        value={searchText}
+        onChange={(evt) => setSearchText(evt.target.value)}
+        size="small"
         variant="outlined"
         InputProps={{
           disableUnderline: true,
@@ -17,6 +31,7 @@ const FilterSection = () => {
           ),
         }}
       />
+      <Button onClick={onApply}>Apply</Button>
     </Stack>
   );
 };
