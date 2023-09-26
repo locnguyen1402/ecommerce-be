@@ -15,11 +15,6 @@ type Props = {
 
 const ProductCardAvatar = (props: Props) => {
   const theme = useTheme();
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   return (
     <Box
@@ -28,14 +23,11 @@ const ProductCardAvatar = (props: Props) => {
         height: 220,
         overflow: "hidden",
         borderRadius: 1.5,
-        // borderBottomLeftRadius: 0,
-        // borderBottomRightRadius: 0,
         padding: 1,
-        backgroundColor: mounted
-          ? theme.palette.mode === "light"
-            ? "grey.200"
-            : alpha(theme.palette.grey[500], 0.12)
-          : undefined,
+        backgroundColor: "grey.200",
+        [theme.getColorSchemeSelector("dark")]: {
+          backgroundColor: alpha(theme.palette.grey[500], 0.12),
+        },
       }}
     >
       <Box

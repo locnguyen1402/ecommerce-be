@@ -1,11 +1,11 @@
 import Link from "next/link";
 
-import { IconButton, Stack, Typography } from "@mui/material";
-import { Favorite as FavoriteIcon } from "@mui/icons-material";
+import { Stack, Typography } from "@mui/material";
 
 import { SearchProductItem } from "@/models/search";
 
 import ProductCardAvatar from "./ProductCardAvatar";
+import ProductCardLikeButton from "./ProductCardLikeButton";
 
 type Props = {
   product: SearchProductItem;
@@ -36,32 +36,19 @@ const ProductCard = (props: Props) => {
     >
       <ProductCardAvatar src={product.coverImageUrl} alt={product.title} />
 
-      <IconButton
-        className="favorite-btn"
-        aria-label="add-to-favorites"
-        sx={{
-          display: {
-            xs: "inline-flex",
-            md: "none",
-          },
-          minWidth: "unset",
-          position: "absolute",
-          right: 5,
-          top: 180,
-          backgroundColor: "primary.main",
-          color: "#fff",
-
-          ":hover": {
-            backgroundColor: "primary.main",
-          },
-        }}
-        size="small"
-      >
-        <FavoriteIcon />
-      </IconButton>
+      <ProductCardLikeButton />
 
       <Stack p={1}>
-        <Typography variant="body1" color="text.primary" fontWeight="bold">
+        <Typography
+          variant="body1"
+          color="text.primary"
+          fontWeight="bold"
+          sx={{
+            textOverflow: "ellipsis",
+            overflow: "hidden",
+            whiteSpace: "nowrap",
+          }}
+        >
           {product.title}
         </Typography>
 

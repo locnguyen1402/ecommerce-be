@@ -17,7 +17,7 @@ const getData = async (
   query: PaginationQuery
 ): Promise<SuccessResponse<SearchProductItem[]>> => {
   const url = `${PRODUCTS_API.Search}?${qs.stringify(query)}`;
-  const response = await fetch(url);
+  const response = await fetch(url, { cache: "no-store" });
   const data = await response.json();
 
   let pagination: Nullable<PaginationInfo> = null;
@@ -81,10 +81,10 @@ const SearchPage = async (props: PageProps<PaginationQuery>) => {
               width: "100%",
               display: "grid",
               gridTemplateColumns: {
-                xs: "repeat(2, 1fr)",
-                sm: "repeat(3, 1fr)",
-                md: "repeat(3, 1fr)",
-                lg: "repeat(4, 1fr)",
+                xs: "repeat(2, minmax(0, 1fr))",
+                sm: "repeat(3, minmax(0, 1fr))",
+                md: "repeat(3, minmax(0, 1fr))",
+                lg: "repeat(4, minmax(0, 1fr))",
               },
               gap: {
                 xs: 2,
