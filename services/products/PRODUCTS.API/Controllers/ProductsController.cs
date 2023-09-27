@@ -54,4 +54,16 @@ public class ProductsController : BaseController
 
         return Ok(res);
     }
+
+    [HttpGet("works/{id}/books")]
+    [ProducesResponseType(typeof(List<Book>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetProductInWorkBooks(string id, [FromQuery] PaginationQuery query)
+    {
+        var res = await _workRestClient.GetBooksInWork(id, query);
+
+        PaginatedList<Book>.AttachToHeader(res.PaginationData);
+
+        return Ok(res.Items);
+    }
 }

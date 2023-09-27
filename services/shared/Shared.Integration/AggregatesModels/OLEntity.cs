@@ -7,9 +7,6 @@ public class OLEntity
     public string? Subtitle { get; set; }
     public dynamic? Description { get; set; }
     public OLKey Type { get; set; } = null!;
-    public List<string> Subjects { get; set; } = new List<string>();
-    public List<string> Subject_people { get; set; } = new List<string>();
-    public List<string> Subject_times { get; set; } = new List<string>();
     public List<int> Covers { get; set; } = new List<int>();
     public OLTypeValue? Created { get; set; }
     public OLTypeValue? Last_modified { get; set; }
@@ -32,15 +29,14 @@ public class OLEntityMapperProfile : Profile
             .ForMember(be => be.Id, opt => opt.MapFrom(ol => OLMapperUtils.GetEntityId(ol.Key)))
             .ForMember(be => be.RefType, opt => opt.MapFrom(ol => OLMapperUtils.GetEntityType(ol.Key)))
             .ForMember(be => be.Description, opt => opt.MapFrom(ol => OLMapperUtils.GetEntityDescription(ol)))
-            .ForMember(be => be.SubjectPeople, opt => opt.MapFrom(ol => ol.Subject_people))
-            .ForMember(be => be.SubjectTimes, opt => opt.MapFrom(ol => ol.Subject_times))
             .ForMember(be => be.CreatedAt, opt =>
             {
                 opt.PreCondition(o => o.Created is not null);
                 opt.MapFrom(ol => ol.Created!.Value);
             })
             .ForMember(be => be.ImageUrlS, opt => opt.MapFrom((source) => (OLMapperUtils.BuildOLImageSources(source.Covers, OLImageSize.S) ?? new List<string>()).FirstOrDefault()))
-            .ForMember(be => be.ImageUrlM, opt => opt.MapFrom((source) => (OLMapperUtils.BuildOLImageSources(source.Covers, OLImageSize.M) ?? new List<string>()).FirstOrDefault()));
+            .ForMember(be => be.ImageUrlM, opt => opt.MapFrom((source) => (OLMapperUtils.BuildOLImageSources(source.Covers, OLImageSize.M) ?? new List<string>()).FirstOrDefault()))
+            .ForMember(be => be.CoverImages, opt => opt.MapFrom((source) => OLMapperUtils.BuildOLImageSources(source.Covers, OLImageSize.M)));
     }
 }
 

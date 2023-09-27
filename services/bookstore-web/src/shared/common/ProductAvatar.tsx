@@ -1,34 +1,37 @@
 "use client";
 
-import { useEffect, useState } from "react";
-
 import Image from "next/image";
 
-import { Box, alpha, useTheme } from "@mui/material";
+import { Box, BoxProps, alpha, useTheme } from "@mui/material";
 
 import BookPlaceholder from "@/assets/book_placeholder.png";
 
 type Props = {
   src: string | undefined;
   alt: string;
+
+  sx?: BoxProps["sx"];
 };
 
-const ProductCardAvatar = (props: Props) => {
+const ProductAvatar = (props: Props) => {
   const theme = useTheme();
 
   return (
     <Box
-      sx={{
-        width: "100%",
-        height: 220,
-        overflow: "hidden",
-        borderRadius: 1.5,
-        padding: 1,
-        backgroundColor: "grey.200",
-        [theme.getColorSchemeSelector("dark")]: {
-          backgroundColor: alpha(theme.palette.grey[500], 0.12),
+      sx={[
+        {
+          width: "100%",
+          height: 220,
+          overflow: "hidden",
+          borderRadius: 1.5,
+          padding: 1,
+          backgroundColor: "grey.200",
+          [theme.getColorSchemeSelector("dark")]: {
+            backgroundColor: alpha(theme.palette.grey[500], 0.12),
+          },
         },
-      }}
+        ...(Array.isArray(props.sx) ? props.sx : [props.sx]),
+      ]}
     >
       <Box
         sx={{
@@ -53,4 +56,4 @@ const ProductCardAvatar = (props: Props) => {
   );
 };
 
-export default ProductCardAvatar;
+export default ProductAvatar;

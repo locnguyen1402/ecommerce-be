@@ -20,4 +20,10 @@ export type SearchProductItem = {
 
   firstPublishYear?: number;
   authors: IdName[];
+
+  ratingsAverage: number;
+  ratingsCount: number;
+
+  firstEditionId?: string;
+  editionCount: number;
 };

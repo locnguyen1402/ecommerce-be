@@ -72,7 +72,6 @@ const HeaderSearchInput = () => {
                   placeholder="Search"
                   autoComplete="off"
                   InputProps={{
-                    disableUnderline: true,
                     startAdornment: (
                       <InputAdornment position="start">
                         <SearchIcon />
@@ -80,6 +79,11 @@ const HeaderSearchInput = () => {
                     ),
                   }}
                   inputRef={inputRef}
+                  onKeyDown={(evt) => {
+                    if (evt.key === "Enter") {
+                      onSearch();
+                    }
+                  }}
                 />
                 <Button sx={{ ml: 1 }} onClick={onSearch}>
                   Search

@@ -23,7 +23,6 @@ const FilterSection = () => {
         size="small"
         variant="outlined"
         InputProps={{
-          disableUnderline: true,
           startAdornment: (
             <InputAdornment position="start">
               <SearchIcon />

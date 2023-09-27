@@ -5,7 +5,7 @@ import { Box, GlobalStyles, Stack } from "@mui/material";
 import { adaptPaginationQueryParams } from "@/utils";
 import { ProductService } from "@/services";
 
-import PageTitle from "@/shared/app/PageTitle";
+import PageHeader from "@/shared/app/PageHeader";
 import PageLayout from "@/shared/layout/PageLayout";
 import PromiseResolver from "@/shared/common/PromiseResolver";
 
@@ -28,18 +28,7 @@ const SearchPage = (props: PageProps<PaginationQuery>) => {
           },
         }}
       />
-      <Stack
-        py={{
-          xs: 2,
-          md: 5,
-        }}
-        direction="row"
-        justifyContent="space-between"
-        alignItems="center"
-      >
-        <PageTitle text="Books" />
-        <FilterDrawerButton />
-      </Stack>
+      <PageHeader title="Books" action={<FilterDrawerButton />} />
 
       <Stack direction="row">
         <Box

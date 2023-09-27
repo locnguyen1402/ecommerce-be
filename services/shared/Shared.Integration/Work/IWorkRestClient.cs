@@ -3,4 +3,5 @@ public interface IWorkRestClient
 {
     ValueTask<PaginatedList<SearchResultItem>> GetWorks(WorkListQuery query);
     ValueTask<Work?> GetWorkDetail(string id);
+    ValueTask<PaginatedList<Book>> GetBooksInWork(string workId, PaginationQuery query);
 }

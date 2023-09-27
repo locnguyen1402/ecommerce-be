@@ -1,10 +1,10 @@
 import Link from "next/link";
 
-import { Stack, Typography } from "@mui/material";
+import { Rating, Stack, Typography } from "@mui/material";
 
 import { SearchProductItem } from "@/models/search";
+import ProductAvatar from "@/shared/common/ProductAvatar";
 
-import ProductCardAvatar from "./ProductCardAvatar";
 import ProductCardLikeButton from "./ProductCardLikeButton";
 
 type Props = {
@@ -32,9 +32,14 @@ const ProductCard = (props: Props) => {
         },
       }}
       component={Link}
-      href={`/products/${product.id}`}
+      href={{
+        pathname: `/works/${product.id}`,
+        query: {
+          bookId: product.firstEditionId,
+        },
+      }}
     >
-      <ProductCardAvatar src={product.coverImageUrl} alt={product.title} />
+      <ProductAvatar src={product.coverImageUrl} alt={product.title} />
 
       <ProductCardLikeButton />
 
@@ -56,6 +61,14 @@ const ProductCard = (props: Props) => {
           <Typography variant="caption" color="text.secondary">
             First published in {product.firstPublishYear}
           </Typography>
+        )}
+        {!!product.ratingsCount && (
+          <Stack direction="row" alignItems="center" spacing={0.5}>
+            <Rating value={product.ratingsAverage} readOnly size="small" />
+            <Typography variant="caption" color="text.secondary">
+              {product.ratingsCount} reviews
+            </Typography>
+          </Stack>
         )}
       </Stack>
     </Stack>

@@ -10,6 +10,7 @@ public class Book : BaseEntity
     public List<string> Isbn13 { get; set; } = new List<string>();
     public List<string> Isbn10 { get; set; } = new List<string>();
     public BookStatus Status { get; private set; } = BookStatus.OTHER;
+    public string? WorkId { get; set; }
     public void UpdateStatus(BookStatus status)
     {
         Status = status;

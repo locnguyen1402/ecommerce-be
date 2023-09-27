@@ -1,21 +1,23 @@
 import { RefType, BookStatus } from "./base";
 
-export type Book = {
+export type Entity = {
   id: string;
   title: string;
   subtitle?: string;
   description?: string;
-  subjects?: string[];
-  subjectPeople?: string[];
-  subjectTimes?: string[];
-
-  numberOfPages: number;
-
-  status: BookStatus;
-  refType: RefType;
 
   imageUrlS?: string;
   imageUrlM?: string;
+
+  refType: RefType;
+
+  coverImages: string[];
+};
+
+export type Book = Entity & {
+  numberOfPages: number;
+
+  status: BookStatus;
 
   publishCountry?: string;
   publishDate?: string;
@@ -24,4 +26,13 @@ export type Book = {
   publishers: string[];
   isbn13: string[];
   isbn10: string[];
+
+  workId?: string;
+};
+
+export type Work = Entity & {
+  subjects?: string[];
+  subjectPeople?: string[];
+  subjectTimes?: string[];
+  subjectPlaces?: string[];
 };

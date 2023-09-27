@@ -21,12 +21,12 @@ public class BookRestClient : IBookRestClient
             return null;
         }
 
-        var mappedVal = _mapper.Map<OLBook, Book>(response.Data);
-
         if (Enum.TryParse(previewData.Preview, true, out BookStatus val))
         {
-            mappedVal.UpdateStatus(val);
+            response.Data.UpdateStatus(val);
         }
+
+        var mappedVal = _mapper.Map<OLBook, Book>(response.Data);
 
         return mappedVal;
     }

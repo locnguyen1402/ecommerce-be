@@ -34,7 +34,8 @@ const PageLayout = (props: Props) => {
         {
           display: "flex",
           flexDirection: "column",
-          height: "100%",
+          height: "100vh",
+          width: "100vw",
         },
         ...(Array.isArray(props.sx) ? props.sx : [props.sx]),
       ]}
@@ -43,7 +44,14 @@ const PageLayout = (props: Props) => {
       {!props.headerOverlap && <Toolbar />}
 
       <BodyWrapper>
-        <Box component="main">{props.children}</Box>
+        <Box
+          component="main"
+          sx={{
+            width: "100%",
+          }}
+        >
+          {props.children}
+        </Box>
       </BodyWrapper>
 
       {!!props.footer && props.footer}

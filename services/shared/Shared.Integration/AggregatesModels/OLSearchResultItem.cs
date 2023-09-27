@@ -28,7 +28,14 @@ public class OLSearchResultItem
     public List<string>? AuthorIds { get; set; }
     [JsonPropertyName("author_name")]
     public List<string>? AuthorNames { get; set; }
-
+    [JsonPropertyName("ratings_average")]
+    public float RatingsAverage { get; set; } = 0;
+    [JsonPropertyName("ratings_count")]
+    public int RatingsCount { get; set; } = 0;
+    [JsonPropertyName("edition_count")]
+    public int EditionCount { get; set; } = 0;
+    [JsonPropertyName("edition_key")]
+    public List<string> EditionKeys { get; set; } = new List<string>();
 }
 
 public class OLSearchResultItemMapperProfile : Profile
@@ -43,7 +50,12 @@ public class OLSearchResultItemMapperProfile : Profile
             .ForMember(be => be.CoverBookId, opt => opt.MapFrom(ol => ol.CoverEditionKey))
             .ForMember(be => be.CoverImageUrl, opt => opt.MapFrom(ol => OLMapperUtils.BuildOLImageSource(ol.CoverImageId, OLImageSize.M)))
             .ForMember(be => be.RelatedBookImgs, opt => opt.MapFrom(ol => OLMapperUtils.BuildArchiveImageSources(ol.FromArchiveImageIds)))
-            .ForMember(be => be.Authors, opt => opt.MapFrom(ol => BuildAuthorInfos(ol)));
+            .ForMember(be => be.Authors, opt => opt.MapFrom(ol => BuildAuthorInfos(ol)))
+            .ForMember(be => be.FirstEditionId, opt =>
+            {
+                opt.PreCondition(o => !o.EditionKeys.IsNullOrEmpty());
+                opt.MapFrom(o => OLMapperUtils.GetEntityId(o.EditionKeys.First()));
+            });
     }
     private static BookStatus GetLendingBookStatus(OLSearchResultItem source)
     {

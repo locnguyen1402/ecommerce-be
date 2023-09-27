@@ -40,6 +40,11 @@ const componentOptions: Components<Omit<Theme, "components">> = {
       color: "custom",
     },
   },
+  MuiInput: {
+    defaultProps: {
+      disableUnderline: true,
+    },
+  },
 };
 
 const lightPalette: PaletteOptions = {
@@ -91,7 +96,7 @@ const darkPalette: PaletteOptions = {
   divider: alpha(GreyPalette[500], 0.24),
   background: {
     default: GreyPalette[900],
-    defaultChannel: '22, 28, 36',
+    defaultChannel: "22, 28, 36",
     paper: GreyPalette[800],
   },
   action: {
