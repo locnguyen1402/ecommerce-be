@@ -31,8 +31,12 @@ const GreyPalette = {
 const componentOptions: Components<Omit<Theme, "components">> = {
   MuiButton: {
     styleOverrides: {
-      root: () => ({
+      root: ({ ownerState }) => ({
         fontWeight: "bold",
+        ...(ownerState.variant === "contained" &&
+          ownerState.color === "primary" && {
+            color: "#fff",
+          }),
       }),
     },
     defaultProps: {

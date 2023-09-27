@@ -1,4 +1,5 @@
-import { Grid, Stack, Typography } from "@mui/material";
+import { Button, Grid, Stack, Typography } from "@mui/material";
+import { AddShoppingCartOutlined as AddShoppingCartIcon } from "@mui/icons-material";
 
 import { Work, Book } from "@/models";
 
@@ -38,6 +39,35 @@ const GeneralInfo = (props: Props) => {
               {workDetail.description}
             </Typography>
           )}
+
+          <Stack direction="row" spacing={2}>
+            <Button
+              size="large"
+              sx={{
+                textTransform: "capitalize",
+                width: {
+                  xs: "100%",
+                  md: "max-content",
+                },
+              }}
+              startIcon={<AddShoppingCartIcon />}
+            >
+              Add to Card
+            </Button>
+            <Button
+              size="large"
+              sx={{
+                textTransform: "capitalize",
+                width: {
+                  xs: "100%",
+                  md: "max-content",
+                },
+              }}
+              color="primary"
+            >
+              Buy now
+            </Button>
+          </Stack>
         </Stack>
       </Grid>
     </Grid>

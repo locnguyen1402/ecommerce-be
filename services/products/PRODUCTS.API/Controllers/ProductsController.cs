@@ -55,6 +55,21 @@ public class ProductsController : BaseController
         return Ok(res);
     }
 
+    [HttpGet("works/{id}/ratings")]
+    [ProducesResponseType(typeof(WorkRatings), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetWorkRatings(string id)
+    {
+        var res = await _workRestClient.GetWorkRatings(id);
+
+        if (res is null)
+        {
+            return NotFound();
+        }
+
+        return Ok(res);
+    }
+
     [HttpGet("works/{id}/books")]
     [ProducesResponseType(typeof(List<Book>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -65,5 +80,20 @@ public class ProductsController : BaseController
         PaginatedList<Book>.AttachToHeader(res.PaginationData);
 
         return Ok(res.Items);
+    }
+
+    [HttpGet("works/{id}/books/first")]
+    [ProducesResponseType(typeof(Book), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetFirstInWorkBook(string id)
+    {
+        var res = await _workRestClient.GetFirstInWorkBook(id);
+
+        if (res is null)
+        {
+            return NotFound();
+        }
+
+        return Ok(res);
     }
 }

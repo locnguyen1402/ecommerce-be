@@ -18,18 +18,9 @@ export const ProductService = {
   },
 
   getFirstInWorkBook: async (workId: string) => {
-    const url = `${PRODUCTS_API.InWorkBooks.replace(
-      "{id}",
-      workId
-    )}?pageSize=1`;
+    const url = `${PRODUCTS_API.FirstInWorkBook.replace("{id}", workId)}`;
 
-    const res = await HttpUtils.get<Book[]>(url);
-
-    return {
-      data: !!res.data.length ? res.data[0] : null,
-      meta: {},
-      statusCode: res.statusCode,
-    } as SuccessResponse<Book | null>;
+    return HttpUtils.get<Book>(url);
   },
 
   getInWorkBooks: (workId: string, query: PaginationQuery) => {

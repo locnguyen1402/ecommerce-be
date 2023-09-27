@@ -61,4 +61,31 @@ public class WorkRestClient : IWorkRestClient
 
         return new PaginatedList<Book>(mappedVal, query.Page, query.PageSize, response.Data.Size);
     }
+
+    public async ValueTask<Book?> GetFirstInWorkBook(string workId)
+    {
+        var response = await GetBooksInWork(workId, new PaginationQuery { Page = 1, PageSize = 1 });
+
+        if (response.Items.IsNullOrEmpty())
+        {
+            return null;
+        }
+
+        return response.Items.First();
+    }
+
+    public async ValueTask<WorkRatings?> GetWorkRatings(string workId)
+    {
+        var restRequest = new RestRequest($"/works/{workId}/ratings.json");
+        var response = await _client.ExecuteGetAsync<OLWorkRatings>(restRequest);
+
+        if (response.Data == null)
+        {
+            return null;
+        }
+
+        var mappedVal = _mapper.Map<OLWorkRatings, WorkRatings>(response.Data);
+
+        return mappedVal;
+    }
 }

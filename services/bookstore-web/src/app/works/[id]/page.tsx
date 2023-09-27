@@ -13,7 +13,7 @@ const ProductDetailPage = (
   props: PageProps<{ bookId?: string }, { id: string }>
 ) => {
   const workDetailPromise = ProductService.getWorkDetails(props.params.id);
-  let bookDetailPromise: Promise<SuccessResponse<Book | null>>;
+  let bookDetailPromise: Promise<SuccessResponse<Nullable<Book>>>;
 
   if (!!props.searchParams.bookId) {
     bookDetailPromise = ProductService.getBookDetails(

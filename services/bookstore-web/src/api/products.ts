@@ -7,4 +7,5 @@ export const PRODUCTS_API = {
   BookDetail: `${baseApiUrl}/books/{id}`,
   WorkDetail: `${baseApiUrl}/works/{id}`,
   InWorkBooks: `${baseApiUrl}/works/{id}/books`,
+  FirstInWorkBook: `${baseApiUrl}/works/{id}/books/first`,
 };
