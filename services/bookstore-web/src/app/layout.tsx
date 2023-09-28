@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-import ThemeRegistry from "@/theme/ThemeRegistry";
+import App from "@/shared/app/App";
 
 export const metadata: Metadata = {
   title: "Vi Books",
@@ -18,9 +18,10 @@ const RootLayout = (props: Props) => {
       style={{
         scrollBehavior: "smooth",
       }}
+      suppressHydrationWarning
     >
       <body>
-        <ThemeRegistry>{props.children}</ThemeRegistry>
+        <App>{props.children}</App>
       </body>
     </html>
   );

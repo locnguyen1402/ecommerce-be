@@ -13,7 +13,7 @@ const HomeBanner = () => {
       paddingY={15}
       sx={{
         background: (theme) =>
-          `linear-gradient(rgba(${theme.vars.palette.background.defaultChannel}, 0.9), rgba(${theme.vars.palette.background.defaultChannel}, 0.9)), url(/assets/overlay_1.jpg) no-repeat`,
+          `linear-gradient(rgba(${theme.vars.palette.background.defaultChannel} / 0.9), rgba(${theme.vars.palette.background.defaultChannel}/ 0.9)), url(/assets/overlay_1.jpg) no-repeat`,
       }}
     >
       <Container>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRecoilValue } from "recoil";
 
 import createCache from "@emotion/cache";
 import { CacheProvider } from "@emotion/react";
@@ -13,11 +14,15 @@ import {
   getInitColorSchemeScript,
 } from "@mui/material";
 
-import { theme } from "./theme";
+import { layoutStateSelector } from "@/stores/selectors";
+
+import { buildTheme } from "./theme";
 
 type Props = { children: React.ReactNode };
 
 const ThemeRegistry = (props: Props) => {
+  const layoutState = useRecoilValue(layoutStateSelector);
+
   const [{ cache, flush }] = useState(() => {
     const cache = createCache({ key: "vibooks" });
     cache.compat = true;
@@ -64,7 +69,10 @@ const ThemeRegistry = (props: Props) => {
         {getInitColorSchemeScript({
           defaultMode: "system",
         })}
-        <CssVarsProvider theme={theme} defaultMode="system">
+        <CssVarsProvider
+          theme={buildTheme({ primary: layoutState.palette.primary })}
+          defaultMode="system"
+        >
           <CssBaseline />
           {props.children}
         </CssVarsProvider>

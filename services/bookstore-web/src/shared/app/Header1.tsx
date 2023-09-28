@@ -12,8 +12,8 @@ import {
 import { Menu as MenuIcon } from "@mui/icons-material";
 
 import LogoIcon from "../common/LogoIcon";
-import ThemeModeSwitch from "../common/ThemeModeSwitch";
 import HeaderSearchInput from "./HeaderSearchInput";
+import AppSettingsDrawerButton from "./AppSettingsDrawerButton";
 
 const Header1 = () => {
   const isScrolled = useScrollTrigger({
@@ -42,11 +42,10 @@ const Header1 = () => {
             ? {
                 backdropFilter: "blur(6px)",
                 backgroundColor: (theme) =>
-                  `rgba(${theme.vars.palette.background.defaultChannel}, 0.8)`,
+                  `rgba(${theme.vars.palette.background.defaultChannel}/ 0.8)`,
                 height: {
                   xs: 64,
                 },
-                boxShadow: 1,
               }
             : {}),
         }}
@@ -61,37 +60,28 @@ const Header1 = () => {
         >
           <LogoIcon />
 
-          <Stack
-            display={{
-              md: "none",
-            }}
-            direction="row"
-            alignItems="center"
-          >
+          <Stack alignItems="center" direction="row" spacing={0}>
             <HeaderSearchInput />
-            <ThemeModeSwitch />
+            <AppSettingsDrawerButton />
+            <Button
+              sx={{
+                ml: 1,
+                display: {
+                  xs: "none",
+                  md: "inline-flex",
+                },
+              }}
+            >
+              Be a member
+            </Button>
+            <IconButton
+              edge="end"
+              onClick={() => {}}
+              sx={{ display: { md: "none" } }}
+            >
+              <MenuIcon />
+            </IconButton>
           </Stack>
-
-          <Stack
-            display={{
-              xs: "none",
-              md: "flex",
-            }}
-            alignItems="center"
-            direction="row"
-            spacing={1}
-          >
-            <HeaderSearchInput />
-            <ThemeModeSwitch />
-            <Button>Be a member</Button>
-          </Stack>
-          <IconButton
-            edge="end"
-            onClick={() => {}}
-            sx={{ display: { md: "none" } }}
-          >
-            <MenuIcon />
-          </IconButton>
         </Container>
       </Toolbar>
     </AppBar>

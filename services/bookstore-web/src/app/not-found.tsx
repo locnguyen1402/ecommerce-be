@@ -7,11 +7,11 @@ import { Box, Button, Stack, Typography } from "@mui/material";
 
 import PageLayout from "@/shared/layout/PageLayout";
 
-import errorImg from "@/assets/illustration_500.svg";
+import errorImg from "@/assets/illustration_404.svg";
 
 const Error = () => {
   return (
-    <PageLayout>
+    <PageLayout bodyWrapper>
       <Stack
         width="100%"
         alignItems="center"
@@ -26,10 +26,12 @@ const Error = () => {
       >
         <Stack spacing={2}>
           <Typography variant="h3" fontWeight="bold">
-            500 Internal Server Error
+            Page Not Found!
           </Typography>
           <Typography variant="body1" color="text.secondary">
-            There was an error, please try again later.
+            Sorry, we couldn’t find the page you’re looking for.
+            <br />
+            Perhaps you’ve mistyped the URL? Be sure to check your spelling.
           </Typography>
         </Stack>
 

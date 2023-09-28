@@ -37,62 +37,60 @@ const HeaderSearchInput = () => {
       <IconButton onClick={openSearchBar}>
         <SearchIcon />
       </IconButton>
-      <div>
-        <ClickAwayListener
-          mouseEvent="onMouseDown"
-          touchEvent="onTouchStart"
-          onClickAway={closeSearchBar}
-        >
-          <Slide direction="down" in={visible} mountOnEnter unmountOnExit>
-            <Box
+      <ClickAwayListener
+        mouseEvent="onMouseDown"
+        touchEvent="onTouchStart"
+        onClickAway={closeSearchBar}
+      >
+        <Slide direction="down" in={visible} mountOnEnter unmountOnExit>
+          <Box
+            sx={{
+              position: "absolute",
+              top: 0,
+              width: "100%",
+              left: 0,
+              zIndex: 1,
+              height: 80,
+              display: "flex",
+              alignItems: "center",
+              backgroundColor: (theme) =>
+                `rgba(${theme.vars.palette.background.defaultChannel}/ 0.8)`,
+              backdropFilter: "blur(6px)",
+            }}
+          >
+            <Container
               sx={{
-                position: "absolute",
-                top: 0,
-                width: "100%",
-                left: 0,
-                zIndex: 1,
-                height: 80,
                 display: "flex",
                 alignItems: "center",
-                backgroundColor: (theme) =>
-                  `rgba(${theme.vars.palette.background.defaultChannel}, 0.8)`,
-                backdropFilter: "blur(6px)",
               }}
             >
-              <Container
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
+              <TextField
+                autoFocus
+                fullWidth
+                variant="standard"
+                placeholder="Search"
+                autoComplete="off"
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <SearchIcon />
+                    </InputAdornment>
+                  ),
                 }}
-              >
-                <TextField
-                  autoFocus
-                  fullWidth
-                  variant="standard"
-                  placeholder="Search"
-                  autoComplete="off"
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <SearchIcon />
-                      </InputAdornment>
-                    ),
-                  }}
-                  inputRef={inputRef}
-                  onKeyDown={(evt) => {
-                    if (evt.key === "Enter") {
-                      onSearch();
-                    }
-                  }}
-                />
-                <Button sx={{ ml: 1 }} onClick={onSearch}>
-                  Search
-                </Button>
-              </Container>
-            </Box>
-          </Slide>
-        </ClickAwayListener>
-      </div>
+                inputRef={inputRef}
+                onKeyDown={(evt) => {
+                  if (evt.key === "Enter") {
+                    onSearch();
+                  }
+                }}
+              />
+              <Button sx={{ ml: 1 }} onClick={onSearch}>
+                Search
+              </Button>
+            </Container>
+          </Box>
+        </Slide>
+      </ClickAwayListener>
     </>
   );
 };

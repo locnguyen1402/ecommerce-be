@@ -5,7 +5,6 @@ import {
   createTheme,
   Theme,
   experimental_extendTheme as extendTheme,
-  responsiveFontSizes,
 } from "@mui/material/styles";
 
 const {
@@ -27,6 +26,8 @@ const GreyPalette = {
   800: "#212B36",
   900: "#161C24",
 };
+
+export const PrimaryColors = ["#03beff", "#fa541c", "#1ad5a6"];
 
 const componentOptions: Components<Omit<Theme, "components">> = {
   MuiButton: {
@@ -53,21 +54,14 @@ const componentOptions: Components<Omit<Theme, "components">> = {
 
 const lightPalette: PaletteOptions = {
   mode: "light",
-  primary: {
-    main: "#03beff",
-  },
-  grey: GreyPalette,
   custom: augmentColor({ color: { main: GreyPalette[800] } }),
   text: {
     primary: GreyPalette[800],
     secondary: GreyPalette[600],
     disabled: GreyPalette[500],
   },
-  divider: alpha(GreyPalette[500], 0.24),
   background: {
-    // default: "#fff",
     default: "#fff",
-    defaultChannel: "255, 255, 255",
     paper: "#fff",
   },
   action: {
@@ -87,20 +81,15 @@ const lightPalette: PaletteOptions = {
 
 const darkPalette: PaletteOptions = {
   mode: "dark",
-  primary: {
-    main: "#03beff",
-  },
-  grey: GreyPalette,
   custom: augmentColor({ color: { main: "#fff" } }),
   text: {
     primary: "#fff",
     secondary: GreyPalette[500],
     disabled: GreyPalette[600],
   },
-  divider: alpha(GreyPalette[500], 0.24),
+
   background: {
     default: GreyPalette[900],
-    defaultChannel: "22, 28, 36",
     paper: GreyPalette[800],
   },
   action: {
@@ -118,94 +107,108 @@ const darkPalette: PaletteOptions = {
   },
 };
 
-let temp = extendTheme({
-  cssVarPrefix: "vibooks",
-  colorSchemes: {
-    light: {
-      palette: lightPalette,
-    },
-    dark: {
-      palette: darkPalette,
-    },
-  },
-  components: componentOptions,
-  typography: {
-    h1: {
-      fontSize: pxToRem(40),
-      [breakpoints.up("sm")]: {
-        fontSize: pxToRem(52),
+export const buildTheme = ({ primary }: { primary: string }) => {
+  return extendTheme({
+    cssVarPrefix: "vibooks",
+    colorSchemes: {
+      light: {
+        palette: {
+          ...lightPalette,
+          primary: {
+            main: primary,
+          },
+          grey: GreyPalette,
+          divider: alpha(GreyPalette[500], 0.24),
+        },
       },
-      [breakpoints.up("md")]: {
-        fontSize: pxToRem(58),
-      },
-      [breakpoints.up("lg")]: {
-        fontSize: pxToRem(64),
+      dark: {
+        palette: {
+          ...darkPalette,
+          primary: {
+            main: primary,
+          },
+          grey: GreyPalette,
+          divider: alpha(GreyPalette[500], 0.24),
+        },
       },
     },
-    h2: {
-      fontSize: pxToRem(32),
-      [breakpoints.up("sm")]: {
+    components: componentOptions,
+    typography: {
+      h1: {
         fontSize: pxToRem(40),
+        [breakpoints.up("sm")]: {
+          fontSize: pxToRem(52),
+        },
+        [breakpoints.up("md")]: {
+          fontSize: pxToRem(58),
+        },
+        [breakpoints.up("lg")]: {
+          fontSize: pxToRem(64),
+        },
       },
-      [breakpoints.up("md")]: {
-        fontSize: pxToRem(44),
-      },
-      [breakpoints.up("lg")]: {
-        fontSize: pxToRem(48),
-      },
-    },
-    h3: {
-      fontSize: pxToRem(24),
-      [breakpoints.up("sm")]: {
-        fontSize: pxToRem(28),
-      },
-      [breakpoints.up("md")]: {
-        fontSize: pxToRem(30),
-      },
-      [breakpoints.up("lg")]: {
+      h2: {
         fontSize: pxToRem(32),
+        [breakpoints.up("sm")]: {
+          fontSize: pxToRem(40),
+        },
+        [breakpoints.up("md")]: {
+          fontSize: pxToRem(44),
+        },
+        [breakpoints.up("lg")]: {
+          fontSize: pxToRem(48),
+        },
       },
-    },
-    h4: {
-      fontSize: pxToRem(20),
-      [breakpoints.up("sm")]: {
-        fontSize: pxToRem(22),
-      },
-      [breakpoints.up("md")]: {
-        fontSize: pxToRem(23),
-      },
-      [breakpoints.up("lg")]: {
+      h3: {
         fontSize: pxToRem(24),
+        [breakpoints.up("sm")]: {
+          fontSize: pxToRem(28),
+        },
+        [breakpoints.up("md")]: {
+          fontSize: pxToRem(30),
+        },
+        [breakpoints.up("lg")]: {
+          fontSize: pxToRem(32),
+        },
       },
-    },
-    h5: {
-      fontSize: pxToRem(18),
-      [breakpoints.up("sm")]: {
-        fontSize: pxToRem(18),
-      },
-      [breakpoints.up("md")]: {
-        fontSize: pxToRem(18),
-      },
-      [breakpoints.up("lg")]: {
+      h4: {
         fontSize: pxToRem(20),
+        [breakpoints.up("sm")]: {
+          fontSize: pxToRem(22),
+        },
+        [breakpoints.up("md")]: {
+          fontSize: pxToRem(23),
+        },
+        [breakpoints.up("lg")]: {
+          fontSize: pxToRem(24),
+        },
+      },
+      h5: {
+        fontSize: pxToRem(18),
+        [breakpoints.up("sm")]: {
+          fontSize: pxToRem(18),
+        },
+        [breakpoints.up("md")]: {
+          fontSize: pxToRem(18),
+        },
+        [breakpoints.up("lg")]: {
+          fontSize: pxToRem(20),
+        },
+      },
+      h6: {
+        fontSize: pxToRem(18),
+      },
+      subtitle2: {
+        fontSize: pxToRem(14),
+      },
+      body2: {
+        fontSize: pxToRem(14),
+      },
+      caption: {
+        fontSize: pxToRem(12),
+      },
+      overline: {
+        fontSize: pxToRem(12),
       },
     },
-    h6: {
-      fontSize: pxToRem(18),
-    },
-    subtitle2: {
-      fontSize: pxToRem(14),
-    },
-    body2: {
-      fontSize: pxToRem(14),
-    },
-    caption: {
-      fontSize: pxToRem(12),
-    },
-    overline: {
-      fontSize: pxToRem(12),
-    },
-  },
-});
-
-export const theme = temp;
+  });
+};
