@@ -12,9 +12,14 @@ public class WorkRestClient : IWorkRestClient
     public async ValueTask<PaginatedList<SearchResultItem>> GetWorks(WorkListQuery query)
     {
         var page = query.Page - 1;
-        var queryString = $"q={query.Keyword}&offset={page * query.PageSize}&limit={query.PageSize}";
+        var queryString = $"offset={page * query.PageSize}&limit={query.PageSize}";
 
-        var restRequest = new RestRequest($"/search.json?{queryString}&mode=ebooks&has_fulltext=true");
+        if (query.Recover == true)
+        {
+            queryString = $"offset=0&limit={query.Page * query.PageSize}";
+        }
+
+        var restRequest = new RestRequest($"/search.json?{queryString}&q={query.Keyword}&mode=ebooks&has_fulltext=true");
 
         var response = await _client.ExecuteGetAsync<OLWorkListResponse>(restRequest);
 
