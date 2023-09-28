@@ -5,9 +5,11 @@ import { Book } from "@/models";
 
 import PageLayout from "@/shared/layout/PageLayout";
 import PageHeader from "@/shared/app/PageHeader";
+import PageSection from "@/shared/app/PageSection";
 import PromisesResolver from "@/shared/common/PromisesResolver";
 
 import GeneralInfo from "./components/GeneralInfo";
+import RelatedProducts from "./components/RelatedProducts";
 
 const ProductDetailPage = (
   props: PageProps<{ bookId?: string }, { id: string }>
@@ -26,6 +28,7 @@ const ProductDetailPage = (
   return (
     <PageLayout>
       <PageHeader title="Details" />
+
       <div key={Math.random().toString()}>
         <Suspense fallback={"loading..."}>
           <PromisesResolver promises={[workDetailPromise, bookDetailPromise]}>
@@ -38,6 +41,10 @@ const ProductDetailPage = (
           </PromisesResolver>
         </Suspense>
       </div>
+
+      <PageSection>
+        <RelatedProducts />
+      </PageSection>
     </PageLayout>
   );
 };

@@ -1,4 +1,4 @@
-import { Button, Grid, Stack, Typography } from "@mui/material";
+import { Box, Button, Grid, Stack, Typography } from "@mui/material";
 import { AddShoppingCartOutlined as AddShoppingCartIcon } from "@mui/icons-material";
 
 import { Work, Book } from "@/models";
@@ -16,18 +16,24 @@ const GeneralInfo = (props: Props) => {
   return (
     <Grid container spacing={{ xs: 4, md: 8 }}>
       <Grid item xs={12} md={5}>
-        <ProductAvatar
-          src={workDetail.imageUrlM}
-          alt={workDetail.title}
+        <Box
           sx={{
             height: {
               xs: 300,
               sm: 360,
               md: 420,
             },
-            padding: 2,
           }}
-        />
+        >
+          <ProductAvatar
+            src={workDetail.imageUrlM}
+            alt={workDetail.title}
+            sx={{
+              height: "100%",
+              maxHeight: "100%",
+            }}
+          />
+        </Box>
       </Grid>
       <Grid item xs={12} md={7}>
         <Stack spacing={2}>

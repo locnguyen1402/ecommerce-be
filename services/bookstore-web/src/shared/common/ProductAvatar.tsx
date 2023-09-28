@@ -1,10 +1,8 @@
 "use client";
 
-import Image from "next/image";
-
 import { Box, BoxProps, alpha, useTheme } from "@mui/material";
 
-import BookPlaceholder from "@/assets/book_placeholder.png";
+import AspectRatio from "./AspectRatio";
 
 type Props = {
   src: string | undefined;
@@ -21,9 +19,7 @@ const ProductAvatar = (props: Props) => {
       sx={[
         {
           width: "100%",
-          height: 220,
-          overflow: "hidden",
-          borderRadius: 1.5,
+          borderRadius: 4,
           padding: 1,
           backgroundColor: "grey.200",
           [theme.getColorSchemeSelector("dark")]: {
@@ -33,25 +29,18 @@ const ProductAvatar = (props: Props) => {
         ...(Array.isArray(props.sx) ? props.sx : [props.sx]),
       ]}
     >
-      <Box
-        sx={{
-          position: "relative",
-          width: "100%",
-          height: "100%",
-        }}
-      >
-        <Image
-          priority
-          src={props.src || BookPlaceholder}
+      <AspectRatio ratio={12 / 16}>
+        <Box
+          component="img"
+          src={props.src || "/assets/book_placeholder.png"}
           alt={props.alt}
-          fill
-          sizes="100%"
-          style={{
-            borderRadius: 4,
+          sx={{
+            width: "100%",
+            height: "100%",
             objectFit: "contain",
           }}
         />
-      </Box>
+      </AspectRatio>
     </Box>
   );
 };
