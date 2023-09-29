@@ -12,9 +12,10 @@ import { TrendingType } from "@/models";
 import PageLayout from "@/shared/layout/PageLayout";
 import PageHeader from "@/shared/app/PageHeader";
 import PromiseResolver from "@/shared/common/PromiseResolver";
-
-import SkeletonProductList from "@/app/search/components/SkeletonProductList";
-import ProductList from "@/app/search/components/ProductList";
+import SkeletonCardList from "@/shared/card/SkeletonCardList";
+import SearchProductItemSkeletonCard from "@/shared/card/SearchProductItemSkeletonCard";
+import SearchProductItemCard from "@/shared/card/SearchProductItemCard";
+import Pagination from "@/shared/common/Pagination";
 
 const TrendingPage = (
   props: PageProps<
@@ -59,11 +60,45 @@ const TrendingPage = (
         >
           <Suspense
             fallback={
-              <SkeletonProductList pageSize={paginationQuery.pageSize} />
+              <SkeletonCardList
+                pageSize={paginationQuery.pageSize}
+                skeletonCard={SearchProductItemSkeletonCard}
+              />
             }
           >
             <PromiseResolver promise={resultPromise}>
-              {(val) => <ProductList {...val} />}
+              {({ data, meta }) => (
+                <>
+                  {!!data.length && (
+                    <>
+                      {data.map((item, idx) => {
+                        return (
+                          <SearchProductItemCard key={item.id} product={item} />
+                        );
+                      })}
+
+                      {!!meta?.pagination && (
+                        <Box
+                          gridColumn={{
+                            xs: "span 2",
+                            sm: "span 3",
+                            md: "span 4",
+                            lg: "span 5",
+                          }}
+                          display="flex"
+                          justifyContent="center"
+                          mt={{
+                            xs: 2,
+                            md: 4,
+                          }}
+                        >
+                          <Pagination info={meta?.pagination} />
+                        </Box>
+                      )}
+                    </>
+                  )}
+                </>
+              )}
             </PromiseResolver>
           </Suspense>
         </Box>

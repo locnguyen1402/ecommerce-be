@@ -1,17 +1,18 @@
+"use client";
+
 import Link from "next/link";
 
-import { Box, Rating, Stack, Typography } from "@mui/material";
+import { Box, Rating, Stack, Typography, Button } from "@mui/material";
+import { Favorite as FavoriteIcon } from "@mui/icons-material";
 
 import { SearchProductItem } from "@/models";
 import ProductAvatar from "@/shared/common/ProductAvatar";
-
-import ProductCardLikeButton from "./ProductCardLikeButton";
 
 type Props = {
   product: SearchProductItem;
 };
 
-const ProductCard = (props: Props) => {
+const SearchProductItemCard = (props: Props) => {
   const { product } = props;
 
   return (
@@ -45,7 +46,38 @@ const ProductCard = (props: Props) => {
         }}
       >
         <ProductAvatar src={product.coverImageUrl} alt={product.title} />
-        <ProductCardLikeButton />
+        <Button
+          color="primary"
+          variant="contained"
+          className="favorite-btn"
+          aria-label="add-to-favorites"
+          sx={{
+            display: {
+              xs: "inline-flex",
+              md: "none",
+            },
+            minWidth: "unset",
+            position: "absolute",
+            right: 5,
+            bottom: 5,
+            borderRadius: "50%",
+            width: {
+              xs: 32,
+              md: 40,
+            },
+            height: {
+              xs: 32,
+              md: 40,
+            },
+            color: "white",
+          }}
+          onClick={(evt) => {
+            evt.preventDefault();
+            evt.stopPropagation();
+          }}
+        >
+          <FavoriteIcon />
+        </Button>
       </Box>
 
       <Stack p={1}>
@@ -80,4 +112,4 @@ const ProductCard = (props: Props) => {
   );
 };
 
-export default ProductCard;
+export default SearchProductItemCard;

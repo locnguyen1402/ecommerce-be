@@ -8,11 +8,13 @@ import { ProductService } from "@/services";
 import PageHeader from "@/shared/app/PageHeader";
 import PageLayout from "@/shared/layout/PageLayout";
 import PromiseResolver from "@/shared/common/PromiseResolver";
+import Pagination from "@/shared/common/Pagination";
+import SkeletonCardList from "@/shared/card/SkeletonCardList";
+import SearchProductItemCard from "@/shared/card/SearchProductItemCard";
+import SearchProductItemSkeletonCard from "@/shared/card/SearchProductItemSkeletonCard";
 
 import FilterDrawerButton from "./components/FilterDrawerButton";
 import FilterSection from "./components/FilterSection";
-import ProductList from "./components/ProductList";
-import SkeletonProductList from "./components/SkeletonProductList";
 
 const SearchPage = (props: PageProps<PaginationQuery>) => {
   const paginationQuery = adaptPaginationQueryParams(props.searchParams);
@@ -69,11 +71,47 @@ const SearchPage = (props: PageProps<PaginationQuery>) => {
             >
               <Suspense
                 fallback={
-                  <SkeletonProductList pageSize={paginationQuery.pageSize} />
+                  <SkeletonCardList
+                    pageSize={paginationQuery.pageSize}
+                    skeletonCard={SearchProductItemSkeletonCard}
+                  />
                 }
               >
                 <PromiseResolver promise={searchResultPromise}>
-                  {(val) => <ProductList {...val} />}
+                  {({ data, meta }) => (
+                    <>
+                      {!!data.length && (
+                        <>
+                          {data.map((item, idx) => {
+                            return (
+                              <SearchProductItemCard
+                                key={item.id}
+                                product={item}
+                              />
+                            );
+                          })}
+
+                          {!!meta?.pagination && (
+                            <Box
+                              gridColumn={{
+                                xs: "span 2",
+                                sm: "span 3",
+                                lg: "span 4",
+                              }}
+                              display="flex"
+                              justifyContent="center"
+                              mt={{
+                                xs: 2,
+                                md: 4,
+                              }}
+                            >
+                              <Pagination info={meta?.pagination} />
+                            </Box>
+                          )}
+                        </>
+                      )}
+                    </>
+                  )}
                 </PromiseResolver>
               </Suspense>
             </Box>
