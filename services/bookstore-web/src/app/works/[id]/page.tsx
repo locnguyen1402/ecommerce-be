@@ -6,9 +6,10 @@ import { Book } from "@/models";
 import PageLayout from "@/shared/layout/PageLayout";
 import PageHeader from "@/shared/app/PageHeader";
 import PromisesResolver from "@/shared/common/PromisesResolver";
+import BackdropLoading from "@/shared/common/BackdropLoading";
+import RelatedProducts from "@/shared/common/RelatedProducts";
 
 import GeneralInfo from "./components/GeneralInfo";
-import RelatedProducts from "./components/RelatedProducts";
 
 const ProductDetailPage = (
   props: PageProps<{ bookId?: string }, { id: string }>
@@ -30,7 +31,7 @@ const ProductDetailPage = (
       <PageHeader title="Details" />
 
       <div key={Math.random().toString()}>
-        <Suspense fallback={"loading..."}>
+        <Suspense fallback={<BackdropLoading />}>
           <PromisesResolver
             promises={[
               workDetailPromise,

@@ -2,7 +2,7 @@ import Link from "next/link";
 
 import { Box, Rating, Stack, Typography } from "@mui/material";
 
-import { SearchProductItem } from "@/models/search";
+import { SearchProductItem } from "@/models";
 import ProductAvatar from "@/shared/common/ProductAvatar";
 
 import ProductCardLikeButton from "./ProductCardLikeButton";

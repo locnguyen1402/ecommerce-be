@@ -11,3 +11,12 @@ export enum BookStatus {
   NoView = "NOVIEW",
   Other = "OTHER",
 }
+
+export enum TrendingType {
+  NOW = "now",
+  DAILY = "daily",
+  WEEKLY = "weekly",
+  MONTHLY = "monthly",
+  YEARLY = "yearly",
+  FOREVER = "forever",
+}

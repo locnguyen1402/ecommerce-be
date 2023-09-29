@@ -70,6 +70,30 @@ public class WorkRestClient : IWorkRestClient
         return new PaginatedList<SearchResultItem>(mappedVal, query.Page, query.PageSize, response.Data.TotalItems);
     }
 
+    public async ValueTask<PaginatedList<SearchResultItem>> GetTrendingWorks(TrendingWorksQuery query)
+    {
+        var trendingType = TrendingType.DAILY.ToString();
+
+        if (query.Type is not null && Enum.TryParse(query.Type.ToString(), out TrendingType val))
+        {
+            trendingType = val.ToString();
+        }
+
+        var url = $"/trending/{trendingType.ToLower()}.json?page={query.Page}&limit={query.PageSize}";
+        var restRequest = new RestRequest(url);
+
+        var response = await _client.ExecuteGetAsync<OLTrendingWorksResponse>(restRequest);
+
+        if (response.Data == null)
+        {
+            return PaginatedList<SearchResultItem>.CreateEmpty(query.Page, query.PageSize);
+        }
+
+        var mappedVal = _mapper.Map<List<OLSearchResultItem>, List<SearchResultItem>>(response.Data.Works);
+
+        return new PaginatedList<SearchResultItem>(mappedVal, query.Page, query.PageSize, 100);
+    }
+
     public async ValueTask<Work?> GetWorkDetail(string id)
     {
         var restRequest = new RestRequest($"/works/{id}.json");

@@ -25,6 +25,17 @@ public class ProductsController : BaseController
         return Ok(res.Items);
     }
 
+    [HttpGet("trending")]
+    [ProducesResponseType(typeof(List<SearchResultItem>), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetTrendingProducts([FromQuery] TrendingProductListQuery query)
+    {
+        var res = await _workRestClient.GetTrendingWorks(query);
+
+        PaginatedList<SearchResultItem>.AttachToHeader(res.PaginationData);
+
+        return Ok(res.Items);
+    }
+
     [HttpGet("books/{id}")]
     [ProducesResponseType(typeof(Book), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]

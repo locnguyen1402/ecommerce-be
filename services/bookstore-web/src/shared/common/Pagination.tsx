@@ -37,6 +37,7 @@ const Pagination = (props: Props) => {
             component={Link}
             href={url}
             scroll={false}
+            prefetch={false}
             {...item}
             onClick={(evt) => {
               window.scrollTo({

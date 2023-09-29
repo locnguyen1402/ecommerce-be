@@ -4,11 +4,17 @@ import { Work, Book, SearchProductItem, WorkRatings } from "@/models";
 import { HttpUtils } from "@/utils";
 import { PRODUCTS_API } from "@/api";
 
-import { ProductSearchQuery } from "@/models/query";
+import { ProductSearchQuery, TrendingProductsQuery } from "@/models/query";
 
 export const ProductService = {
   searchProducts: (query: ProductSearchQuery) => {
     const url = `${PRODUCTS_API.Search}?${qs.stringify(query)}`;
+
+    return HttpUtils.get<SearchProductItem[]>(url);
+  },
+
+  getTrendingProducts: (query: TrendingProductsQuery) => {
+    const url = `${PRODUCTS_API.Trending}?${qs.stringify(query)}`;
 
     return HttpUtils.get<SearchProductItem[]>(url);
   },
