@@ -1,7 +1,7 @@
 "use client";
 
 import { Fab, useScrollTrigger } from "@mui/material";
-import { NavigationOutlined as NavigationIcon } from "@mui/icons-material";
+import { Navigation as NavigationIcon } from "@mui/icons-material";
 
 const FloatingTopButton = () => {
   const isScrolled = useScrollTrigger({
@@ -15,7 +15,7 @@ const FloatingTopButton = () => {
       aria-label="top"
       size="medium"
       sx={{
-        display: !isScrolled ? 'none': undefined,
+        display: !isScrolled ? "none" : undefined,
         position: "fixed",
         bottom: {
           xs: 10,
@@ -33,7 +33,7 @@ const FloatingTopButton = () => {
         });
       }}
     >
-      <NavigationIcon />
+      <NavigationIcon sx={{ color: "white" }} />
     </Fab>
   );
 };

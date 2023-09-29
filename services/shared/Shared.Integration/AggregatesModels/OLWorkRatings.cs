@@ -5,8 +5,8 @@ public class OLWorkRatings
     public CountsInfo? Counts { get; set; }
     public class SummaryInfo
     {
-        public float Average { get; set; } = 0;
-        public int Count { get; set; } = 0;
+        public float? Average { get; set; } = 0;
+        public int? Count { get; set; } = 0;
     }
     public class CountsInfo
     {

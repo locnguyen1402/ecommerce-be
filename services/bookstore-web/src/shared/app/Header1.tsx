@@ -1,7 +1,10 @@
 "use client";
 
+import Link from "next/link";
+
 import {
   AppBar,
+  Box,
   Button,
   Container,
   IconButton,
@@ -58,7 +61,16 @@ const Header1 = () => {
             justifyContent: "space-between",
           }}
         >
-          <LogoIcon />
+          <Box
+            href="/"
+            component={Link}
+            sx={{
+              display: "flex",
+              alignItems: "center",
+            }}
+          >
+            <LogoIcon />
+          </Box>
 
           <Stack alignItems="center" direction="row" spacing={0}>
             <HeaderSearchInput />

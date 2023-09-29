@@ -18,7 +18,7 @@ const ProductCardLikeButton = () => {
         minWidth: "unset",
         position: "absolute",
         right: 5,
-        top: 180,
+        bottom: 5,
         borderRadius: "50%",
         width: {
           xs: 32,
@@ -32,6 +32,7 @@ const ProductCardLikeButton = () => {
       }}
       onClick={(evt) => {
         evt.preventDefault();
+        evt.stopPropagation();
       }}
     >
       <FavoriteIcon />

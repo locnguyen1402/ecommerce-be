@@ -1,5 +1,33 @@
 import { RefType, BookStatus } from "./base";
 
+export type SearchProductItem = {
+  id: string;
+  title: string;
+  refType: RefType;
+
+  lendingBookId?: string;
+  lendingBookStatus?: BookStatus;
+
+  coverBookId: string;
+  coverImageUrl?: string;
+
+  hasFullText: boolean;
+
+  wantToReadCount: number;
+  alreadyReadCount: number;
+
+  relatedBookImgs: string[];
+
+  firstPublishYear?: number;
+  authors: IdName[];
+
+  ratingsAverage: number;
+  ratingsCount: number;
+
+  firstEditionId?: string;
+  editionCount: number;
+};
+
 export type Entity = {
   id: string;
   title: string;
@@ -35,4 +63,14 @@ export type Work = Entity & {
   subjectPeople?: string[];
   subjectTimes?: string[];
   subjectPlaces?: string[];
+};
+
+export type WorkRatings = {
+  average: number;
+  count: number;
+  rating1Stars: number;
+  rating2Stars: number;
+  rating3Stars: number;
+  rating4Stars: number;
+  rating5Stars: number;
 };

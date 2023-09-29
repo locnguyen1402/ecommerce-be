@@ -12,15 +12,51 @@ public class WorkRestClient : IWorkRestClient
     public async ValueTask<PaginatedList<SearchResultItem>> GetWorks(WorkListQuery query)
     {
         var page = query.Page - 1;
-        var queryString = $"offset={page * query.PageSize}&limit={query.PageSize}";
+        var queryList = new List<string>{
+            "mode=ebooks",
+            "has_fulltext=true"
+        };
+
+        if (!query.Title.IsNullOrEmpty())
+        {
+            queryList.Add($"title={query.Title}");
+        }
+        if (!query.Author.IsNullOrEmpty())
+        {
+            queryList.Add($"author={query.Author}");
+        }
+        if (!query.Place.IsNullOrEmpty())
+        {
+            queryList.Add($"place={query.Place}");
+        }
+        if (!query.Subject.IsNullOrEmpty())
+        {
+            queryList.Add($"subject={query.Subject}");
+        }
+        if (!query.Person.IsNullOrEmpty())
+        {
+            queryList.Add($"person={query.Person}");
+        }
+        if (!query.Keyword.IsNullOrEmpty())
+        {
+            queryList.Add($"q={query.Keyword}");
+        }
+        if (query.HasFullText == true)
+        {
+            queryList.Add("has_fulltext=true");
+        }
 
         if (query.Recover == true)
         {
-            queryString = $"offset=0&limit={query.Page * query.PageSize}";
+            queryList.Add($"offset=0&limit={query.Page * query.PageSize}");
+        }
+        else
+        {
+            queryList.Add($"offset={page * query.PageSize}&limit={query.PageSize}");
         }
 
-        // var restRequest = new RestRequest($"/search.json?{queryString}&q={query.Keyword}&mode=ebooks&has_fulltext=true");
-        var restRequest = new RestRequest($"/search.json?{queryString}&q={query.Keyword}");
+        var url = $"/search.json?{string.Join("&", queryList)}";
+        var restRequest = new RestRequest(url);
 
         var response = await _client.ExecuteGetAsync<OLWorkListResponse>(restRequest);
 

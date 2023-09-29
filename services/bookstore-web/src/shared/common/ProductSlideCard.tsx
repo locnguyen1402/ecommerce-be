@@ -1,6 +1,6 @@
 import Link, { LinkProps } from "next/link";
 
-import { Box, Paper, Stack, Typography, alpha, useTheme } from "@mui/material";
+import { Box, Paper, Typography, alpha, useTheme } from "@mui/material";
 
 import ProductAvatar from "./ProductAvatar";
 

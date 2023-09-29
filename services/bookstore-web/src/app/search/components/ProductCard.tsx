@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import { Rating, Stack, Typography } from "@mui/material";
+import { Box, Rating, Stack, Typography } from "@mui/material";
 
 import { SearchProductItem } from "@/models/search";
 import ProductAvatar from "@/shared/common/ProductAvatar";
@@ -17,7 +17,6 @@ const ProductCard = (props: Props) => {
   return (
     <Stack
       sx={{
-        position: "relative",
         textDecoration: "none",
         transition: "all .2s ease-in-out",
         ":hover": {
@@ -39,9 +38,15 @@ const ProductCard = (props: Props) => {
         },
       }}
     >
-      <ProductAvatar src={product.coverImageUrl} alt={product.title} />
-
-      <ProductCardLikeButton />
+      <Box
+        sx={{
+          width: "100%",
+          position: "relative",
+        }}
+      >
+        <ProductAvatar src={product.coverImageUrl} alt={product.title} />
+        <ProductCardLikeButton />
+      </Box>
 
       <Stack p={1}>
         <Typography

@@ -1,11 +1,13 @@
 import qs from "querystring";
 
-import { Work, Book, SearchProductItem } from "@/models";
+import { Work, Book, SearchProductItem, WorkRatings } from "@/models";
 import { HttpUtils } from "@/utils";
 import { PRODUCTS_API } from "@/api";
 
+import { ProductSearchQuery } from "@/models/query";
+
 export const ProductService = {
-  searchProducts: (query: PaginationQuery) => {
+  searchProducts: (query: ProductSearchQuery) => {
     const url = `${PRODUCTS_API.Search}?${qs.stringify(query)}`;
 
     return HttpUtils.get<SearchProductItem[]>(url);
@@ -15,6 +17,12 @@ export const ProductService = {
     const url = PRODUCTS_API.WorkDetail.replace("{id}", id);
 
     return HttpUtils.get<Work>(url);
+  },
+
+  getWorkRatings: (id: string) => {
+    const url = PRODUCTS_API.WorkRatings.replace("{id}", id);
+
+    return HttpUtils.get<WorkRatings>(url);
   },
 
   getFirstInWorkBook: async (workId: string) => {

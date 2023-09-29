@@ -1,3 +1,4 @@
+import { Box } from "@mui/material";
 import { ReactNode } from "react";
 
 import Slider, { type Settings } from "react-slick";
@@ -10,6 +11,7 @@ const ProductCarousel = (props: Props) => {
     slidesToScroll: 6,
     infinite: false,
     dots: false,
+    arrows: false,
     responsive: [
       {
         breakpoint: 1200,
@@ -39,6 +41,52 @@ const ProductCarousel = (props: Props) => {
         },
       },
     ],
+    appendDots: (dots) => {
+      return (
+        <Box
+          mt={{
+            xs: 4,
+            md: 6,
+          }}
+          position="static"
+          component="ul"
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          sx={{
+            "& > .slick-active": {
+              ".dot": {
+                opacity: 1,
+              },
+            },
+          }}
+        >
+          {dots}
+        </Box>
+      );
+    },
+    customPaging: () => {
+      return (
+        <Box
+          width="100%"
+          height="100%"
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+        >
+          <Box
+            className="dot"
+            width={8}
+            height={8}
+            sx={{
+              opacity: 0.32,
+              borderRadius: "50%",
+              backgroundColor: "primary.main",
+            }}
+          />
+        </Box>
+      );
+    },
     ...props.settings,
   };
 

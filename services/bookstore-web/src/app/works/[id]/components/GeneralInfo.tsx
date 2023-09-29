@@ -1,17 +1,19 @@
 import { Box, Button, Grid, Stack, Typography } from "@mui/material";
 import { AddShoppingCartOutlined as AddShoppingCartIcon } from "@mui/icons-material";
 
-import { Work, Book } from "@/models";
+import { Work, Book, WorkRatings } from "@/models";
 
 import ProductAvatar from "@/shared/common/ProductAvatar";
+import WorkRatingsSection from "./WorkRatingsSection";
 
 type Props = {
   workDetail: Work;
+  workRatings: WorkRatings;
   bookDetail: Nullable<Book>;
 };
 
 const GeneralInfo = (props: Props) => {
-  const { workDetail, bookDetail } = props;
+  const { workDetail, bookDetail, workRatings } = props;
 
   return (
     <Grid container spacing={{ xs: 4, md: 8 }}>
@@ -36,10 +38,17 @@ const GeneralInfo = (props: Props) => {
         </Box>
       </Grid>
       <Grid item xs={12} md={7}>
-        <Stack spacing={2}>
-          <Typography variant="h3" component="h1" fontWeight="bold">
-            {bookDetail?.title || workDetail.title}
-          </Typography>
+        <Typography variant="h3" component="h1" fontWeight="bold">
+          {bookDetail?.title || workDetail.title}
+        </Typography>
+        <Stack
+          mt={{
+            xs: 2,
+            md: 4,
+          }}
+          spacing={2}
+        >
+          <WorkRatingsSection ratings={workRatings} />
           {!!workDetail.description && (
             <Typography variant="body2" color="text.secondary">
               {workDetail.description}
