@@ -5,7 +5,7 @@ import Slider, { type Settings } from "react-slick";
 
 type Props = { settings?: Settings; children: ReactNode };
 
-const ProductCarousel = (props: Props) => {
+const Carousel = (props: Props) => {
   const settings: Settings = {
     slidesToShow: 6,
     slidesToScroll: 6,
@@ -93,4 +93,4 @@ const ProductCarousel = (props: Props) => {
   return <Slider {...settings}>{props.children}</Slider>;
 };
 
-export default ProductCarousel;
+export default Carousel;

@@ -3,13 +3,13 @@ import { Fragment } from "react";
 import { Box, BoxProps, Container, Toolbar } from "@mui/material";
 
 import Header1 from "../app/Header1";
+import Footer from "../app/Footer";
 import FloatingTopButton from "../app/FloatingTopButton";
 
 type Props = {
   children: React.ReactNode;
   sx?: BoxProps["sx"];
   header?: Nullable<React.ReactNode>;
-  footer?: React.ReactNode;
 
   bodyWrapper?: React.PropsWithChildren<any> | false;
   headerOverlap?: boolean;
@@ -54,7 +54,7 @@ const PageLayout = (props: Props) => {
         </Box>
       </BodyWrapper>
 
-      {!!props.footer && props.footer}
+      <Footer />
 
       <FloatingTopButton />
     </Box>

@@ -7,9 +7,11 @@ import PageLayout from "@/shared/layout/PageLayout";
 import PageHeader from "@/shared/app/PageHeader";
 import PromisesResolver from "@/shared/common/PromisesResolver";
 import BackdropLoading from "@/shared/common/BackdropLoading";
-import RelatedProducts from "@/shared/common/RelatedProducts";
+import QueryExecutor from "@/shared/common/QueryExecutor";
 
 import GeneralInfo from "./components/GeneralInfo";
+import ProductsCarousel from "@/shared/common/ProductsCarousel";
+import ProductSlideCard from "@/shared/card/ProductSlideCard";
 
 const ProductDetailPage = (
   props: PageProps<{ bookId?: string }, { id: string }>
@@ -56,12 +58,38 @@ const ProductDetailPage = (
                     bookDetail={bookVal?.data || null}
                   />
 
-                  <RelatedProducts
-                    query={{ keyword }}
-                    pageSectionProps={{
-                      title: "You might also like",
+                  {/* "You might also like" */}
+                  <QueryExecutor
+                    queryPromise={() =>
+                      ProductService.searchProducts({
+                        page: 1,
+                        pageSize: 20,
+                        keyword,
+                      })
+                    }
+                  >
+                    {({ isLoading, data }) => {
+                      return <></>;
+                      // <ProductsCarousel
+                      //     isLoading={isLoading}
+                      //     data={data}
+                      //     itemRender={(item) => {
+                      //       return (
+                      //         <ProductSlideCard
+                      //           imgSrc={item.coverImageUrl}
+                      //           title={item.title}
+                      //           href={{
+                      //             pathname: `/works/${item.id}`,
+                      //             query: {
+                      //               bookId: item.firstEditionId,
+                      //             },
+                      //           }}
+                      //         />
+                      //       );
+                      //     }}
+                      //   />
                     }}
-                  />
+                  </QueryExecutor>
                 </>
               );
             }}

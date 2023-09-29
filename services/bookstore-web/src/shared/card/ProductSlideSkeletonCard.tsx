@@ -1,8 +1,8 @@
 import { Box, Paper, Skeleton, alpha, useTheme } from "@mui/material";
 
-import AspectRatio from "./AspectRatio";
+import AspectRatio from "../common/AspectRatio";
 
-const ProductSlideCardSkeleton = () => {
+const ProductSlideSkeletonCard = () => {
   const theme = useTheme();
 
   return (
@@ -44,4 +44,4 @@ const ProductSlideCardSkeleton = () => {
   );
 };
 
-export default ProductSlideCardSkeleton;
+export default ProductSlideSkeletonCard;

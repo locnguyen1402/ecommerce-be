@@ -2,7 +2,6 @@ import { Container, Typography } from "@mui/material";
 
 import PageLayout from "@/shared/layout/PageLayout";
 import HomeBanner from "./components/HomeBanner";
-import LogoLoading from "@/shared/common/BackdropLoading";
 
 const HomePage = () => {
   return (

@@ -18,7 +18,7 @@ const FloatingTopButton = () => {
         display: !isScrolled ? "none" : undefined,
         position: "fixed",
         bottom: {
-          xs: 10,
+          xs: 55,
           md: 30,
         },
         right: {

@@ -2,7 +2,7 @@ import Link, { LinkProps } from "next/link";
 
 import { Box, Paper, Typography, alpha, useTheme } from "@mui/material";
 
-import ProductAvatar from "./ProductAvatar";
+import ProductAvatar from "../common/ProductAvatar";
 
 type Props = {
   imgSrc: string | undefined;
