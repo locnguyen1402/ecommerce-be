@@ -19,7 +19,8 @@ public class WorkRestClient : IWorkRestClient
             queryString = $"offset=0&limit={query.Page * query.PageSize}";
         }
 
-        var restRequest = new RestRequest($"/search.json?{queryString}&q={query.Keyword}&mode=ebooks&has_fulltext=true");
+        // var restRequest = new RestRequest($"/search.json?{queryString}&q={query.Keyword}&mode=ebooks&has_fulltext=true");
+        var restRequest = new RestRequest($"/search.json?{queryString}&q={query.Keyword}");
 
         var response = await _client.ExecuteGetAsync<OLWorkListResponse>(restRequest);
 
