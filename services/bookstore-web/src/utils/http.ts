@@ -1,3 +1,5 @@
+import getEnv from "@/env";
+
 type HTTPRequestMethod = "GET" | "POST" | "PUT" | "DELETE";
 
 type RequestOptions = Omit<RequestInit, "method">;
@@ -14,7 +16,11 @@ function sendRequest<T>(
     cache: options?.cache || "no-store",
   };
 
-  return fetch(url, requestOptions).then(handleResponse);
+  console.log(
+    "🚀 ~ file: http.ts:21 ~ `${getEnv().apiUrl}${url}`:",
+    `${getEnv().apiUrl}${url}`
+  );
+  return fetch(`${getEnv().apiUrl}${url}`, requestOptions).then(handleResponse);
 }
 
 async function handleResponse(response: Response) {

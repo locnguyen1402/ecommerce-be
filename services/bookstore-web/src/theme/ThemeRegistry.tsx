@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, ReactNode } from "react";
 import { useRecoilValue } from "recoil";
 
 import createCache from "@emotion/cache";
@@ -18,7 +18,7 @@ import { layoutStateSelector } from "@/stores/selectors";
 
 import { buildTheme } from "./theme";
 
-type Props = { children: React.ReactNode };
+type Props = { children: ReactNode };
 
 const ThemeRegistry = (props: Props) => {
   const layoutState = useRecoilValue(layoutStateSelector);

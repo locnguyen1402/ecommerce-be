@@ -1,5 +1,6 @@
-import { Box } from "@mui/material";
 import { ReactNode } from "react";
+
+import { Box } from "@mui/material";
 
 import Slider, { type Settings } from "react-slick";
 
@@ -90,7 +91,7 @@ const Carousel = (props: Props) => {
     ...props.settings,
   };
 
-  return <Slider {...settings}>{props.children}</Slider>;
+  return <Slider {...settings}>{props.children as any}</Slider>;
 };
 
 export default Carousel;

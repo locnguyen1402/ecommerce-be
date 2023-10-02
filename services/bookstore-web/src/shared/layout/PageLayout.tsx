@@ -1,4 +1,4 @@
-import { Fragment } from "react";
+import { Fragment, ReactNode, PropsWithChildren, FC } from "react";
 
 import { Box, BoxProps, Container, Toolbar } from "@mui/material";
 
@@ -7,17 +7,17 @@ import Footer from "../app/Footer";
 import FloatingTopButton from "../app/FloatingTopButton";
 
 type Props = {
-  children: React.ReactNode;
+  children: ReactNode;
   sx?: BoxProps["sx"];
-  header?: Nullable<React.ReactNode>;
+  header?: Nullable<ReactNode>;
 
-  bodyWrapper?: React.PropsWithChildren<any> | false;
+  bodyWrapper?: PropsWithChildren<any> | false;
   headerOverlap?: boolean;
 };
 
 const PageLayout = (props: Props) => {
-  let Header: Nullable<React.FC> = Header1;
-  let BodyWrapper: React.PropsWithChildren<any> = Container;
+  let Header: Nullable<FC> = Header1;
+  let BodyWrapper: PropsWithChildren<any> = Container;
 
   if (props.bodyWrapper === false) {
     BodyWrapper = Fragment;
