@@ -24,7 +24,7 @@ const Error = () => {
           md: 8,
         }}
       >
-        <Stack spacing={2}>
+        <Stack spacing={2} alignItems="center">
           <Typography variant="h3" fontWeight="bold">
             500 Internal Server Error
           </Typography>

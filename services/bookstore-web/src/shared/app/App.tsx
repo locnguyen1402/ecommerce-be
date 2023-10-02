@@ -19,6 +19,8 @@ const App = (props: Props) => {
         defaultOptions: {
           queries: {
             retry: 0,
+            cacheTime: 0,
+            staleTime: 0,
             refetchOnWindowFocus: false,
           },
         },

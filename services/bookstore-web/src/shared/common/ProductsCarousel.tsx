@@ -1,15 +1,15 @@
-import { FC, Fragment, ReactNode } from "react";
+import { FC, Fragment, ReactNode, useMemo } from "react";
 
 import { Settings } from "react-slick";
 
 import ProductSlideSkeletonCard from "../card/ProductSlideSkeletonCard";
-import SkeletonCardList from "../card/SkeletonCardList";
-import ProductCarousel from "../lib/Carousel";
+import Carousel from "../lib/Carousel";
 
-type Props<T> = {
+type Props<T extends Record<string, any>> = {
   data: T[] | undefined;
   isLoading: boolean;
   itemRender: (item: T) => ReactNode;
+  keyField?: keyof T;
 
   pageSize?: number;
 
@@ -18,50 +18,32 @@ type Props<T> = {
   skeletonCard?: FC;
 };
 
-const ProductsCarousel = <T extends any>(props: Props<T>) => {
+const ProductsCarousel = <T extends Record<string, any>>(props: Props<T>) => {
   const pageSize = props.pageSize || 20;
-  // const SkeletonCard = props.skeletonCard || ProductSlideSkeletonCard;
+  const SkeletonCard = useMemo(
+    () => props.skeletonCard || ProductSlideSkeletonCard,
+    [props.skeletonCard]
+  );
 
   return (
     <>
-      {/* <PageSection
-        {...props.pageSectionProps}
-        sx={[
-          ...(Array.isArray(props.pageSectionProps.sx)
-            ? props.pageSectionProps.sx
-            : [props.pageSectionProps.sx]),
-          {
-            display:
-              !props.isLoading && !props.data?.length ? "none" : undefined,
-          },
-        ]}
-      >
-        
-      </PageSection> */}
       {props.isLoading ? (
-        <ProductCarousel settings={props.carouselSettings}>
-          <SkeletonCardList pageSize={pageSize} skeletonCard={ProductSlideSkeletonCard} />
-        </ProductCarousel>
+        <Carousel settings={props.carouselSettings}>
+          {Array.from(Array(pageSize).keys()).map((_, idx) => {
+            return <SkeletonCard key={idx} />;
+          })}
+        </Carousel>
       ) : (
-        <ProductCarousel settings={props.carouselSettings}>
+        <Carousel settings={props.carouselSettings}>
           {!!props.data?.length &&
             props.data.map((item, idx) => {
               return (
-                <Fragment key={idx}>{props.itemRender(item)}</Fragment>
-                // <ProductSlideCard
-                //   key={idx}
-                //   imgSrc={item.coverImageUrl}
-                //   title={item.title}
-                //   href={{
-                //     pathname: `/works/${item.id}`,
-                //     query: {
-                //       bookId: item.firstEditionId,
-                //     },
-                //   }}
-                // />
+                <Fragment key={item[props.keyField || "id"] as string}>
+                  {props.itemRender(item)}
+                </Fragment>
               );
             })}
-        </ProductCarousel>
+        </Carousel>
       )}
     </>
   );

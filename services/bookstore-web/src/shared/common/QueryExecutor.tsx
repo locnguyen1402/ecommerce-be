@@ -1,25 +1,37 @@
 "use client";
 
-import { ReactNode } from "react";
+import { ReactNode, useMemo, useState } from "react";
+
+import qs from "querystring";
 
 import { useQuery } from "@tanstack/react-query";
 
-type Props<T> = {
-  children: (val: { isLoading: boolean; data: T[] }) => ReactNode;
-  queryPromise: () => Promise<SuccessResponse<T[]>>;
+import { HttpUtils } from "@/utils";
 
-  queryKey?: string[];
+type Props<T> = {
+  url: string;
+  queryParams?: Record<string, any>;
+
+  children: (val: { isLoading: boolean; data: T[] }) => ReactNode;
 };
 
 const QueryExecutor = <T extends any>(props: Props<T>) => {
+  const queryString = useMemo(() => {
+    if (!props.queryParams) {
+      return "";
+    }
+    return qs.stringify(props.queryParams);
+  }, [props.queryParams]);
+
   const context = useQuery({
-    queryKey: !!props.queryKey?.length
-      ? props.queryKey
-      : [Math.random().toString()],
-    queryFn: props.queryPromise,
+    queryKey: [props.url, queryString],
+    queryFn: () => {
+      return HttpUtils.get<T[]>(`${props.url}?${queryString}`);
+    },
   });
 
   const data = context.data?.data || [];
+
   return props.children({
     isLoading: context.isLoading,
     data,

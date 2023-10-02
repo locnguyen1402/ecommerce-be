@@ -79,7 +79,7 @@ public class WorkRestClient : IWorkRestClient
             trendingType = val.ToString();
         }
 
-        var url = $"/trending/{trendingType.ToLower()}.json?page={query.Page}&limit={query.PageSize}";
+        var url = $"/trending/{trendingType.ToUpper()}.json?page={query.Page}&limit={query.PageSize}";
         var restRequest = new RestRequest(url);
 
         var response = await _client.ExecuteGetAsync<OLTrendingWorksResponse>(restRequest);
