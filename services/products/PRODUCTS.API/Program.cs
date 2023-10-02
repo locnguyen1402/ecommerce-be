@@ -5,6 +5,17 @@ var configuration = builder.Configuration;
 var appSettings = configuration.GetSection(nameof(AppSettings)).Get<AppSettings>()!;
 builder.Services.Configure<AppSettings>(builder.Configuration.GetSection(nameof(AppSettings)));
 
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(
+        policy =>
+        {
+            policy.WithOrigins("http://localhost:3000")
+                .AllowAnyHeader()
+                .AllowAnyMethod();
+        });
+});
+
 builder.Services.AddHttpContextAccessor();
 
 builder.Services.ConfigController();
@@ -23,6 +34,8 @@ var app = builder.Build();
 
 app.UseSwagger();
 app.UseSwaggerUI();
+
+app.UseCors();
 
 app.UseHttpsRedirection();
 

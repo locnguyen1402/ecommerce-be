@@ -21,17 +21,17 @@ public class BookRestClient : IBookRestClient
             return null;
         }
 
-        var mappedVal = _mapper.Map<OLBook, Book>(response.Data);
-
         if (Enum.TryParse(previewData.Preview, true, out BookStatus val))
         {
-            mappedVal.UpdateStatus(val);
+            response.Data.UpdateStatus(val);
         }
+
+        var mappedVal = _mapper.Map<OLBook, Book>(response.Data);
 
         return mappedVal;
     }
 
-    private async ValueTask<OLJsonSearchResult?> GetPreviewDataBook(string id)
+    private async ValueTask<OLViewApiJsonSearchResult?> GetPreviewDataBook(string id)
     {
         var jsonListData = await GetPreviewDataBooks(new string[] { id });
 
@@ -43,7 +43,7 @@ public class BookRestClient : IBookRestClient
         return jsonListData!.First();
     }
 
-    private async ValueTask<List<OLJsonSearchResult>?> GetPreviewDataBooks(string[] bookIds)
+    private async ValueTask<List<OLViewApiJsonSearchResult>?> GetPreviewDataBooks(string[] bookIds)
     {
         var bibKeys = new List<string>();
 
@@ -65,9 +65,9 @@ public class BookRestClient : IBookRestClient
 
         try
         {
-            var result = new List<OLJsonSearchResult>();
-            var jsonData = JsonSerializer.Deserialize<Dictionary<string, OLJsonSearchResult>>(response.Data, JsonConstant.JsonSerializerOptions);
-            foreach (KeyValuePair<string, OLJsonSearchResult> entry in jsonData)
+            var result = new List<OLViewApiJsonSearchResult>();
+            var jsonData = JsonSerializer.Deserialize<Dictionary<string, OLViewApiJsonSearchResult>>(response.Data, JsonConstant.JsonSerializerOptions);
+            foreach (KeyValuePair<string, OLViewApiJsonSearchResult> entry in jsonData)
             {
                 result.Add(entry.Value);
             }

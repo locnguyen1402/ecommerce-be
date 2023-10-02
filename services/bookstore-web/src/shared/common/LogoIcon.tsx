@@ -1,14 +1,18 @@
 "use client";
 
-import { Box, useTheme } from "@mui/material";
+import { Box, BoxProps, useTheme } from "@mui/material";
 
-const LogoIcon = () => {
+type Props = {
+  sx?: BoxProps["sx"];
+};
+
+const LogoIcon = (props: Props) => {
   const theme = useTheme();
 
   const primaryColor = theme.palette.primary.main;
 
   return (
-    <Box display="inline-flex" width={100}>
+    <Box display="inline-flex" width={100} sx={props.sx}>
       <svg
         xmlns="http://www.w3.org/2000/svg"
         version="1.1"

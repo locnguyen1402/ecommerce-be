@@ -15,4 +15,9 @@ public class SearchResultItem
     public List<string> RelatedBookImgs { get; set; } = new List<string>();
     public int? FirstPublishYear { get; set; }
     public List<IdName> Authors { get; set; } = new List<IdName>();
+    public float RatingsAverage { get; set; } = 0;
+    public int RatingsCount { get; set; } = 0;
+    public int EditionCount { get; set; } = 0;
+    public List<string> EditionKeys { get; set; } = new List<string>();
+    public string? FirstEditionId { get; set; }
 }

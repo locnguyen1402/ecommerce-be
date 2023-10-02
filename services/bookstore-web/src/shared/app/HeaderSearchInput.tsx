@@ -1,6 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
+
+import { useRouter } from "next/navigation";
 
 import {
   Box,
@@ -11,16 +13,24 @@ import {
   InputAdornment,
   Slide,
   TextField,
-  alpha,
 } from "@mui/material";
 import { SearchOutlined as SearchIcon } from "@mui/icons-material";
 
 const HeaderSearchInput = () => {
+  const router = useRouter();
   const [visible, setVisible] = useState<boolean>(false);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const openSearchBar = () => setVisible(true);
 
   const closeSearchBar = () => setVisible(false);
+
+  const onSearch = () => {
+    const keyword = inputRef.current?.value;
+
+    closeSearchBar();
+    router.push(`/search?keyword=${keyword}`);
+  };
 
   return (
     <>
@@ -35,16 +45,16 @@ const HeaderSearchInput = () => {
         <Slide direction="down" in={visible} mountOnEnter unmountOnExit>
           <Box
             sx={{
-              position: "fixed",
+              position: "absolute",
               top: 0,
               width: "100%",
               left: 0,
-              zIndex: (theme) => theme.zIndex.appBar + 1,
+              zIndex: 1,
               height: 80,
               display: "flex",
               alignItems: "center",
               backgroundColor: (theme) =>
-                `rgba(${theme.vars.palette.background.default}, 0.72)`,
+                `rgba(${theme.vars.palette.background.defaultChannel}/ 0.8)`,
               backdropFilter: "blur(6px)",
             }}
           >
@@ -61,15 +71,20 @@ const HeaderSearchInput = () => {
                 placeholder="Search"
                 autoComplete="off"
                 InputProps={{
-                  disableUnderline: true,
                   startAdornment: (
                     <InputAdornment position="start">
                       <SearchIcon />
                     </InputAdornment>
                   ),
                 }}
+                inputRef={inputRef}
+                onKeyDown={(evt) => {
+                  if (evt.key === "Enter") {
+                    onSearch();
+                  }
+                }}
               />
-              <Button sx={{ ml: 1 }} onClick={closeSearchBar}>
+              <Button sx={{ ml: 1 }} onClick={onSearch}>
                 Search
               </Button>
             </Container>

@@ -1,21 +1,30 @@
-import { Fragment } from "react";
+import { Fragment, ReactNode, PropsWithChildren, FC } from "react";
 
-import { Box, BoxProps, Container } from "@mui/material";
+import { Box, BoxProps, Container, Toolbar } from "@mui/material";
+
+import Header1 from "../app/Header1";
+import Footer from "../app/Footer";
+import FloatingTopButton from "../app/FloatingTopButton";
 
 type Props = {
-  children: React.ReactNode;
+  children: ReactNode;
   sx?: BoxProps["sx"];
-  header?: React.ReactNode;
-  footer?: React.ReactNode;
+  header?: Nullable<ReactNode>;
 
-  bodyWrapper?: React.PropsWithChildren<any> | false;
+  bodyWrapper?: PropsWithChildren<any> | false;
+  headerOverlap?: boolean;
 };
 
 const PageLayout = (props: Props) => {
-  let BodyWrapper: React.PropsWithChildren<any> = Container;
+  let Header: Nullable<FC> = Header1;
+  let BodyWrapper: PropsWithChildren<any> = Container;
 
   if (props.bodyWrapper === false) {
     BodyWrapper = Fragment;
+  }
+
+  if (props.header === false) {
+    Header = null;
   }
 
   return (
@@ -26,17 +35,28 @@ const PageLayout = (props: Props) => {
           display: "flex",
           flexDirection: "column",
           height: "100%",
+          width: "100%",
         },
         ...(Array.isArray(props.sx) ? props.sx : [props.sx]),
       ]}
     >
-      {!!props.header && props.header}
+      {!!Header && <Header />}
+      {!props.headerOverlap && <Toolbar />}
 
       <BodyWrapper>
-        <Box component="main">{props.children}</Box>
+        <Box
+          component="main"
+          sx={{
+            width: "100%",
+          }}
+        >
+          {props.children}
+        </Box>
       </BodyWrapper>
 
-      {!!props.footer && props.footer}
+      <Footer />
+
+      <FloatingTopButton />
     </Box>
   );
 };
