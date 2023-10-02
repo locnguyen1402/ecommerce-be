@@ -70,16 +70,19 @@ const ProductDetailPage = (
             }}
           </PromisesResolver>
         </Suspense>
-      </div>
 
-      <TrendingProductsCarouselSection
-        query={{
-          type: TrendingType.WEEKLY,
-        }}
-        pageSectionProps={{
-          title: "Trending: This week",
-        }}
-      />
+        <TrendingProductsCarouselSection
+          query={{
+            type: TrendingType.WEEKLY,
+          }}
+          pageSectionProps={{
+            title: "Trending: This week",
+            titleHref: {
+              pathname: `/trending/${TrendingType.WEEKLY}`,
+            },
+          }}
+        />
+      </div>
     </PageLayout>
   );
 };

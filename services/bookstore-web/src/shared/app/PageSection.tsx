@@ -1,12 +1,16 @@
 import { ReactNode } from "react";
 
+import Link, { LinkProps } from "next/link";
+
 import { Box, BoxProps, Container, Typography } from "@mui/material";
 
 type Props = {
   children: ReactNode;
   useContainer?: boolean;
-  title?: string;
   sx?: BoxProps["sx"];
+
+  title?: string;
+  titleHref?: LinkProps["href"];
 };
 
 const PageSection = (props: Props) => {
@@ -33,7 +37,17 @@ const PageSection = (props: Props) => {
             },
           }}
         >
-          <Typography variant="h3">{props.title}</Typography>
+          {!!props.titleHref ? (
+            <Box
+              component={Link}
+              href={props.titleHref}
+              sx={{ color: "unset" }}
+            >
+              <Typography variant="h3">{props.title}</Typography>
+            </Box>
+          ) : (
+            <Typography variant="h3">{props.title}</Typography>
+          )}
         </Box>
       )}
       {props.children}

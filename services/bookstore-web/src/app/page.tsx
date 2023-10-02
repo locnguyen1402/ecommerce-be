@@ -18,6 +18,9 @@ const HomePage = () => {
           }}
           pageSectionProps={{
             title: "Trending: Today",
+            titleHref: {
+              pathname: `/trending/${TrendingType.DAILY}`,
+            },
           }}
         />
 
@@ -27,6 +30,9 @@ const HomePage = () => {
           }}
           pageSectionProps={{
             title: "Trending: All Time",
+            titleHref: {
+              pathname: `/trending/${TrendingType.FOREVER}`,
+            },
           }}
         />
       </Container>
