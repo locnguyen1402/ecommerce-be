@@ -1,18 +1,42 @@
-import { faker } from "@faker-js/faker";
-import { readCsvFile, writeCsvFile } from "./src/helper";
-import { productSchemaBuilder } from "./src/schema-builder";
+import {
+  ProductBuildOption,
+  ProductCategoryBuildOption,
+  UserAddressBuildOption,
+  UserBuildOption,
+} from "./src/constant";
+import { writeCsvFile } from "./src/helper";
 
-// writeCsvFile({
-//   fileName: "test",
-//   count: 10,
-//   schemaBuilder: productSchemaBuilder,
-// });
-const res = (async function () {
-  let sha1sum = await readCsvFile({
-    fileName: "test",
-    schemaBuilder: productSchemaBuilder,
+const FOLDER_PATH = "data";
+
+async function main() {
+  const productCategories = await writeCsvFile({
+    filePath: FOLDER_PATH,
+    ...ProductCategoryBuildOption,
   });
-  console.log(sha1sum);
-})();
+  const users = await writeCsvFile({
+    filePath: FOLDER_PATH,
+    ...UserBuildOption,
+  });
 
-console.log("🚀 ~ file: index.ts:15 ~ res:", res);
+  await writeCsvFile({
+    filePath: FOLDER_PATH,
+    ...UserAddressBuildOption,
+    schemaBuilder: () =>
+      UserAddressBuildOption.schemaBuilder({
+        userIds: users.map((item) => item.id),
+      }),
+  });
+
+  await writeCsvFile({
+    filePath: FOLDER_PATH,
+    ...ProductBuildOption,
+    schemaBuilder: () =>
+      ProductBuildOption.schemaBuilder({
+        categoryIds: productCategories.map((item) => item.id),
+      }),
+  });
+}
+
+(async function () {
+  await main();
+})();

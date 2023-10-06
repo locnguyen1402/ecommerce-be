@@ -1,39 +1,53 @@
-import { pipeline } from "node:stream/promises";
 import csv from "csv-parser";
 import fs from "fs";
+import { pipeline } from "stream";
+import { promisify } from "util";
 
-export type WriteCsvFileOptions = {
+export const pipelineAsync = promisify(pipeline);
+
+export type WriteCsvFileOptions<TSchema extends Record<string, any>> = {
   filePath?: string;
   fileName: string;
-  schemaBuilder: () => Record<string, any>;
+  schemaBuilder: () => TSchema;
   count: number;
+
+  doneCb?: (insertedList: TSchema[]) => void;
 };
 
-export const writeCsvFile = (options: WriteCsvFileOptions) => {
+export const writeCsvFile = <TSchema extends Record<string, any>>(
+  options: WriteCsvFileOptions<TSchema>
+) => {
   const baseData = options.schemaBuilder();
   const headers = Object.keys(baseData);
 
-  let stream = fs.createWriteStream(`${options.fileName}.csv`);
+  let stream = fs.createWriteStream(`${options.filePath}/${options.fileName}.csv`);
   stream.write(headers.toString() + "\n");
 
-  for (let i = 0; i < options.count; i++) {
-    const data = options.schemaBuilder();
+  return new Promise<TSchema[]>((resolve, reject) => {
+    const insertedList: TSchema[] = [];
+    for (let i = 0; i < options.count; i++) {
+      const data = options.schemaBuilder();
 
-    const rowData: any[] = [];
-    headers.forEach((key) => {
-      rowData.push(data[key]);
-    });
+      const rowData: TSchema[] = [];
+      headers.forEach((key) => {
+        rowData.push(data[key]);
+      });
+      insertedList.push(data);
 
-    stream.write(rowData.toString() + "\n");
-  }
+      stream.write(rowData.toString() + "\n");
+    }
 
-  stream.end();
+    stream.end(options.doneCb);
+    resolve(insertedList);
+  });
 };
 
 export type ReadCsvFileOptions<T extends Record<string, any>> = {
   filePath?: string;
   fileName: string;
   schemaBuilder: () => T;
+
+  doneCb?: (data: T[]) => void;
 };
 
 export const readCsvFile = async <TResult extends Record<string, any>>(
@@ -42,20 +56,18 @@ export const readCsvFile = async <TResult extends Record<string, any>>(
   const baseData = options.schemaBuilder();
   const headers = Object.keys(baseData);
 
-  const reader = fs.createReadStream(`${options.fileName}.csv`);
-  const result: any[] = [];
-  const results = [];
+  const reader = fs.createReadStream(`${options.filePath}/${options.fileName}.csv`);
 
-  reader
-    .pipe(csv({ headers }))
-    .on("data", (data) => results.push(data))
-    .on("end", () => {
-      console.log(results);
-      // [
-      //   { NAME: 'Daffy Duck', AGE: '24' },
-      //   { NAME: 'Bugs Bunny', AGE: '22' }
-      // ]
-    });
-
-  return pipeline(reader)
+  return new Promise<TResult[]>((resolve, reject) => {
+    const results: TResult[] = [];
+    reader
+      .pipe(csv({ headers }))
+      .on("data", (data) => results.push(data))
+      .on("end", () => {
+        if (typeof options.doneCb === "function") {
+          options.doneCb(results);
+        }
+        resolve(results);
+      });
+  });
 };
