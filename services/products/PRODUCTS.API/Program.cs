@@ -5,6 +5,14 @@ var configuration = builder.Configuration;
 var appSettings = configuration.GetSection(nameof(AppSettings)).Get<AppSettings>()!;
 builder.Services.Configure<AppSettings>(builder.Configuration.GetSection(nameof(AppSettings)));
 
+builder.Services.ConfigDbContext<ProductDbContext>
+(
+    configuration!.GetConnectionString("DefaultConnectionString")!,
+    typeof(Program).Assembly.ToString()
+);
+
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
+
 builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(

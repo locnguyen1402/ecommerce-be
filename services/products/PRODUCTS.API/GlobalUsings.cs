@@ -7,6 +7,9 @@ global using Microsoft.EntityFrameworkCore;
 
 global using ECommerce.Products.Api.Application.Queries;
 
+global using ECommerce.Products.Infrastructure.DbContexts;
+global using ECommerce.Products.Infrastructure.Repositories;
+
 global using ECommerce.Shared.Common.Controllers;
 global using ECommerce.Shared.Common.Domain.AggregatesModels;
 global using ECommerce.Shared.Common.AppSettings;

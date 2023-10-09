@@ -38,12 +38,15 @@ public static class ServiceCollectionExtensions
         return services;
     }
 
-    public static IServiceCollection ConfigDbContext<TDbContext>(this IServiceCollection services, string connectionString) where TDbContext : DbContext
+    public static IServiceCollection ConfigDbContext<TDbContext>(this IServiceCollection services, string connectionString, string assembly) where TDbContext : DbContext
     {
         services.AddDbContext<TDbContext>(option =>
         {
             option
-                .UseNpgsql(connectionString)
+                .UseNpgsql(connectionString, opt =>
+                {
+                    opt.MigrationsAssembly(assembly);
+                })
                 .UseSnakeCaseNamingConvention();
         });
 

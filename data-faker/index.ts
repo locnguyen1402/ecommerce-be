@@ -13,19 +13,6 @@ async function main() {
     filePath: FOLDER_PATH,
     ...ProductCategoryBuildOption,
   });
-  const users = await writeCsvFile({
-    filePath: FOLDER_PATH,
-    ...UserBuildOption,
-  });
-
-  await writeCsvFile({
-    filePath: FOLDER_PATH,
-    ...UserAddressBuildOption,
-    schemaBuilder: () =>
-      UserAddressBuildOption.schemaBuilder({
-        userIds: users.map((item) => item.id),
-      }),
-  });
 
   await writeCsvFile({
     filePath: FOLDER_PATH,
@@ -35,6 +22,20 @@ async function main() {
         categoryIds: productCategories.map((item) => item.id),
       }),
   });
+  
+  // const users = await writeCsvFile({
+  //   filePath: FOLDER_PATH,
+  //   ...UserBuildOption,
+  // });
+
+  // await writeCsvFile({
+  //   filePath: FOLDER_PATH,
+  //   ...UserAddressBuildOption,
+  //   schemaBuilder: () =>
+  //     UserAddressBuildOption.schemaBuilder({
+  //       userIds: users.map((item) => item.id),
+  //     }),
+  // });
 }
 
 (async function () {

@@ -1,15 +1,14 @@
 namespace ECommerce.Products.Domain.AggregatesModels;
 public class Product : Entity
 {
-    public string Title { get; set; }
-    public string Author { get; set; } = string.Empty;
-    public int PublicationYear { get; set; }
-    public string Publisher { get; set; } = string.Empty;
-    public string? ImageUrlS { get; set; }
-    public string? ImageUrlM { get; set; }
-    public string? ImageUrlL { get; set; }
-    public Product(string title) : base()
+    public string Name { get; private set; }
+    public string? Description { get; private set; }
+    public int Price { get; private set; }
+    public string Tags { get; private set; } = string.Empty;
+    public Guid ProductCategoryId { get; private set; }
+    public ProductCategory ProductCategory { get; private set; } = null!;
+    public Product(string name) : base()
     {
-        Title = title;
+        Name = name;
     }
 }

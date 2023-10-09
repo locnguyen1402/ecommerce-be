@@ -11,7 +11,7 @@ export const productSchemaBuilder = (config: { categoryIds: string[] }) => {
   return {
     id: faker.string.uuid(),
     name: faker.commerce.productName(),
-    description: faker.commerce.productDescription(),
+    description: faker.lorem.sentences({ min: 1, max: 5 }),
     price: faker.commerce.price({
       min: 0,
       max: 100000,
