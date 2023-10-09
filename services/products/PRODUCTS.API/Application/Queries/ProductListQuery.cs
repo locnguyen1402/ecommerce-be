@@ -1,6 +1,7 @@
 namespace ECommerce.Products.Api.Application.Queries;
-public class ProductListQuery : WorkListQuery
+public class ProductListQuery : PaginationQuery
 {
+    public string? Keyword { get; set; }
 }
 
 public class ProductListQueryValidator : AbstractValidator<ProductListQuery>

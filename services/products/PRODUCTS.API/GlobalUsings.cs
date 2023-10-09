@@ -1,3 +1,5 @@
+global using Microsoft.IdentityModel.Tokens;
+
 global using AutoMapper;
 
 global using FluentValidation;
@@ -6,6 +8,8 @@ global using Microsoft.AspNetCore.Mvc;
 global using Microsoft.EntityFrameworkCore;
 
 global using ECommerce.Products.Api.Application.Queries;
+
+global using ECommerce.Products.Domain.AggregatesModels;
 
 global using ECommerce.Products.Infrastructure.DbContexts;
 global using ECommerce.Products.Infrastructure.Repositories;
@@ -20,5 +24,3 @@ global using ECommerce.Shared.Libs.Extensions;
 global using ECommerce.Shared.Integration.Extensions;
 global using ECommerce.Shared.Integration.RestClients;
 global using ECommerce.Shared.Integration.Application.Queries;
-
-

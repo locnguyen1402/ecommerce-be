@@ -19,3 +19,5 @@ global using AutoMapper;
 global using ECommerce.Shared.Common.Constants;
 global using ECommerce.Shared.Common.Domain.AggregatesModels;
 global using ECommerce.Shared.Common.Infrastructure.Data;
+
+global using ECommerce.Shared.Libs.Extensions;

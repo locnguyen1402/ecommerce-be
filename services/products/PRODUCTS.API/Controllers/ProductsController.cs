@@ -1,22 +1,44 @@
+
+
 namespace ECommerce.Products.Api.Controllers;
 public class ProductsController : BaseController
 {
     private readonly IWorkRestClient _workRestClient;
     private readonly IBookRestClient _bookRestClient;
+    private readonly IProductRepository _productRepository;
     public ProductsController(
             ILogger<ProductsController> logger,
             IMapper mapper,
             IWorkRestClient workRestClient,
-            IBookRestClient bookRestClient
+            IBookRestClient bookRestClient,
+            IProductRepository productRepository
         ) : base(logger, mapper)
     {
         _workRestClient = workRestClient;
         _bookRestClient = bookRestClient;
+        _productRepository = productRepository;
     }
 
-    [HttpGet]
+    [HttpGet()]
+    public async Task<IActionResult> GetProducts([FromQuery] ProductListQuery queryRes)
+    {
+        var query = _productRepository.Query.Include(p => p.ProductCategory).OrderBy(p => p.CreatedAt).AsQueryable();
+
+        if (!queryRes.Keyword.IsNullOrEmpty())
+        {
+            query = query.Where(p => p.Name.Contains(queryRes.Keyword!));
+        }
+
+        var result = await PaginatedList<Product>.CreateFromQuery(query, queryRes.Page, queryRes.PageSize);
+
+        result.ExposeHeader();
+
+        return Ok(result.Items);
+    }
+
+    [HttpGet("works")]
     [ProducesResponseType(typeof(List<SearchResultItem>), StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetProducts([FromQuery] ProductListQuery query)
+    public async Task<IActionResult> GetProductWorks([FromQuery] ProductWorkListQuery query)
     {
         var res = await _workRestClient.GetWorks(query);
 
