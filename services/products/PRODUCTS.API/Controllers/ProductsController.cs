@@ -1,4 +1,4 @@
-
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace ECommerce.Products.Api.Controllers;
 public class ProductsController : BaseController
@@ -20,6 +20,7 @@ public class ProductsController : BaseController
     }
 
     [HttpGet()]
+    [ProducesResponseType(typeof(List<ProductItemResponse>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetProducts([FromQuery] ProductListQuery queryRes)
     {
         var query = _productRepository.Query.Include(p => p.ProductCategory).OrderBy(p => p.CreatedAt).AsQueryable();
@@ -33,7 +34,24 @@ public class ProductsController : BaseController
 
         result.ExposeHeader();
 
-        return Ok(result.Items);
+        return Ok(_mapper.Map<List<Product>, List<ProductItemResponse>>(result.Items));
+    }
+
+    [HttpGet("{id:guid}")]
+    [ProducesResponseType(typeof(ProductDetailResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetProductDetail(Guid id)
+    {
+        var query = _productRepository.Query.Include(p => p.ProductCategory);
+
+        var result = await query.FirstOrDefaultAsync(p => p.Id == id);
+
+        if (result == null)
+        {
+            return NotFound();
+        }
+
+        return Ok(_mapper.Map<Product, ProductDetailResponse>(result));
     }
 
     [HttpGet("works")]

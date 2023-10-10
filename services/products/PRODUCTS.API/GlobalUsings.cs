@@ -8,6 +8,7 @@ global using Microsoft.AspNetCore.Mvc;
 global using Microsoft.EntityFrameworkCore;
 
 global using ECommerce.Products.Api.Application.Queries;
+global using ECommerce.Products.Api.Application.Responses;
 
 global using ECommerce.Products.Domain.AggregatesModels;
 
