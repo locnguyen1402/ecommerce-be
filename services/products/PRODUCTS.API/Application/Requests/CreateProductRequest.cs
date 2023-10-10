@@ -14,6 +14,8 @@ public class CreateProductRequestValidator : AbstractValidator<CreateProductRequ
     public CreateProductRequestValidator(IProductCategoryRepository productCategoryRepository)
     {
         RuleFor(b => b.Name)
+            .NotNull()
+            .NotEmpty()
             .MaximumLength(100);
         RuleFor(b => b.Description)
             .MaximumLength(250);

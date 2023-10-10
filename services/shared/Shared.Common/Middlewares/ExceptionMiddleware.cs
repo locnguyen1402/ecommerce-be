@@ -22,8 +22,7 @@ public class ExceptionMiddleware : IMiddleware
                 }
             }
 
-            ProblemDetails problemDetails = null!;
-
+            ProblemDetails problemDetails;
             if (exception is BaseException except)
             {
                 problemDetails = new ProblemDetails()
