@@ -1,3 +1,6 @@
+using MediatR;
+using Microsoft.Extensions.DependencyInjection;
+
 namespace ECommerce.Shared.Libs.Extensions;
 public static class ServiceCollectionExtensions
 {
@@ -6,6 +9,12 @@ public static class ServiceCollectionExtensions
         var assemblies = GetAssemblies();
 
         return services.AddAutoMapper(assemblies);
+    }
+    public static IServiceCollection RegisterMediatR(this IServiceCollection services)
+    {
+        var assemblies = GetAssemblies();
+
+        return services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(assemblies));
     }
     public static IServiceCollection AddValidation(this IServiceCollection services)
     {

@@ -37,4 +37,13 @@ public class EntityRepository<TEntity> : IEntityRepository<TEntity> where TEntit
     {
         return await _dbContext.SaveChangesAsync();
     }
+
+    public async ValueTask<bool> IsExisted(Guid id)
+    {
+        return await _dbSet.AnyAsync(x => x.Id == id);
+    }
+    public EntityEntry<TEntity> CreateEntry(TEntity entity)
+    {
+        return _dbContext.Entry(entity);
+    }
 }

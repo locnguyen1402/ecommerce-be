@@ -14,7 +14,7 @@ global using FluentValidation.AspNetCore;
 
 global using Microsoft.EntityFrameworkCore;
 
-global using Microsoft.AspNetCore.Http.Json;
+global using Microsoft.AspNetCore.Http;
 
 global using Microsoft.Extensions.DependencyInjection;
 

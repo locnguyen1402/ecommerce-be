@@ -11,6 +11,7 @@ global using Microsoft.AspNetCore.Mvc;
 
 global using Microsoft.EntityFrameworkCore;
 global using Microsoft.EntityFrameworkCore.Metadata.Builders;
+global using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 global using Microsoft.Extensions.Logging;
 
@@ -19,5 +20,6 @@ global using AutoMapper;
 global using ECommerce.Shared.Common.Constants;
 global using ECommerce.Shared.Common.Domain.AggregatesModels;
 global using ECommerce.Shared.Common.Infrastructure.Data;
+global using ECommerce.Shared.Common.Exceptions;
 
 global using ECommerce.Shared.Libs.Extensions;

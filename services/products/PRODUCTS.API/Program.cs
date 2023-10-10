@@ -12,6 +12,9 @@ builder.Services.ConfigDbContext<ProductDbContext>
 );
 
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<IProductCategoryRepository, ProductCategoryRepository>();
+
+builder.Services.AddTransient<ExceptionMiddleware>();
 
 builder.Services.AddCors(options =>
 {
@@ -30,7 +33,8 @@ builder.Services.ConfigController();
 
 builder.Services
     .AddAutoMapper()
-    .AddValidation();
+    .AddValidation()
+    .RegisterMediatR();
 
 builder.Services.RegisterOLRestClient(appSettings.Integration.OpenLibrary.RestClients.BaseUrl);
 // builder.Services.RegisterOLRestClient("https://openlibrary.org");
@@ -48,6 +52,8 @@ app.UseCors();
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+
+app.UseMiddleware<ExceptionMiddleware>();
 
 app.MapControllers();
 

@@ -16,18 +16,6 @@ public class ProductItemResponseProfile : Profile
     {
         CreateMap<Product, ProductItemResponse>()
             .ForMember(p => p.Category, opt => opt.MapFrom(p => p.ProductCategory))
-            .ForMember(p => p.Tags, opt => opt.MapFrom(source => BuildTagList(source.Tags)));
-    }
-
-    private static List<string> BuildTagList(string tags)
-    {
-        var tagList = new List<string>();
-
-        if (!tags.IsNullOrEmpty())
-        {
-            tagList = tags.Split("/").ToList();
-        }
-
-        return tagList;
+            .ForMember(p => p.Tags, opt => opt.MapFrom(source => Product.BuildTagList(source.Tags)));
     }
 }
