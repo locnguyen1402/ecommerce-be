@@ -11,7 +11,7 @@ public class CreateProductRequest : IRequest<Product>
 
 public class CreateProductRequestValidator : AbstractValidator<CreateProductRequest>
 {
-    public CreateProductRequestValidator(IProductCategoryRepository productCategoryRepository)
+    public CreateProductRequestValidator()
     {
         RuleFor(b => b.Name)
             .NotNull()
@@ -34,14 +34,14 @@ public class CreateProductRequestHandler : IRequestHandler<CreateProductRequest,
     public async Task<Product> Handle(CreateProductRequest request, CancellationToken cancellationToken)
     {
         var product = new Product(request.Name, request.Description);
-        product.AddTags(request.Tags);
+        // product.AddTags(request.Tags);
         product.AssignToCategory(request.CategoryId);
 
         _productRepository.Add(product);
 
         await _productRepository.SaveChangesAsync();
 
-        await _productRepository.CreateEntry(product).Reference(p => p.ProductCategory).LoadAsync(cancellationToken);
+        await _productRepository.CreateEntry(product).Reference(p => p.Category).LoadAsync(cancellationToken);
 
         return product;
     }

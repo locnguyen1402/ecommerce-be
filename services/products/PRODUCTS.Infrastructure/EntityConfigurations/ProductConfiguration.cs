@@ -5,11 +5,14 @@ public class ProductConfiguration : BaseEntityConfiguration<Product>
     {
         base.Configure(builder);
 
-        builder.Property(e => e.Name)
+        builder.Property(e => e.Title)
             .HasMaxLength(100)
             .IsRequired();
 
-        builder.HasOne(p => p.ProductCategory)
+        builder.HasOne(p => p.Category)
+            .WithMany(p => p.Products);
+        
+        builder.HasMany(p => p.Tags)
             .WithMany(p => p.Products);
     }
 }

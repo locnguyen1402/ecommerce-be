@@ -9,7 +9,7 @@ public class UpdateProductCategoryRequest : IRequest<bool>
 
 public class UpdateProductCategoryRequestValidator : AbstractValidator<UpdateProductCategoryRequest>
 {
-    public UpdateProductCategoryRequestValidator(IProductCategoryRepository productCategoryRepository)
+    public UpdateProductCategoryRequestValidator()
     {
         RuleFor(b => b.Id)
             .NotNull()
@@ -25,9 +25,9 @@ public class UpdateProductCategoryRequestValidator : AbstractValidator<UpdatePro
 
 public class UpdateProductCategoryRequestHandler : IRequestHandler<UpdateProductCategoryRequest, bool>
 {
-    private readonly IProductCategoryRepository _productCategoryRepository;
+    private readonly ICategoryRepository _productCategoryRepository;
     public UpdateProductCategoryRequestHandler(
-        IProductCategoryRepository productCategoryRepository
+        ICategoryRepository productCategoryRepository
     )
     {
         _productCategoryRepository = productCategoryRepository;
@@ -44,7 +44,7 @@ public class UpdateProductCategoryRequestHandler : IRequestHandler<UpdateProduct
             };
         }
 
-        var isExisted = await _productCategoryRepository.Query.AnyAsync(cate => cate.Id != request.Id && cate.Name == request.Name, cancellationToken);
+        var isExisted = await _productCategoryRepository.Query.AnyAsync(cate => cate.Id != request.Id && cate.Title == request.Name, cancellationToken);
 
         if (isExisted)
         {

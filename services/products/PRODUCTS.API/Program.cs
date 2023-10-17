@@ -12,7 +12,7 @@ builder.Services.ConfigDbContext<ProductDbContext>
 );
 
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
-builder.Services.AddScoped<IProductCategoryRepository, ProductCategoryRepository>();
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 
 builder.Services.AddTransient<ExceptionMiddleware>();
 

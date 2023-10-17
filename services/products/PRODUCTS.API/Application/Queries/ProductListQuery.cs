@@ -27,20 +27,20 @@ public class ProductListQueryHandler : IRequestHandler<ProductListQuery, Paginat
     }
     public async Task<PaginatedList<Product>> Handle(ProductListQuery request, CancellationToken cancellationToken)
     {
-        var query = _productRepository.Query.Include(p => p.ProductCategory).OrderBy(p => p.CreatedAt).AsQueryable();
+        var query = _productRepository.Query.Include(p => p.Category).OrderBy(p => p.CreatedAt).AsQueryable();
 
         if (!request.Keyword.IsNullOrEmpty())
         {
-            query = query.Where(p => p.Name.Contains(request.Keyword!));
+            query = query.Where(p => p.Title.Contains(request.Keyword!));
         }
 
         if (request.CategoryId.HasValue)
         {
-            query = query.Where(p => p.ProductCategoryId == request.CategoryId);
+            query = query.Where(p => p.CategoryId == request.CategoryId);
         }
         else if (!request.CategoryIds.IsNullOrEmpty())
         {
-            query = query.Where(p => request.CategoryIds!.Contains(p.ProductCategoryId));
+            query = query.Where(p => request.CategoryIds!.Contains(p.CategoryId));
         }
 
         var result = await PaginatedList<Product>.CreateFromQuery(query, request.Page, request.PageSize);

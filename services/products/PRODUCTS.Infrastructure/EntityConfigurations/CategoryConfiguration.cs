@@ -1,11 +1,11 @@
 namespace ECommerce.Products.Infrastructure.EntityConfigurations;
-public class ProductCategoryConfiguration : BaseEntityConfiguration<ProductCategory>
+public class CategoryConfiguration : BaseEntityConfiguration<Category>
 {
-    public override void Configure(EntityTypeBuilder<ProductCategory> builder)
+    public override void Configure(EntityTypeBuilder<Category> builder)
     {
         base.Configure(builder);
 
-        builder.Property(e => e.Name)
+        builder.Property(e => e.Title)
             .HasMaxLength(100)
             .IsRequired();
 

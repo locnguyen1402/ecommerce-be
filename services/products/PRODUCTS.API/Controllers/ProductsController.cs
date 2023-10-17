@@ -2,13 +2,13 @@ namespace ECommerce.Products.Api.Controllers;
 public class ProductsController : BaseController
 {
     private readonly IProductRepository _productRepository;
-    private readonly IProductCategoryRepository _productCategoryRepository;
+    private readonly ICategoryRepository _productCategoryRepository;
     private readonly IMediator _mediator;
     public ProductsController(
             ILogger<ProductsController> logger,
             IMapper mapper,
             IProductRepository productRepository,
-            IProductCategoryRepository productCategoryRepository,
+            ICategoryRepository productCategoryRepository,
             IMediator mediator
         ) : base(logger, mapper)
     {
@@ -46,7 +46,7 @@ public class ProductsController : BaseController
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetProductDetail(Guid id)
     {
-        var query = _productRepository.Query.Include(p => p.ProductCategory);
+        var query = _productRepository.Query.Include(p => p.Category);
 
         var result = await query.FirstOrDefaultAsync(p => p.Id == id);
 

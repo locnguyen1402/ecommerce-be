@@ -12,7 +12,7 @@ public class UpdateProductRequest : IRequest<bool>
 
 public class UpdateProductRequestValidator : AbstractValidator<UpdateProductRequest>
 {
-    public UpdateProductRequestValidator(IProductCategoryRepository productCategoryRepository)
+    public UpdateProductRequestValidator()
     {
         RuleFor(b => b.Id)
             .NotNull()
@@ -34,10 +34,10 @@ public class UpdateProductRequestValidator : AbstractValidator<UpdateProductRequ
 public class UpdateProductRequestHandler : IRequestHandler<UpdateProductRequest, bool>
 {
     private readonly IProductRepository _productRepository;
-    private readonly IProductCategoryRepository _productCategoryRepository;
+    private readonly ICategoryRepository _productCategoryRepository;
     public UpdateProductRequestHandler(
         IProductRepository productRepository,
-        IProductCategoryRepository productCategoryRepository
+        ICategoryRepository productCategoryRepository
     )
     {
         _productRepository = productRepository;
@@ -67,7 +67,7 @@ public class UpdateProductRequestHandler : IRequestHandler<UpdateProductRequest,
 
         product.UpdateGeneralInfo(request.Name, request.Description);
         product.ChangePrice(request.Price);
-        product.AddTags(request.Tags);
+        // product.AddTags(request.Tags);
         product.AssignToCategory(request.CategoryId);
 
         _productRepository.Update(product);

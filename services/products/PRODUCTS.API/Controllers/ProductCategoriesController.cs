@@ -1,12 +1,12 @@
 namespace ECommerce.Products.Api.Controllers;
 public class ProductCategoriesController : BaseController
 {
-    private readonly IProductCategoryRepository _productCategoryRepository;
+    private readonly ICategoryRepository _productCategoryRepository;
     private readonly IMediator _mediator;
     public ProductCategoriesController(
             ILogger<ProductCategoriesController> logger,
             IMapper mapper,
-            IProductCategoryRepository productCategoryRepository,
+            ICategoryRepository productCategoryRepository,
             IMediator mediator
         ) : base(logger, mapper)
     {
@@ -22,14 +22,14 @@ public class ProductCategoriesController : BaseController
 
         if (!queryRes.Keyword.IsNullOrEmpty())
         {
-            query = query.Where(p => p.Name.Contains(queryRes.Keyword!));
+            query = query.Where(p => p.Title.Contains(queryRes.Keyword!));
         }
 
-        var result = await PaginatedList<ProductCategory>.CreateFromQuery(query, queryRes.Page, queryRes.PageSize);
+        var result = await PaginatedList<Category>.CreateFromQuery(query, queryRes.Page, queryRes.PageSize);
 
         result.ExposeHeader();
 
-        return Ok(_mapper.Map<List<ProductCategory>, List<ProductCategoryResponse>>(result.Items));
+        return Ok(_mapper.Map<List<Category>, List<ProductCategoryResponse>>(result.Items));
     }
     [HttpPut("{id:guid}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]

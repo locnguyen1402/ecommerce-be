@@ -11,6 +11,6 @@ public class ProductCategoryResponseProfile : Profile
 {
     public ProductCategoryResponseProfile()
     {
-        CreateMap<ProductCategory, ProductCategoryResponse>();
+        CreateMap<Category, ProductCategoryResponse>();
     }
 }
