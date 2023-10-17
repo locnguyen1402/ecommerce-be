@@ -17,6 +17,8 @@ global using Microsoft.Extensions.Logging;
 
 global using AutoMapper;
 
+global using FluentValidation;
+
 global using ECommerce.Shared.Common.Constants;
 global using ECommerce.Shared.Common.Domain.AggregatesModels;
 global using ECommerce.Shared.Common.Infrastructure.Data;

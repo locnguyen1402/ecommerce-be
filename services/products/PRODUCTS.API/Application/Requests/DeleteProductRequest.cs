@@ -13,15 +13,11 @@ public class DeleteProductRequestHandler : IRequestHandler<DeleteProductRequest,
     }
     public async Task<Guid> Handle(DeleteProductRequest request, CancellationToken cancellationToken)
     {
-        var product = await _productRepository.FindAsync(request.Id);
-
-        if (product is null)
-        {
-            throw new BaseException("Product not found", StatusCodes.Status404NotFound)
-            {
-                Title = nameof(NotFound),
-            };
-        }
+        var product = await _productRepository.FindAsync(request.Id)
+                        ?? throw new BaseException("Product not found", StatusCodes.Status404NotFound)
+                        {
+                            Title = nameof(NotFound),
+                        };
 
         _productRepository.Remove(product);
 

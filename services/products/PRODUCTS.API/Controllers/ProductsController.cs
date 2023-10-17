@@ -65,6 +65,21 @@ public class ProductsController : BaseController
         return Ok(_mapper.Map<Product, ProductDetailResponse>(result));
     }
 
+    [HttpPut("{id:guid}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> UpdateProductDetail(Guid id, [FromBody] UpdateProductRequest request)
+    {
+        if (id != request.Id)
+        {
+            return BadRequest();
+        }
+
+        await _mediator.Send(request);
+
+        return NoContent();
+    }
+
     [HttpDelete("{id:guid}")]
     [ProducesResponseType(typeof(Guid), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]

@@ -13,6 +13,17 @@ public class Product : Entity
         Description = description;
     }
 
+    public void UpdateGeneralInfo(string name, string? description)
+    {
+        Name = name;
+        Description = description;
+    }
+
+    public void ChangePrice(int price)
+    {
+        Price = price;
+    }
+
     public void AssignToCategory(Guid categoryId)
     {
         ProductCategoryId = categoryId;
