@@ -25,6 +25,14 @@ public class PaginatedList<T>
         return new PaginatedList<T>(items, page, pageSize, totalItems);
     }
 
+    public static PaginatedList<T> CreateFromList(IList<T> list, int page, int pageSize)
+    {
+        var totalItems = list.Count;
+        var items = list.ToPaginatedList(page, pageSize);
+
+        return new PaginatedList<T>(items.ToList(), page, pageSize, totalItems);
+    }
+
     public static void AttachToHeader(PaginationData paginationData)
     {
         var httpContext = new HttpContextAccessor().HttpContext;

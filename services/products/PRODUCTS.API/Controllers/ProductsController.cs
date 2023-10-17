@@ -19,16 +19,9 @@ public class ProductsController : BaseController
 
     [HttpGet]
     [ProducesResponseType(typeof(List<ProductItemResponse>), StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetProducts([FromQuery] ProductListQuery queryRes)
+    public async Task<IActionResult> GetProducts([FromQuery] ProductListQuery query)
     {
-        var query = _productRepository.Query.Include(p => p.ProductCategory).OrderBy(p => p.CreatedAt).AsQueryable();
-
-        if (!queryRes.Keyword.IsNullOrEmpty())
-        {
-            query = query.Where(p => p.Name.Contains(queryRes.Keyword!));
-        }
-
-        var result = await PaginatedList<Product>.CreateFromQuery(query, queryRes.Page, queryRes.PageSize);
+        var result = await _mediator.Send(query);
 
         result.ExposeHeader();
 

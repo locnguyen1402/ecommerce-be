@@ -1,5 +1,3 @@
-using ECommerce.Shared.Common.Validators;
-
 namespace ECommerce.Products.Api.Application.Requests;
 
 public class UpdateProductRequest : IRequest<bool>

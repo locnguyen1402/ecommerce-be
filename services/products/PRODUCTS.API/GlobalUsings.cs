@@ -24,6 +24,7 @@ global using ECommerce.Shared.Common.AppSettings;
 global using ECommerce.Shared.Common.Domain.Queries;
 global using ECommerce.Shared.Common.Exceptions;
 global using ECommerce.Shared.Common.Middlewares;
+global using ECommerce.Shared.Common.Validators;
 
 global using ECommerce.Shared.Libs.Extensions;
 

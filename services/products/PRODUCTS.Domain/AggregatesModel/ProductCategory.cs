@@ -9,4 +9,9 @@ public class ProductCategory : Entity
         Name = name;
         this.Products = new HashSet<Product>();
     }
+    public void UpdateGeneralInfo(string name, string? description)
+    {
+        Name = name;
+        Description = description;
+    }
 }

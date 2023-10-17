@@ -8,4 +8,10 @@ public static class QueryableExtensions
                     .ToListAsync();
     }
 
+    // public static IList<T> ToPaginatedList<T>(this IList<T> list, int page, int pageSize)
+    // {
+    //     return list.Skip((page - 1) * pageSize)
+    //                 .Take(pageSize)
+    //                 .ToList();
+    // }
 }
