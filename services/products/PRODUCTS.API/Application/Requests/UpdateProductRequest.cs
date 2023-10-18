@@ -6,7 +6,7 @@ public class UpdateProductRequest : IRequest<bool>
     public string Title { get; set; } = null!;
     public string? Description { get; set; }
     public int Price { get; set; }
-    public List<string> Tags { get; set; } = new List<string>();
+    public List<Guid> Tags { get; set; } = new List<Guid>();
     public Guid CategoryId { get; set; }
 }
 
@@ -34,9 +34,11 @@ public class UpdateProductRequestValidator : AbstractValidator<UpdateProductRequ
 public class UpdateProductRequestHandler : IRequestHandler<UpdateProductRequest, bool>
 {
     private readonly IProductRepository _productRepository;
+    private readonly ITagRepository _tagRepository;
     private readonly ICategoryRepository _productCategoryRepository;
     public UpdateProductRequestHandler(
         IProductRepository productRepository,
+        ITagRepository tagRepository,
         ICategoryRepository productCategoryRepository
     )
     {
@@ -45,30 +47,22 @@ public class UpdateProductRequestHandler : IRequestHandler<UpdateProductRequest,
     }
     public async Task<bool> Handle(UpdateProductRequest request, CancellationToken cancellationToken)
     {
-        var category = await _productCategoryRepository.FindAsync(request.CategoryId);
-
-        if (category is null)
+        var category = await _productCategoryRepository.FindAsync(request.CategoryId) ?? throw new BaseException("Product category not found", StatusCodes.Status404NotFound)
         {
-            throw new BaseException("Product category not found", StatusCodes.Status404NotFound)
-            {
-                Title = nameof(NotFound),
-            };
-        }
+            Title = nameof(NotFound),
+        };
 
-        var product = await _productRepository.FindAsync(request.Id);
-
-        if (product is null)
+        var product = await _productRepository.FindAsync(request.Id) ?? throw new BaseException("Product not found", StatusCodes.Status404NotFound)
         {
-            throw new BaseException("Product not found", StatusCodes.Status404NotFound)
-            {
-                Title = nameof(NotFound),
-            };
-        }
+            Title = nameof(NotFound),
+        };
 
         product.UpdateGeneralInfo(request.Title, request.Description);
         product.ChangePrice(request.Price);
-        // product.AddTags(request.Tags);
         product.AssignToCategory(request.CategoryId);
+
+        var tags = await _tagRepository.Query.Where(t => request.Tags!.Contains(t.Id)).ToListAsync(cancellationToken);
+        product.AddTags(tags);
 
         _productRepository.Update(product);
 

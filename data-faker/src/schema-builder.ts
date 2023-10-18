@@ -11,7 +11,7 @@ export const tags = [
 export const productTagSchemaBuilder = () => {
   return {
     id: faker.string.uuid(),
-    value: faker.commerce.productAdjective(),
+    value: faker.helpers.arrayElement(tags),
   };
 };
 
@@ -28,7 +28,7 @@ export const productSchemaBuilder = (config: {
       max: 100000,
       dec: 0,
     }),
-    tags: faker.helpers.arrayElement(config.tagIds),
+    // tags: faker.helpers.arrayElement(config.tagIds),
     categoryId: faker.helpers.arrayElement(config.categoryIds),
   };
 };

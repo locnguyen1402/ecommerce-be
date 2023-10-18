@@ -17,6 +17,10 @@ public class EntityRepository<TEntity> : IEntityRepository<TEntity> where TEntit
     {
         return await _dbSet.FindAsync(keyValues);
     }
+    public EntityEntry<TEntity> Attach(TEntity entity)
+    {
+        return _dbSet.Attach(entity);
+    }
     public TEntity Add(TEntity entity)
     {
         var entityEntry = _dbSet.Add(entity);

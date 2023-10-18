@@ -5,6 +5,7 @@ public interface IEntityRepository<TEntity> where TEntity : Entity
     ValueTask<bool> IsExisted(Guid id);
     ValueTask<TEntity?> FindAsync(object[] keyValues);
     ValueTask<TEntity?> FindAsync(object keyValues);
+    EntityEntry<TEntity> Attach(TEntity entity);
     TEntity Add(TEntity entity);
     TEntity Update(TEntity entity);
     void Remove(TEntity entity);

@@ -6,5 +6,8 @@ public class ProductRepository : EntityRepository<Product>, IProductRepository
     {
     }
 
-    public IQueryable<Product> IncludedQuery => this.Query.Include(p => p.Category).Include(p => p.Tags);
+    public IQueryable<Product> IncludedQuery => Query
+                                                    .Include(p => p.Category)
+                                                    .Include(p => p.ProductTags)
+                                                        .ThenInclude(p => p.Tag);
 }
