@@ -11,8 +11,9 @@ public class ProductConfiguration : BaseEntityConfiguration<Product>
 
         builder.HasOne(p => p.Category)
             .WithMany(p => p.Products);
-        
+
         builder.HasMany(p => p.Tags)
-            .WithMany(p => p.Products);
+            .WithMany(p => p.Products)
+            .UsingEntity<ProductTag>();
     }
 }

@@ -3,7 +3,7 @@ namespace ECommerce.Products.Api.Application.Requests;
 public class UpdateProductRequest : IRequest<bool>
 {
     public Guid Id { get; set; }
-    public string Name { get; set; } = null!;
+    public string Title { get; set; } = null!;
     public string? Description { get; set; }
     public int Price { get; set; }
     public List<string> Tags { get; set; } = new List<string>();
@@ -17,7 +17,7 @@ public class UpdateProductRequestValidator : AbstractValidator<UpdateProductRequ
         RuleFor(b => b.Id)
             .NotNull()
             .IsValidGuid();
-        RuleFor(b => b.Name)
+        RuleFor(b => b.Title)
             .NotNull()
             .NotEmpty()
             .MaximumLength(100);
@@ -65,7 +65,7 @@ public class UpdateProductRequestHandler : IRequestHandler<UpdateProductRequest,
             };
         }
 
-        product.UpdateGeneralInfo(request.Name, request.Description);
+        product.UpdateGeneralInfo(request.Title, request.Description);
         product.ChangePrice(request.Price);
         // product.AddTags(request.Tags);
         product.AssignToCategory(request.CategoryId);

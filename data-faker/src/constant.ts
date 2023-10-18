@@ -2,12 +2,14 @@ import {
   BuildOption,
   Product,
   ProductCategory,
+  ProductTag,
   User,
   UserAddress,
 } from "./models";
 import {
   productSchemaBuilder,
   productCategorySchemaBuilder,
+  productTagSchemaBuilder,
   userSchemaBuilder,
   userAddressSchemaBuilder,
 } from "./schema-builder";
@@ -22,6 +24,12 @@ export const ProductCategoryBuildOption: BuildOption<ProductCategory> = {
   fileName: "product_categories",
   count: 10,
   schemaBuilder: productCategorySchemaBuilder,
+};
+
+export const ProductTagBuildOption: BuildOption<ProductTag> = {
+  fileName: "product_tags",
+  count: 100,
+  schemaBuilder: productTagSchemaBuilder,
 };
 
 export const UserBuildOption: BuildOption<User> = {

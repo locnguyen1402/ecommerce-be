@@ -1,6 +1,7 @@
 import {
   ProductBuildOption,
   ProductCategoryBuildOption,
+  ProductTagBuildOption,
   UserAddressBuildOption,
   UserBuildOption,
 } from "./src/constant";
@@ -14,15 +15,20 @@ async function main() {
     ...ProductCategoryBuildOption,
   });
 
-  await writeCsvFile({
+  const productTags = await writeCsvFile({
     filePath: FOLDER_PATH,
-    ...ProductBuildOption,
-    schemaBuilder: () =>
-      ProductBuildOption.schemaBuilder({
-        categoryIds: productCategories.map((item) => item.id),
-      }),
+    ...ProductTagBuildOption,
   });
-  
+
+  // await writeCsvFile({
+  //   filePath: FOLDER_PATH,
+  //   ...ProductBuildOption,
+  //   schemaBuilder: () =>
+  //     ProductBuildOption.schemaBuilder({
+  //       categoryIds: productCategories.map((item) => item.id),
+  //     }),
+  // });
+
   // const users = await writeCsvFile({
   //   filePath: FOLDER_PATH,
   //   ...UserBuildOption,

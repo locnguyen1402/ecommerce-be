@@ -1,25 +1,34 @@
 import { faker } from "@faker-js/faker";
 
-export const productTags = faker.helpers.multiple(
-  faker.commerce.productAdjective,
-  {
-    count: 20,
-  }
-);
+export const tags = [
+  ...new Set(
+    faker.helpers.multiple(faker.commerce.productAdjective, {
+      count: 100,
+    })
+  ),
+];
 
-export const productSchemaBuilder = (config: { categoryIds: string[] }) => {
+export const productTagSchemaBuilder = () => {
   return {
     id: faker.string.uuid(),
-    name: faker.commerce.productName(),
+    value: faker.commerce.productAdjective(),
+  };
+};
+
+export const productSchemaBuilder = (config: {
+  categoryIds: string[];
+  tagIds: string[];
+}) => {
+  return {
+    id: faker.string.uuid(),
+    title: faker.commerce.productName(),
     description: faker.lorem.sentences({ min: 1, max: 5 }),
     price: faker.commerce.price({
       min: 0,
       max: 100000,
       dec: 0,
     }),
-    tags: faker.helpers
-      .arrayElements(productTags, { min: 0, max: 10 })
-      .join("/"),
+    tags: faker.helpers.arrayElement(config.tagIds),
     categoryId: faker.helpers.arrayElement(config.categoryIds),
   };
 };
@@ -27,7 +36,7 @@ export const productSchemaBuilder = (config: { categoryIds: string[] }) => {
 export const productCategorySchemaBuilder = () => {
   return {
     id: faker.string.uuid(),
-    name: faker.lorem.words({ min: 1, max: 3 }),
+    title: faker.lorem.words({ min: 1, max: 3 }),
     description: faker.lorem.paragraph({ min: 1, max: 3 }),
   };
 };

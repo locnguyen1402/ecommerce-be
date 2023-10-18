@@ -1,6 +1,7 @@
 import {
   productCategorySchemaBuilder,
   productSchemaBuilder,
+  productTagSchemaBuilder,
   userAddressSchemaBuilder,
   userSchemaBuilder,
 } from "./schema-builder";
@@ -17,6 +18,7 @@ export type BuildOption<TSchema extends Record<string, any>> = {
 
 export type Product = ReturnType<typeof productSchemaBuilder>;
 export type ProductCategory = ReturnType<typeof productCategorySchemaBuilder>;
+export type ProductTag = ReturnType<typeof productTagSchemaBuilder>;
 
 export type User = ReturnType<typeof userSchemaBuilder>;
 export type UserAddress = ReturnType<typeof userAddressSchemaBuilder>;
