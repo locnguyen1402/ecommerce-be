@@ -5,7 +5,8 @@ public class CreateProductRequest : IRequest<Guid>
     public string Title { get; set; } = null!;
     public string? Description { get; set; }
     public int Price { get; set; }
-    public List<Guid>? Tags { get; set; } = new List<Guid>();
+    public List<Guid>? TagIds { get; set; } = new();
+    public List<string>? Tags { get; set; } = new();
     public Guid CategoryId { get; set; }
 }
 
@@ -51,12 +52,17 @@ public class CreateProductRequestHandler : IRequestHandler<CreateProductRequest,
 
         var product = new Product(request.Title, request.Description);
 
-        if (!request.Tags.IsNullOrEmpty())
-        {
-            var tags = await _tagRepository.Query.Where(t => request.Tags!.Contains(t.Id)).ToListAsync(cancellationToken);
-            product.AddTags(tags);
+        var tags = new List<Tag>();
 
+        if (!request.TagIds.IsNullOrEmpty())
+        {
+            tags = await _tagRepository.Query.Where(t => request.TagIds!.Contains(t.Id)).ToListAsync(cancellationToken);
         }
+        else if (!request.Tags.IsNullOrEmpty())
+        {
+            tags = await _tagRepository.Query.Where(t => request.Tags!.Contains(t.Value)).ToListAsync(cancellationToken);
+        }
+        product.AddTags(tags);
 
         product.ChangePrice(request.Price);
         product.AssignToCategory(request.CategoryId);
