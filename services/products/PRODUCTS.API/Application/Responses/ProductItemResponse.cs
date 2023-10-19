@@ -3,7 +3,7 @@ namespace ECommerce.Products.Api.Application.Responses;
 public class ProductItemResponse
 {
     public Guid Id { get; set; }
-    public string Name { get; set; } = null!;
+    public string Title { get; set; } = null!;
     public string? Description { get; set; }
     public int Price { get; set; }
     public List<string> Tags { get; set; } = new List<string>();

@@ -16,7 +16,7 @@ import {
 
 export const ProductBuildOption: BuildOption<Product> = {
   fileName: "products",
-  count: 100000,
+  count: 20000,
   schemaBuilder: productSchemaBuilder,
 };
 

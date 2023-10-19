@@ -5,20 +5,20 @@ import {
   UserAddressBuildOption,
   UserBuildOption,
 } from "./src/constant";
-import { writeCsvFile } from "./src/helper";
+import { readCsvFile, writeCsvFile } from "./src/helper";
 
 const FOLDER_PATH = "data";
 
 async function main() {
-  const productCategories = await writeCsvFile({
-    filePath: FOLDER_PATH,
-    ...ProductCategoryBuildOption,
-  });
+  // const productCategories = await writeCsvFile({
+  //   filePath: FOLDER_PATH,
+  //   ...ProductCategoryBuildOption,
+  // });
 
-  const productTags = await writeCsvFile({
-    filePath: FOLDER_PATH,
-    ...ProductTagBuildOption,
-  });
+  // const productTags = await writeCsvFile({
+  //   filePath: FOLDER_PATH,
+  //   ...ProductTagBuildOption,
+  // });
 
   // await writeCsvFile({
   //   filePath: FOLDER_PATH,
@@ -42,6 +42,19 @@ async function main() {
   //       userIds: users.map((item) => item.id),
   //     }),
   // });
+
+  const result = await readCsvFile({
+    filePath: FOLDER_PATH,
+    ...ProductBuildOption,
+    schemaBuilder: () =>
+      ProductBuildOption.schemaBuilder({
+        categoryIds: ["sample"],
+      }),
+  });
+  console.log(
+    "🚀 ~ file: index.ts:50 ~ main ~ result:",
+    result.filter((item) => !item.categoryId)
+  );
 }
 
 (async function () {

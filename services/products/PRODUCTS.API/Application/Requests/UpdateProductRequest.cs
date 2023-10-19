@@ -42,6 +42,7 @@ public class UpdateProductRequestHandler : IRequestHandler<UpdateProductRequest,
         ICategoryRepository productCategoryRepository
     )
     {
+        _tagRepository = tagRepository;
         _productRepository = productRepository;
         _productCategoryRepository = productCategoryRepository;
     }
