@@ -1,110 +1,76 @@
 namespace ECommerce.Products.Api.Controllers;
 public class ProductsController : BaseController
 {
-    private readonly IWorkRestClient _workRestClient;
-    private readonly IBookRestClient _bookRestClient;
+    private readonly IProductRepository _productRepository;
+    private readonly IMediator _mediator;
     public ProductsController(
             ILogger<ProductsController> logger,
             IMapper mapper,
-            IWorkRestClient workRestClient,
-            IBookRestClient bookRestClient
+            IProductRepository productRepository,
+            IMediator mediator
         ) : base(logger, mapper)
     {
-        _workRestClient = workRestClient;
-        _bookRestClient = bookRestClient;
+        _productRepository = productRepository;
+        _mediator = mediator;
     }
 
     [HttpGet]
-    [ProducesResponseType(typeof(List<SearchResultItem>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(List<ProductItemResponse>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetProducts([FromQuery] ProductListQuery query)
     {
-        var res = await _workRestClient.GetWorks(query);
+        var result = await _mediator.Send(query);
 
-        PaginatedList<SearchResultItem>.AttachToHeader(res.PaginationData);
+        result.ExposeHeader();
 
-        return Ok(res.Items);
+        return Ok(_mapper.Map<List<Product>, List<ProductItemResponse>>(result.Items));
     }
 
-    [HttpGet("trending")]
-    [ProducesResponseType(typeof(List<SearchResultItem>), StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetTrendingProducts([FromQuery] TrendingProductListQuery query)
+    [HttpPost]
+    [ProducesResponseType(typeof(Guid), StatusCodes.Status200OK)]
+    public async Task<IActionResult> CreateProduct(CreateProductRequest request)
     {
-        var res = await _workRestClient.GetTrendingWorks(query);
+        var result = await _mediator.Send(request);
 
-        PaginatedList<SearchResultItem>.AttachToHeader(res.PaginationData);
-
-        return Ok(res.Items);
+        return Ok(result);
     }
 
-    [HttpGet("books/{id}")]
-    [ProducesResponseType(typeof(Book), StatusCodes.Status200OK)]
+    [HttpGet("{id:guid}")]
+    [ProducesResponseType(typeof(ProductDetailResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> GetProductBookDetail(string id)
+    public async Task<IActionResult> GetProductDetail(Guid id)
     {
-        var res = await _bookRestClient.GetBookDetail(id);
+        var query = _productRepository.IncludedQuery;
 
-        if (res is null)
+        var result = await query.FirstOrDefaultAsync(p => p.Id == id);
+
+        if (result == null)
         {
             return NotFound();
         }
 
-        return Ok(res);
+        return Ok(_mapper.Map<Product, ProductDetailResponse>(result));
     }
 
-    [HttpGet("works/{id}")]
-    [ProducesResponseType(typeof(Work), StatusCodes.Status200OK)]
+    [HttpPut("{id:guid}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> GetProductWorkDetail(string id)
+    public async Task<IActionResult> UpdateProductDetail(Guid id, [FromBody] UpdateProductRequest request)
     {
-        var res = await _workRestClient.GetWorkDetail(id);
-
-        if (res is null)
+        if (id != request.Id)
         {
-            return NotFound();
+            return BadRequest();
         }
 
-        return Ok(res);
+        await _mediator.Send(request);
+
+        return NoContent();
     }
 
-    [HttpGet("works/{id}/ratings")]
-    [ProducesResponseType(typeof(WorkRatings), StatusCodes.Status200OK)]
+    [HttpDelete("{id:guid}")]
+    [ProducesResponseType(typeof(Guid), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> GetWorkRatings(string id)
+    public async Task<IActionResult> DeleteProduct(Guid id)
     {
-        var res = await _workRestClient.GetWorkRatings(id);
-
-        if (res is null)
-        {
-            return NotFound();
-        }
-
-        return Ok(res);
-    }
-
-    [HttpGet("works/{id}/books")]
-    [ProducesResponseType(typeof(List<Book>), StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> GetProductInWorkBooks(string id, [FromQuery] PaginationQuery query)
-    {
-        var res = await _workRestClient.GetBooksInWork(id, query);
-
-        PaginatedList<Book>.AttachToHeader(res.PaginationData);
-
-        return Ok(res.Items);
-    }
-
-    [HttpGet("works/{id}/books/first")]
-    [ProducesResponseType(typeof(Book), StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> GetFirstInWorkBook(string id)
-    {
-        var res = await _workRestClient.GetFirstInWorkBook(id);
-
-        if (res is null)
-        {
-            return NotFound();
-        }
-
-        return Ok(res);
+        return Ok(await _mediator.Send(new DeleteProductRequest { Id = id }));
     }
 }

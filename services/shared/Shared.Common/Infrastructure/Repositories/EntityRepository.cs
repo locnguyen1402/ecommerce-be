@@ -17,6 +17,10 @@ public class EntityRepository<TEntity> : IEntityRepository<TEntity> where TEntit
     {
         return await _dbSet.FindAsync(keyValues);
     }
+    public EntityEntry<TEntity> Attach(TEntity entity)
+    {
+        return _dbSet.Attach(entity);
+    }
     public TEntity Add(TEntity entity)
     {
         var entityEntry = _dbSet.Add(entity);
@@ -36,5 +40,14 @@ public class EntityRepository<TEntity> : IEntityRepository<TEntity> where TEntit
     public async Task<int> SaveChangesAsync()
     {
         return await _dbContext.SaveChangesAsync();
+    }
+
+    public async ValueTask<bool> IsExisted(Guid id)
+    {
+        return await _dbSet.AnyAsync(x => x.Id == id);
+    }
+    public EntityEntry<TEntity> CreateEntry(TEntity entity)
+    {
+        return _dbContext.Entry(entity);
     }
 }

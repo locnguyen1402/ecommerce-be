@@ -17,10 +17,31 @@ public class PaginatedList<T>
         return new PaginatedList<T>(new List<T>(), page ?? 0, pageSize ?? 0, 0);
     }
 
+    public static async Task<PaginatedList<T>> CreateFromQuery(IQueryable<T> query, int page, int pageSize)
+    {
+        var totalItems = await query.CountAsync();
+        var items = await query.ToPaginatedListAsync(page, pageSize);
+
+        return new PaginatedList<T>(items, page, pageSize, totalItems);
+    }
+
+    public static PaginatedList<T> CreateFromList(IList<T> list, int page, int pageSize)
+    {
+        var totalItems = list.Count;
+        var items = list.ToPaginatedList(page, pageSize);
+
+        return new PaginatedList<T>(items.ToList(), page, pageSize, totalItems);
+    }
+
     public static void AttachToHeader(PaginationData paginationData)
     {
         var httpContext = new HttpContextAccessor().HttpContext;
 
         httpContext?.Response.Headers.Add("X-Pagination", paginationData.ToPaginationString());
+    }
+
+    public void ExposeHeader()
+    {
+        AttachToHeader(this.PaginationData);
     }
 }

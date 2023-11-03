@@ -1,0 +1,14 @@
+{
+  "name": "data-faker",
+  "version": "0.0.1",
+  "private": true,
+  "dependencies": {
+    "@faker-js/faker": "^8.1.0",
+    "csv-parser": "^3.0.0",
+    "lodash": "^4.17.21"
+  },
+  "devDependencies": {
+    "@types/lodash": "^4.14.199",
+    "@types/node": "^20.8.2"
+  }
+}

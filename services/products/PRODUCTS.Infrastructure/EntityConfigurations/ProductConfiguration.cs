@@ -6,28 +6,14 @@ public class ProductConfiguration : BaseEntityConfiguration<Product>
         base.Configure(builder);
 
         builder.Property(e => e.Title)
-            .HasMaxLength(500)
+            .HasMaxLength(100)
             .IsRequired();
 
-        builder.Property(e => e.PublicationYear)
-            .HasColumnType("smallint")
-            .HasDefaultValue(0);
+        builder.HasOne(p => p.Category)
+            .WithMany(p => p.Products);
 
-        builder.Property(e => e.Publisher)
-            .HasMaxLength(100)
-            .HasDefaultValue("''");
-
-        builder.Property(e => e.ImageUrlS)
-            .HasColumnType("text");
-
-        builder.Property(e => e.ImageUrlM)
-            .HasColumnType("text");
-
-        builder.Property(e => e.ImageUrlL)
-            .HasColumnType("text");
-
-        // builder.HasOne(p => p.ProductSaleInfo)
-        //     .WithOne(p => p.Product)
-        //     .HasForeignKey<ProductSaleInfo>(p => p.ProductId);
+        builder.HasMany(p => p.Tags)
+            .WithMany(p => p.Products)
+            .UsingEntity<ProductTag>();
     }
 }

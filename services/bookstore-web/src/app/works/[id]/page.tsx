@@ -39,14 +39,16 @@ const ProductDetailPage = async (
         bookDetail={bookDetail?.data || null}
       />
 
-      <ProductsCarouselSection
-        query={{
-          keyword,
-        }}
-        pageSectionProps={{
-          title: "You might also like",
-        }}
-      />
+      {!!keyword && (
+        <ProductsCarouselSection
+          query={{
+            keyword,
+          }}
+          pageSectionProps={{
+            title: "You might also like",
+          }}
+        />
+      )}
 
       <TrendingProductsCarouselSection
         query={{

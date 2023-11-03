@@ -18,6 +18,9 @@ const nextConfig = {
     ],
     domains: ["covers.openlibrary.org"],
   },
+  experimental: {
+    serverActions: true,
+  },
 };
 
 module.exports = nextConfig;

@@ -482,3 +482,6 @@ wwwwroot
 
 # vscode
 .vscode
+
+# dump data
+data-faker/data
