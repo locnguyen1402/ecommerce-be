@@ -1,9 +1,11 @@
+const baseUrl = "/api/ol-products";
+
 export const PRODUCTS_API = {
-  Search: "/api/products/",
-  Trending: "/api/products/trending",
-  BookDetail: "/api/products/books/{id}",
-  WorkDetail: "/api/products/works/{id}",
-  WorkRatings: "/api/products/works/{id}/ratings",
-  InWorkBooks: "/api/products/works/{id}/books",
-  FirstInWorkBook: "/api/products/works/{id}/books/first",
+  Search: `${baseUrl}/works`,
+  Trending: `${baseUrl}/trending`,
+  BookDetail: `${baseUrl}/books/{id}`,
+  WorkDetail: `${baseUrl}/works/{id}`,
+  WorkRatings: `${baseUrl}/works/{id}/ratings`,
+  InWorkBooks: `${baseUrl}/works/{id}/books`,
+  FirstInWorkBook: `${baseUrl}/works/{id}/books/first`,
 };
