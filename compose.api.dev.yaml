@@ -1,0 +1,26 @@
+version: "3.9"
+
+services:
+  catalog:
+    build:
+      context: .
+      dockerfile: containerfile.dev
+      args:
+        - APP_PATH=catalog
+        - APP_NAME=Catalog.Api
+    container_name: catalog
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    labels:
+      - app=laundry
+      - name=catalog
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 512M
+    networks:
+      - ecommerce-platform
+
+networks:
+  ecommerce-platform:
