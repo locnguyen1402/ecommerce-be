@@ -22,5 +22,6 @@
 - Database: Postgres
 
 ## Risks
+
 - Newbie with ASP.NET Core
-- Three hours of free time per day 
+- Three hours of free time per day

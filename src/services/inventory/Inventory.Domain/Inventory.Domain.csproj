@@ -1,0 +1,8 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <AssemblyName>ECommerce.Inventory.Domain</AssemblyName>
+    <RootNamespace>ECommerce.Inventory.Domain</RootNamespace>
+  </PropertyGroup>
+
+</Project>
