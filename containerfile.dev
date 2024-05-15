@@ -1,0 +1,45 @@
+FROM mcr.microsoft.com/dotnet/sdk:8.0-bookworm-slim AS build
+WORKDIR /app
+
+ARG BUILD_CONFIGURATION=Debug
+ENV ASPNETCORE_ENVIRONMENT=Development
+ENV DOTNET_USE_POLLING_FILE_WATCHER=true
+
+ARG APP_PATH
+ENV APP_PATH=$APP_PATH
+
+ARG APP_NAME
+ENV APP_NAME=$APP_NAME
+
+RUN wget https://packages.microsoft.com/config/debian/12/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
+RUN dpkg -i packages-microsoft-prod.deb
+RUN rm packages-microsoft-prod.deb
+RUN apt update && apt install libmsquic --yes
+
+RUN dotnet workload update
+RUN dotnet workload install aspire
+
+COPY "Api.sln" "api/src/Api.sln"
+COPY "Directory.Packages.props" "api/src/Directory.Packages.props"
+COPY "Directory.Build.props" "api/src/Directory.Build.props"
+
+COPY "protos" "api/src/protos"
+COPY "deploy/local/certs" "api/src/deploy/local/certs"
+COPY "libs" "api/src/libs"
+COPY "services/$APP_PATH" "api/src/services/$APP_PATH"
+COPY "shared" "api/src/shared"
+
+WORKDIR /app/api/src/services/$APP_PATH/$APP_NAME
+RUN dotnet build -c Debug
+
+FROM build as runtime
+EXPOSE 443
+ENV ASPNETCORE_HTTP_PORTS=80
+ENV ASPNETCORE_HTTPS_PORTS=443
+ENV ASPNETCORE_URLS=https://+443;http://+80
+
+COPY ./entrypoint.dev.sh entrypoint.sh
+
+RUN chmod +x ./entrypoint.sh
+
+ENTRYPOINT ["./entrypoint.sh"]
