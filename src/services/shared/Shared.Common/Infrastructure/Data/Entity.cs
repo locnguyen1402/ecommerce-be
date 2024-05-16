@@ -1,5 +1,3 @@
-using System;
-
 namespace ECommerce.Shared.Common.Infrastructure.Data;
 
 public class Entity

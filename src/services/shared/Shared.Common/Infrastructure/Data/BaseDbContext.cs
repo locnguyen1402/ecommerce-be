@@ -1,15 +1,15 @@
+using System.Reflection;
+
+using Microsoft.EntityFrameworkCore;
+
 namespace ECommerce.Shared.Common.Infrastructure.Data;
 
-public abstract class BaseDbContext : DbContext
+public abstract class BaseDbContext(DbContextOptions opts) : DbContext(opts)
 {
-    public BaseDbContext(DbContextOptions opts) : base(opts)
-    {
-    }
-
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        var entryAssembly = Assembly.GetCallingAssembly() ?? throw new NullReferenceException("entryAssembly");
+        // var entryAssembly = Assembly.GetCallingAssembly() ?? throw new NullReferenceException("entryAssembly");
 
-        modelBuilder.ApplyConfigurationsFromAssembly(entryAssembly);
+        // modelBuilder.ApplyConfigurationsFromAssembly(entryAssembly);
     }
 }

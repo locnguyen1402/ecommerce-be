@@ -43,6 +43,7 @@
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.1" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Relational" Version="8.0.1" />
     <PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.0" />
+    <PackageVersion Include="AutoMapper" Version="13.0.1" />
   </ItemGroup>
 
   <!-- Identity -->

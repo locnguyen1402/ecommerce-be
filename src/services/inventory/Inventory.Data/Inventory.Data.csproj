@@ -7,11 +7,13 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.DataProtection.EntityFrameworkCore" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational"  />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" />
   </ItemGroup>
 
   <!-- Dependencies -->
   <ItemGroup>
+    <ProjectReference Include="../../shared/Shared.Common/Shared.Common.csproj" />
+
     <ProjectReference Include="../Inventory.Domain/Inventory.Domain.csproj" />
   </ItemGroup>
 

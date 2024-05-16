@@ -5,4 +5,8 @@
     <RootNamespace>ECommerce.Shared.Common</RootNamespace>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational"  />
+  </ItemGroup>
+
 </Project>

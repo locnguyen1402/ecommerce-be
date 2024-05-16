@@ -1,3 +1,6 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
 using ECommerce.Shared.Common.Infrastructure.Data;
 
 namespace ECommerce.Shared.Common.Infrastructure.EntityConfigurations;

@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-using ECommerce.Inventory.Domain.AggregatesModel.Product;
+using ECommerce.Inventory.Domain.AggregatesModel;
 
 namespace ECommerce.Inventory.Data.EntityConfigurations;
 
