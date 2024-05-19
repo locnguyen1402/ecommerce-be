@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using ECommerce.Inventory.Data;
 using ECommerce.Inventory.Data.Repositories;
 using ECommerce.Inventory.Domain.AggregatesModel;
+using ECommerce.Shared.Common.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 var Configuration = builder.Configuration;
@@ -22,9 +23,17 @@ builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-app.MapGet("/", () => "Hello World!");
+// Configure the HTTP request pipeline.
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+
+app.AutoMapEndpoints(typeof(Program).Assembly);
 
 app.Run();
