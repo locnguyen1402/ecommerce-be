@@ -5,25 +5,26 @@ using ECommerce.Inventory.Data;
 using ECommerce.Inventory.Data.Repositories;
 using ECommerce.Inventory.Domain.AggregatesModel;
 using ECommerce.Shared.Common.Extensions;
+using ECommerce.Shared.Libs.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 var Configuration = builder.Configuration;
 
 // Db context
 var connectionString = Configuration.GetConnectionString("DefaultConnection")!;
-builder.Services
-    .AddDbContext<InventoryDbContext>(options =>
-    {
-        options.UseNpgsql(connectionString);
-    });
+builder.Services.ConfigDbContext<InventoryDbContext>(connectionString, typeof(Program).Assembly.ToString());
 
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 
 // Common dependencies
-builder.Services.AddHttpContextAccessor();
-builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
+builder.Services
+    .AddHttpContextAccessor()
+    .AddAutoMapper()
+    .AddValidation()
+    .RegisterMediatR();
+
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.ConfigureSwaggerGen();
 
 var app = builder.Build();
 
