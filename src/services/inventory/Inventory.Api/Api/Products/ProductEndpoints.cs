@@ -1,13 +1,16 @@
+using MediatR;
+
 using ECommerce.Shared.Common.Endpoint;
+
+using ECommerce.Inventory.Api.Products.Queries;
 
 namespace ECommerce.Inventory.Api.Endpoints;
 
-public class ProductEndpoints : MinimalEndpoint
+public class ProductEndpoints(WebApplication app) : MinimalEndpoint(app, "/products")
 {
-    public ProductEndpoints(IEndpointRouteBuilder builder) : base(builder, "/products") { }
-    public override void MapEndpoints()
+    public override void MapEndpoints(IMediator mediator)
     {
-        Builder.MapGet("/", () => "Hello from products");
+        Builder.MapGet("/", async () => await mediator.Send(new GetProductsQuery()));
 
         Builder.MapGet("/test", () => "Hello from test");
     }

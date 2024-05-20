@@ -1,8 +1,8 @@
-using Microsoft.AspNetCore.Builder;
+using MediatR;
 
 namespace ECommerce.Shared.Common.Endpoint;
 
 public interface IMinimalEndpoint
 {
-    void MapEndpoints();
+    void MapEndpoints(IMediator mediator);
 }
