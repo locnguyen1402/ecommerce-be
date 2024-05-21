@@ -11,7 +11,8 @@ public abstract class MinimalEndpoint : IMinimalEndpoint
     protected IEndpointRouteBuilder Builder { get; private set; } = null!;
     public MinimalEndpoint(WebApplication app, string basePath)
     {
-        _mediator = app.Services.GetRequiredService<IMediator>();
+        var scope = app.Services.CreateScope();
+        _mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
         Builder = app.MapGroup(basePath);
         MapEndpoints(_mediator);
     }

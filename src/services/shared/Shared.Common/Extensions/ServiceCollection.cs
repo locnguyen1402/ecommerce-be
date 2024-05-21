@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 using FluentValidation;
 using FluentValidation.AspNetCore;
+using MediatR;
 
 namespace ECommerce.Shared.Libs.Extensions;
 public static class ServiceCollectionExtensions
@@ -19,7 +20,12 @@ public static class ServiceCollectionExtensions
     {
         var assemblies = GetAssemblies();
 
-        return services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(assemblies));
+        services.AddMediatR(cfg =>
+        {
+            cfg.RegisterServicesFromAssemblies(assemblies);
+        });
+
+        return services;
     }
     public static IServiceCollection AddValidation(this IServiceCollection services)
     {

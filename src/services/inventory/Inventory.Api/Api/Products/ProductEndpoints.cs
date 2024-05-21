@@ -10,8 +10,8 @@ public class ProductEndpoints(WebApplication app) : MinimalEndpoint(app, "/produ
 {
     public override void MapEndpoints(IMediator mediator)
     {
-        Builder.MapGet("/", async () => await mediator.Send(new GetProductsQuery()));
+        Builder.MapGet("/", () => mediator.Send(new GetProductsQuery()));
 
-        Builder.MapGet("/test", () => "Hello from test");
+        Builder.MapGet("/{id}", (string id) => mediator.Send(new GetProductByIdQuery(id)));
     }
 }
