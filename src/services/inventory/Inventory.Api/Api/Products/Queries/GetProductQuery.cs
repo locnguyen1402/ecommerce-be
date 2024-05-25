@@ -25,6 +25,8 @@ public class GetProductsQueryHandler(
         var response = await query
                             .ToPaginatedListAsync(request.PagingQuery.PageIndex, request.PagingQuery.PageSize, cancellationToken);
 
+        response.PopulatePaginationInfo();
+
         return response;
     }
 }

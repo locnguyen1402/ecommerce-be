@@ -1,4 +1,9 @@
+using System.Text.Json;
+
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+
+using ECommerce.Shared.Common.Constants;
 
 namespace ECommerce.Shared.Common.Pagination;
 
@@ -30,5 +35,22 @@ public class PaginatedList<T> : List<T>, IPaginatedList<T>
         }
 
         return new PaginatedList<T>(items, page, pageSize, hasNextPage);
+    }
+
+    private IPaginatedList GetPaginationInfo()
+    {
+        return this;
+    }
+
+    public string ToJsonString()
+    {
+        return JsonSerializer.Serialize(GetPaginationInfo(), JsonConstant.JsonSerializerOptions);
+    }
+
+    public void PopulatePaginationInfo()
+    {
+        var httpContext = new HttpContextAccessor().HttpContext;
+
+        httpContext?.Response.Headers.Append(HeaderConstants.PAGINATION_KEY, ToJsonString());
     }
 }
