@@ -3,6 +3,7 @@ using System;
 using ECommerce.Inventory.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ECommerce.Inventory.DbMigrator.PostgreSQL.Migrations
 {
     [DbContext(typeof(InventoryDbContext))]
-    partial class InventoryDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240525163520_AddCategoryProduct")]
+    partial class AddCategoryProduct
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -141,14 +144,14 @@ namespace ECommerce.Inventory.DbMigrator.PostgreSQL.Migrations
             modelBuilder.Entity("ECommerce.Inventory.Domain.AggregatesModel.CategoryProduct", b =>
                 {
                     b.HasOne("ECommerce.Inventory.Domain.AggregatesModel.Category", "Category")
-                        .WithMany("CategoryProducts")
+                        .WithMany()
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_category_products_categories_category_id");
 
                     b.HasOne("ECommerce.Inventory.Domain.AggregatesModel.Product", "Product")
-                        .WithMany("CategoryProducts")
+                        .WithMany()
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
@@ -162,13 +165,6 @@ namespace ECommerce.Inventory.DbMigrator.PostgreSQL.Migrations
             modelBuilder.Entity("ECommerce.Inventory.Domain.AggregatesModel.Category", b =>
                 {
                     b.Navigation("Categories");
-
-                    b.Navigation("CategoryProducts");
-                });
-
-            modelBuilder.Entity("ECommerce.Inventory.Domain.AggregatesModel.Product", b =>
-                {
-                    b.Navigation("CategoryProducts");
                 });
 #pragma warning restore 612, 618
         }
