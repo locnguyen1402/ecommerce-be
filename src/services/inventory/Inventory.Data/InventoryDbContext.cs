@@ -14,6 +14,7 @@ public class InventoryDbContext(DbContextOptions<InventoryDbContext> options) : 
     public DbSet<ProductVariant> ProductVariants => Set<ProductVariant>();
     public DbSet<ProductVariantAttributeValue> ProductVariantAttributeValues => Set<ProductVariantAttributeValue>();
     public DbSet<CategoryProduct> CategoryProducts => Set<CategoryProduct>();
+    public DbSet<ProductProductAttribute> ProductProductAttributes => Set<ProductProductAttribute>();
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfiguration(new CategoryEntityConfiguration());

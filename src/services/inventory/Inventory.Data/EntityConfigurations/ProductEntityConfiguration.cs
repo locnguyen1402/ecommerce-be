@@ -36,5 +36,21 @@ public class ProductEntityConfiguration : BaseEntityConfiguration<Product>
                         .HasForeignKey(cp => cp.ProductId);
                 }
             );
+
+        builder.HasMany(p => p.ProductAttributes)
+            .WithMany(p => p.Products)
+            .UsingEntity<ProductProductAttribute>(
+                p => {
+                    p.HasKey(ppa => new { ppa.ProductId, ppa.ProductAttributeId });
+
+                    p.HasOne(ppa => ppa.Product)
+                        .WithMany(p => p.ProductProductAttributes)
+                        .HasForeignKey(ppa => ppa.ProductId);
+
+                    p.HasOne(ppa => ppa.ProductAttribute)
+                        .WithMany(p => p.ProductProductAttributes)
+                        .HasForeignKey(ppa => ppa.ProductAttributeId);
+                }
+            );
     }
 }
