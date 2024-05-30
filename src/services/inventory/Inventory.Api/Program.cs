@@ -13,7 +13,10 @@ var Configuration = builder.Configuration;
 var connectionString = Configuration.GetConnectionString("DefaultConnection")!;
 builder.Services.ConfigDbContext<InventoryDbContext>(connectionString, typeof(Program).Assembly.ToString());
 
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<IProductAttributeRepository, ProductAttributeRepository>();
+builder.Services.AddScoped<IProductVariantRepository, ProductVariantRepository>();
 
 // Common dependencies
 builder.Services

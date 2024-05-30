@@ -20,16 +20,11 @@ public class ProductEntityConfiguration : BaseEntityConfiguration<Product>
             .IsRequired()
             .HasMaxLength(150);
 
-        builder.Property(p => p.Price)
-            .IsRequired();
-
-        builder.Property(p => p.Quantity)
-            .IsRequired();
-
         builder.HasMany(p => p.Categories)
             .WithMany(c => c.Products)
             .UsingEntity<CategoryProduct>(
-                p => {
+                p =>
+                {
                     p.HasKey(cp => new { cp.CategoryId, cp.ProductId });
 
                     p.HasOne(cp => cp.Category)
