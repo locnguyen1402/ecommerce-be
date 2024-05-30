@@ -1,16 +1,15 @@
-// namespace ECommerce.Shared.Common.Infrastructure.Data;
+using System.Reflection;
 
-// public abstract class BaseDbContext : DbContext
-// {
-//     public BaseDbContext(DbContextOptions opts) : base(opts)
-//     {
+using Microsoft.EntityFrameworkCore;
 
-//     }
+namespace ECommerce.Shared.Common.Infrastructure.Data;
 
-//     protected override void OnModelCreating(ModelBuilder modelBuilder)
-//     {
-//         var entryAssembly = Assembly.GetCallingAssembly() ?? throw new NullReferenceException("entryAssembly");
+public abstract class BaseDbContext(DbContextOptions opts) : DbContext(opts)
+{
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        // var entryAssembly = Assembly.GetCallingAssembly() ?? throw new NullReferenceException("entryAssembly");
 
-//         modelBuilder.ApplyConfigurationsFromAssembly(entryAssembly);
-//     }
-// }
+        // modelBuilder.ApplyConfigurationsFromAssembly(entryAssembly);
+    }
+}

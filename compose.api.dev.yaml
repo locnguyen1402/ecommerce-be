@@ -1,19 +1,21 @@
 version: "3.9"
 
 services:
-  catalog:
+  inventory:
     build:
       context: .
       dockerfile: containerfile.dev
       args:
-        - APP_PATH=catalog
-        - APP_NAME=Catalog.Api
-    container_name: catalog
+        - APP_PATH=inventory
+        - APP_NAME=Inventory.Api
+    container_name: inventory
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
     labels:
-      - app=laundry
-      - name=catalog
+      - app=ecommerce
+      - name=inventory
+    ports:
+      - 10002:80
     deploy:
       resources:
         limits:

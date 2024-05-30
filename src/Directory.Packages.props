@@ -43,6 +43,7 @@
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.1" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Relational" Version="8.0.1" />
     <PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.0" />
+    <PackageVersion Include="AutoMapper" Version="13.0.1" />
   </ItemGroup>
 
   <!-- Identity -->
@@ -65,7 +66,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageVersion Include="FluentValidation" Version="11.9.0" />
+    <PackageVersion Include="FluentValidation" Version="11.9.1" />
+    <PackageVersion Include="FluentValidation.DependencyInjectionExtensions" Version="11.9.1" />
+    <PackageVersion Include="FluentValidation.AspNetCore" Version="11.3.0" />
+    <PackageVersion Include="MediatR" Version="12.2.0" />
   </ItemGroup>
 
   <!-- Open Api -->

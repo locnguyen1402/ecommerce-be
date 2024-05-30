@@ -19,15 +19,11 @@ RUN apt update && apt install libmsquic --yes
 RUN dotnet workload update
 RUN dotnet workload install aspire
 
-COPY "Api.sln" "api/src/Api.sln"
-COPY "Directory.Packages.props" "api/src/Directory.Packages.props"
-COPY "Directory.Build.props" "api/src/Directory.Build.props"
-
-COPY "protos" "api/src/protos"
-COPY "deploy/local/certs" "api/src/deploy/local/certs"
-COPY "libs" "api/src/libs"
-COPY "services/$APP_PATH" "api/src/services/$APP_PATH"
-COPY "shared" "api/src/shared"
+COPY "ecommerce-platform.sln" "api/src/ecommerce-platform.sln"
+COPY "src/Directory.Packages.props" "api/src/Directory.Packages.props"
+COPY "src/Directory.Build.props" "api/src/Directory.Build.props"
+COPY "src/services/$APP_PATH" "api/src/services/$APP_PATH"
+COPY "src/services/shared" "api/src/shared"
 
 WORKDIR /app/api/src/services/$APP_PATH/$APP_NAME
 RUN dotnet build -c Debug
@@ -36,7 +32,8 @@ FROM build as runtime
 EXPOSE 443
 ENV ASPNETCORE_HTTP_PORTS=80
 ENV ASPNETCORE_HTTPS_PORTS=443
-ENV ASPNETCORE_URLS=https://+443;http://+80
+# ENV ASPNETCORE_URLS=https://+443;http://+80
+ENV ASPNETCORE_URLS=http://+80
 
 COPY ./entrypoint.dev.sh entrypoint.sh
 
