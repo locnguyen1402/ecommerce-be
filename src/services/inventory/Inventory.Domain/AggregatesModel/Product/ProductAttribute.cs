@@ -4,7 +4,7 @@ namespace ECommerce.Inventory.Domain.AggregatesModel;
 
 public class ProductAttribute(string name) : Entity()
 {
-    public string Name { get; private set; } = name;
+    public string Name { get; private set; } = name.ToLower();
     private readonly List<ProductVariantAttributeValue> _productVariantAttributeValues = [];
     public ICollection<ProductVariantAttributeValue> ProductVariantAttributeValues => _productVariantAttributeValues;
     private readonly List<Product> _products = [];
