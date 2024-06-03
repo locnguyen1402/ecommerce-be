@@ -17,4 +17,24 @@ public class Product(string name, string slug, string? description) : Entity()
     public ICollection<ProductAttribute> ProductAttributes => _productAttributes;
     private readonly List<ProductProductAttribute> _productProductAttributes = [];
     public ICollection<ProductProductAttribute> ProductProductAttributes => _productProductAttributes;
+    public void AddAttribute(ProductAttribute attribute)
+    {
+        if (_productAttributes.Any(x => x.Id == attribute.Id))
+        {
+            return;
+        }
+
+        _productAttributes.Add(attribute);
+    }
+    public void AddAttributes(IEnumerable<ProductAttribute> attributes)
+    {
+        foreach (var attribute in attributes)
+        {
+            AddAttribute(attribute);
+        }
+    }
+    public void AddVariant(ProductVariant variant)
+    {
+        _productVariants.Add(variant);
+    }
 }

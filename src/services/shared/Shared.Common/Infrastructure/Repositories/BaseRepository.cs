@@ -7,7 +7,7 @@ public class BaseRepository<TEntity> : IBaseRepository<TEntity> where TEntity : 
 {
     protected readonly BaseDbContext _dbContext;
     protected readonly DbSet<TEntity> _dbSet;
-    public IQueryable<TEntity> Query => _dbSet.AsNoTracking();
+    public IQueryable<TEntity> Query => _dbSet;
     public BaseRepository(BaseDbContext dbContext)
     {
         _dbContext = dbContext;

@@ -17,6 +17,8 @@ public class ProductEndpoints(WebApplication app) : MinimalEndpoint(app, "/produ
 
         Builder.MapGet("/", (PagingQuery query) => mediator.Send(new GetProductsQuery(query)));
 
+        Builder.MapPost("/", (CreateProductCommand command) => mediator.Send(command));
+
         Builder.MapGet("/{id:Guid}", (Guid id) => mediator.Send(new GetProductByIdQuery(id)));
     }
 }
