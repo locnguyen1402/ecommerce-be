@@ -25,7 +25,7 @@ public class Specification<TEntity> : ISpecification<TEntity> where TEntity : cl
     public void ApplyPaging(IPagingParams pagingParams)
         => PagingParams = pagingParams;
     public void ApplyPaging(int pageIndex, int pageSize)
-        => PagingParams = new Dictionary<string, int> { { nameof(IPagingParams.PageIndex), pageIndex }, { nameof(IPagingParams.PageSize), pageSize } } as IPagingParams;
+        => PagingParams = new PagingParams(pageIndex, pageSize);
     public void AsNoTracking()
         => EnableTracking = false;
     public void AsSplitQuery()

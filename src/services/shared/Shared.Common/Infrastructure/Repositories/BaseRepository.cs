@@ -4,6 +4,7 @@ using System.Linq.Expressions;
 using ECommerce.Shared.Common.Infrastructure.Data;
 using ECommerce.Shared.Common.Infrastructure.Specification;
 using ECommerce.Shared.Common.Extensions;
+using ECommerce.Shared.Common.Pagination;
 
 namespace ECommerce.Shared.Common.Infrastructure.Repositories;
 public class BaseRepository<TEntity>(BaseDbContext dbContext) : IBaseRepository<TEntity> where TEntity : class
@@ -57,7 +58,8 @@ public class BaseRepository<TEntity>(BaseDbContext dbContext) : IBaseRepository<
     }
     public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         => await _dbContext.SaveChangesAsync(cancellationToken);
-
     public async ValueTask<IEnumerable<TEntity>> GetAsync(Specification<TEntity> specification, CancellationToken cancellationToken = default)
         => await _dbSet.Specify(specification).ToListAsync(cancellationToken);
+    public async ValueTask<IPaginatedList<TEntity>> PaginateAsync(Specification<TEntity> specification, CancellationToken cancellationToken = default)
+        => await _dbSet.Specify(specification).ToPaginatedListAsync(specification.PagingParams!, cancellationToken);
 }
