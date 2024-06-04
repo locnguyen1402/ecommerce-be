@@ -1,6 +1,6 @@
 using MediatR;
 
-namespace ECommerce.Shared.Common.Endpoint;
+namespace ECommerce.Shared.Common.Infrastructure.Endpoint;
 
 public interface IMinimalEndpoint
 {

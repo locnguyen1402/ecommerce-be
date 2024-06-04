@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace ECommerce.Shared.Common.Endpoint;
+namespace ECommerce.Shared.Common.Infrastructure.Endpoint;
 
 public abstract class MinimalEndpoint : IMinimalEndpoint
 {
@@ -17,5 +17,4 @@ public abstract class MinimalEndpoint : IMinimalEndpoint
         MapEndpoints(_mediator);
     }
     public abstract void MapEndpoints(IMediator mediator);
-
 }

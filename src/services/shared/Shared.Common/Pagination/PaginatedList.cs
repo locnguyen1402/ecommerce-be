@@ -23,6 +23,14 @@ public class PaginatedList<T> : List<T>, IPaginatedList<T>
         AddRange(items);
     }
 
+    public static IPaginatedList<T> Create(IEnumerable<T> source, int page, int pageSize)
+    {
+        var items = source.Skip((page - 1) * pageSize).Take(pageSize + 1).ToList();
+
+        var hasNextPage = items.Count > pageSize;
+
+        return new PaginatedList<T>(items, page, pageSize, hasNextPage);
+    }
 
     public static async Task<IPaginatedList<T>> CreateAsync(IQueryable<T> source, int page, int pageSize, CancellationToken cancellationToken = default)
     {

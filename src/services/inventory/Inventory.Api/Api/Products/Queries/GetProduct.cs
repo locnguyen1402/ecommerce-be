@@ -6,6 +6,7 @@ using ECommerce.Inventory.Domain.AggregatesModel;
 using ECommerce.Shared.Common.Extensions;
 using ECommerce.Shared.Common.Pagination;
 using ECommerce.Shared.Common.Queries;
+using ECommerce.Inventory.Api.Products.Specifications;
 
 namespace ECommerce.Inventory.Api.Products.Queries;
 
@@ -20,13 +21,17 @@ public class GetProductsQueryHandler(
 {
     public async Task<IPaginatedList<Product>> Handle(GetProductsQuery request, CancellationToken cancellationToken)
     {
-        var query = productRepository.Query.AsNoTracking();
+        var spec = new GetProductsSpecification();
 
-        var response = await query
-                            .ToPaginatedListAsync(request.PagingQuery.PageIndex, request.PagingQuery.PageSize, cancellationToken);
+        var response = await productRepository.GetAsync(spec, cancellationToken);
 
-        response.PopulatePaginationInfo();
+        // var query = productRepository.Query.AsNoTracking();
 
-        return response;
+        // var response = await query
+        //                     .ToPaginatedListAsync(request.PagingQuery.PageIndex, request.PagingQuery.PageSize, cancellationToken);
+
+        // response.PopulatePaginationInfo();
+
+        return response.ToPaginatedList(request.PagingQuery.PageIndex, request.PagingQuery.PageSize);
     }
 }

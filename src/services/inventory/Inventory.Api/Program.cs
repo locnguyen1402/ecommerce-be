@@ -20,6 +20,7 @@ builder.Services.AddScoped<IProductVariantRepository, ProductVariantRepository>(
 
 // Common dependencies
 builder.Services
+    .ConfigureJson()
     .AddHttpContextAccessor()
     .AddAutoMapper()
     .AddValidation()

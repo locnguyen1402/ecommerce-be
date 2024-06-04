@@ -1,8 +1,7 @@
 using MediatR;
 
-using ECommerce.Shared.Common.Endpoint;
-
 using ECommerce.Shared.Common.Queries;
+using ECommerce.Shared.Common.Infrastructure.Endpoint;
 
 using ECommerce.Inventory.Api.Products.Queries;
 using ECommerce.Inventory.Api.Products.Commands;

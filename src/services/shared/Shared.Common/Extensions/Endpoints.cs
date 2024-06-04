@@ -1,7 +1,7 @@
 using System.Reflection;
 using Microsoft.AspNetCore.Builder;
 
-using ECommerce.Shared.Common.Endpoint;
+using ECommerce.Shared.Common.Infrastructure.Endpoint;
 
 namespace ECommerce.Shared.Common.Extensions;
 public static class EndpointExtensions

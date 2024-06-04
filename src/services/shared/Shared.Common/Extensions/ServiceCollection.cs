@@ -5,11 +5,25 @@ using Microsoft.Extensions.DependencyInjection;
 
 using FluentValidation;
 using FluentValidation.AspNetCore;
-using MediatR;
+using ECommerce.Shared.Common.Constants;
+using Microsoft.AspNetCore.Http.Json;
 
 namespace ECommerce.Shared.Libs.Extensions;
 public static class ServiceCollectionExtensions
 {
+    public static IServiceCollection ConfigureJson(this IServiceCollection services)
+    {
+        services
+            .Configure<JsonOptions>(options =>
+            {
+                options.SerializerOptions.DefaultIgnoreCondition = JsonConstant.JsonSerializerOptions.DefaultIgnoreCondition;
+                options.SerializerOptions.PropertyNamingPolicy = JsonConstant.JsonSerializerOptions.PropertyNamingPolicy;
+                options.SerializerOptions.DictionaryKeyPolicy = JsonConstant.JsonSerializerOptions.DictionaryKeyPolicy;
+                options.SerializerOptions.ReferenceHandler = JsonConstant.JsonSerializerOptions.ReferenceHandler;
+            });
+
+        return services;
+    }
     public static IServiceCollection AddAutoMapper(this IServiceCollection services)
     {
         var assemblies = GetAssemblies();

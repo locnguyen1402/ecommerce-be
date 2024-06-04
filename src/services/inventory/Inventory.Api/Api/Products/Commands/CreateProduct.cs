@@ -100,8 +100,7 @@ public class CreateProductCommandHandler(
             }
         }
 
-        productRepository.Add(newProduct);
-        await productRepository.SaveChangesAsync();
+        await productRepository.AddAndSaveChangeAsync(newProduct);
 
         return new IdResponse(newProduct.Id.ToString());
     }
