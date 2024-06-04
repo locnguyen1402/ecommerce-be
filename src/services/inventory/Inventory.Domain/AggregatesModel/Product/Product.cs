@@ -11,7 +11,7 @@ public class Product(string name, string slug, string? description) : Entity()
     public ICollection<Category> Categories => _categories;
     private readonly List<CategoryProduct> _categoryProducts = [];
     public ICollection<CategoryProduct> CategoryProducts => _categoryProducts;
-    private readonly List<ProductVariant> _productVariants = [];
+    private readonly HashSet<ProductVariant> _productVariants = [];
     public ICollection<ProductVariant> ProductVariants => _productVariants;
     private readonly List<ProductAttribute> _productAttributes = [];
     public ICollection<ProductAttribute> ProductAttributes => _productAttributes;

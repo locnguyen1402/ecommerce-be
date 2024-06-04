@@ -1,28 +1,31 @@
+using System.Data;
 using Microsoft.EntityFrameworkCore;
 
-using MediatR;
 using FluentValidation;
 
 using ECommerce.Shared.Common.AggregatesModel.Response;
+using ECommerce.Shared.Common.Infrastructure.Endpoint;
+
 using ECommerce.Inventory.Domain.AggregatesModel;
-using System.Data;
 
 namespace ECommerce.Inventory.Api.Products.Commands;
 
-public class CreateProductCommand : IRequest<IdResponse>
+public record CreateProductCommand
 {
     public string Name { get; set; } = string.Empty;
     public string Slug { get; set; } = string.Empty;
     public string? Description { get; set; }
     public HashSet<Guid> Attributes { get; set; } = [];
     public List<CreatingProductVariant> Variants { get; set; } = [];
+    public HashSet<CreatingProductVariant> HashedVariants => [.. Variants];
 }
 public class CreateProductCommandValidator : AbstractValidator<CreateProductCommand>
 {
     public CreateProductCommandValidator()
     {
         RuleFor(x => x.Name)
-            .NotEmpty();
+            .NotEmpty()
+            .MaximumLength(200);
 
         RuleFor(x => x.Slug)
             .NotEmpty();
@@ -35,23 +38,31 @@ public class CreateProductCommandValidator : AbstractValidator<CreateProductComm
             .NotEmpty()
             .Must(x => x != Guid.Empty && Guid.TryParse(x.ToString(), out _));
 
+        RuleFor(x => x.Variants)
+            .Must((p, x) => x.Count == p.HashedVariants.Count)
+            .WithMessage("Variant must be unique");
+
         RuleForEach(x => x.Variants)
             .SetValidator(x => new CreateProductVariantValidator([.. x.Attributes]));
     }
 }
-public class CreateProductCommandHandler(
-    IValidator<CreateProductCommand> validator,
-    IProductRepository productRepository,
-    IProductAttributeRepository productAttributeRepository
-) : IRequestHandler<CreateProductCommand, IdResponse>
+public class CreateProductCommandHandler : IEndpointHandler
 {
-    public async Task<IdResponse> Handle(CreateProductCommand request, CancellationToken cancellationToken)
+    public Delegate Handle
+    => async (
+        CreateProductCommand request,
+        IValidator<CreateProductCommand> validator,
+        IProductRepository productRepository,
+        IProductAttributeRepository productAttributeRepository,
+        CancellationToken cancellationToken
+    ) =>
     {
-        var validationResult = validator.Validate(request);
+        var validationResult = await validator.ValidateAsync(request, cancellationToken);
         if (!validationResult.IsValid)
         {
-            throw new ValidationException(validationResult.Errors);
+            return Results.ValidationProblem(validationResult.ToDictionary());
         }
+
         if (await productRepository.Query.AnyAsync(x => x.Slug == request.Slug, cancellationToken))
         {
             throw new Exception("Slug is already existed");
@@ -100,8 +111,8 @@ public class CreateProductCommandHandler(
             }
         }
 
-        await productRepository.AddAndSaveChangeAsync(newProduct);
+        await productRepository.AddAndSaveChangeAsync(newProduct, cancellationToken);
 
-        return new IdResponse(newProduct.Id.ToString());
-    }
+        return TypedResults.Ok(new IdResponse(newProduct.Id.ToString()));
+    };
 }

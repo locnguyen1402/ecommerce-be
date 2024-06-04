@@ -1,37 +1,21 @@
-using Microsoft.EntityFrameworkCore;
-
-using MediatR;
-
 using ECommerce.Inventory.Domain.AggregatesModel;
-using ECommerce.Shared.Common.Extensions;
-using ECommerce.Shared.Common.Pagination;
 using ECommerce.Shared.Common.Queries;
 using ECommerce.Inventory.Api.Products.Specifications;
+using ECommerce.Shared.Common.Infrastructure.Endpoint;
 
 namespace ECommerce.Inventory.Api.Products.Queries;
 
-public record GetProductsQuery(PagingQuery PagingQuery) : IRequest<IPaginatedList<Product>>
+public class GetProductsQueryHandler : IEndpointHandler
 {
-    public PagingQuery PagingQuery { get; init; } = PagingQuery;
-};
-
-public class GetProductsQueryHandler(
-    IProductRepository productRepository
-) : IRequestHandler<GetProductsQuery, IPaginatedList<Product>>
-{
-    public async Task<IPaginatedList<Product>> Handle(GetProductsQuery request, CancellationToken cancellationToken)
+    public Delegate Handle
+    => async (
+        PagingQuery pagingQuery,
+        IProductRepository productRepository,
+        CancellationToken cancellationToken
+    ) =>
     {
-        var spec = new GetProductsSpecification();
+        var spec = new GetProductsSpecification(pagingQuery);
 
-        var response = await productRepository.GetAsync(spec, cancellationToken);
-
-        // var query = productRepository.Query.AsNoTracking();
-
-        // var response = await query
-        //                     .ToPaginatedListAsync(request.PagingQuery.PageIndex, request.PagingQuery.PageSize, cancellationToken);
-
-        // response.PopulatePaginationInfo();
-
-        return response.ToPaginatedList(request.PagingQuery.PageIndex, request.PagingQuery.PageSize);
-    }
+        return await productRepository.PaginateAsync(spec, cancellationToken);
+    };
 }

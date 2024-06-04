@@ -1,6 +1,6 @@
 namespace ECommerce.Shared.Common.Infrastructure.Endpoint;
 
-public interface IMinimalEndpoint
+public interface IEndpointHandler
 {
-    void MapEndpoints();
+    Delegate Handle { get; }
 }

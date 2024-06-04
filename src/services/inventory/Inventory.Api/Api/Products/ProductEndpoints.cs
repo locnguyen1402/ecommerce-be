@@ -1,5 +1,3 @@
-using MediatR;
-
 using ECommerce.Shared.Common.Queries;
 using ECommerce.Shared.Common.Infrastructure.Endpoint;
 
@@ -10,14 +8,13 @@ namespace ECommerce.Inventory.Api.Endpoints;
 
 public class ProductEndpoints(WebApplication app) : MinimalEndpoint(app, "/products")
 {
-    public override void MapEndpoints(IMediator mediator)
+    public override void MapEndpoints()
     {
-        Builder.MapPost("/attributes", (CreateProductAttributeCommand command) => mediator.Send(command));
+        Builder.MapGet<GetProductsQueryHandler>("/");
+        Builder.MapPost<CreateProductCommandHandler>("/");
+        // Builder.MapGet("/{id:Guid}", (Guid id) => mediator.Send(new GetProductByIdQuery(id)));
+        Builder.MapPost<CreateProductAttributeCommandHandler>("/attributes");
 
-        Builder.MapGet("/", (PagingQuery query) => mediator.Send(new GetProductsQuery(query)));
 
-        Builder.MapPost("/", (CreateProductCommand command) => mediator.Send(command));
-
-        Builder.MapGet("/{id:Guid}", (Guid id) => mediator.Send(new GetProductByIdQuery(id)));
     }
 }

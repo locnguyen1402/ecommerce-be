@@ -1,13 +1,14 @@
 using Microsoft.EntityFrameworkCore;
 
-using MediatR;
+using FluentValidation;
 
 using ECommerce.Shared.Common.AggregatesModel.Response;
 using ECommerce.Inventory.Domain.AggregatesModel;
+using ECommerce.Shared.Common.Infrastructure.Endpoint;
 
 namespace ECommerce.Inventory.Api.Products.Commands;
 
-public class CreateProductAttributeCommand : IRequest<IdResponse>
+public record CreateProductAttributeCommand
 {
     private string _name = string.Empty;
     public string Name
@@ -17,24 +18,43 @@ public class CreateProductAttributeCommand : IRequest<IdResponse>
     }
 }
 
-public class CreateProductAttributeCommandHandler(
-    IProductAttributeRepository productAttributeRepository
-) : IRequestHandler<CreateProductAttributeCommand, IdResponse>
+public class CreateProductAttributeCommandValidator : AbstractValidator<CreateProductAttributeCommand>
 {
-    public async Task<IdResponse> Handle(CreateProductAttributeCommand request, CancellationToken cancellationToken)
+    public CreateProductAttributeCommandValidator()
     {
-        var productAttribute = await productAttributeRepository.Query.FirstOrDefaultAsync(x => x.Name == request.Name, cancellationToken);
+        RuleFor(x => x.Name)
+            .NotEmpty()
+            .MaximumLength(20);
+    }
+}
 
-        if (productAttribute != null)
+public class CreateProductAttributeCommandHandler : IEndpointHandler
+{
+    public Delegate Handle
+    => async (
+        CreateProductAttributeCommand command,
+        IValidator<CreateProductAttributeCommand> validator,
+        IProductAttributeRepository productAttributeRepository,
+        CancellationToken cancellationToken
+    ) =>
+    {
+        var validationResult = await validator.ValidateAsync(command, cancellationToken);
+        if (!validationResult.IsValid)
         {
-            return new IdResponse(productAttribute.Id.ToString());
+            return Results.ValidationProblem(validationResult.ToDictionary());
         }
 
-        var newProductAttribute = new ProductAttribute(request.Name);
+        var existedProductAttribute = await productAttributeRepository.Query.FirstOrDefaultAsync(x => x.Name == command.Name, cancellationToken);
 
-        productAttributeRepository.Add(newProductAttribute);
-        await productAttributeRepository.SaveChangesAsync();
+        if (existedProductAttribute != null)
+        {
+            return TypedResults.Ok(new IdResponse(existedProductAttribute.Id.ToString()));
+        }
 
-        return new IdResponse(newProductAttribute.Id.ToString());
-    }
+        var newProductAttribute = new ProductAttribute(command.Name);
+
+        await productAttributeRepository.AddAndSaveChangeAsync(newProductAttribute, cancellationToken);
+
+        return TypedResults.Ok(new IdResponse(newProductAttribute.Id.ToString()));
+    };
 }
