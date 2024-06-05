@@ -7,6 +7,7 @@ using ECommerce.Shared.Common.AggregatesModel.Response;
 using ECommerce.Shared.Common.Infrastructure.Endpoint;
 
 using ECommerce.Inventory.Domain.AggregatesModel;
+using ECommerce.Inventory.Api.Products.Specifications;
 
 namespace ECommerce.Inventory.Api.Products.Commands;
 
@@ -32,7 +33,7 @@ public class CreateProductCommandValidator : AbstractValidator<CreateProductComm
 
         RuleFor(x => x.Attributes)
             .Must(x => x.Count == x.Distinct().Count())
-            .WithMessage("Attribute id must be unique");
+            .WithMessage($"{nameof(CreateProductCommandValidator)} Attribute id must be unique");
 
         RuleForEach(x => x.Attributes)
             .NotEmpty()
@@ -40,7 +41,7 @@ public class CreateProductCommandValidator : AbstractValidator<CreateProductComm
 
         RuleFor(x => x.Variants)
             .Must((p, x) => x.Count == p.HashedVariants.Count)
-            .WithMessage("Variant must be unique");
+            .WithMessage($"{nameof(CreateProductCommandValidator)} Variant must be unique");
 
         RuleForEach(x => x.Variants)
             .SetValidator(x => new CreateProductVariantValidator([.. x.Attributes]));
@@ -63,20 +64,21 @@ public class CreateProductCommandHandler : IEndpointHandler
             return Results.ValidationProblem(validationResult.ToDictionary());
         }
 
-        if (await productRepository.Query.AnyAsync(x => x.Slug == request.Slug, cancellationToken))
+        if (await productRepository.AnyAsync(x => x.Slug == request.Slug, cancellationToken))
         {
-            throw new Exception("Slug is already existed");
+            return Results.BadRequest("Slug is already taken");
         }
 
-        List<ProductAttribute>? selectedAttributes = [];
+        List<ProductAttribute> selectedAttributes = [];
 
         if (request.Attributes.Count != 0)
         {
-            selectedAttributes = await productAttributeRepository.Query.Where(x => request.Attributes.Contains(x.Id)).ToListAsync(cancellationToken);
+            var productAttributesSpec = new GetProductAttributesSpecification(x => request.Attributes.Contains(x.Id));
+            selectedAttributes = (await productAttributeRepository.GetAsync(productAttributesSpec, cancellationToken)).ToList();
 
             if (selectedAttributes.Count != request.Attributes.Count)
             {
-                throw new Exception("Some attributes are not found");
+                return Results.BadRequest("Some attributes are not found");
             }
         }
 
@@ -91,23 +93,7 @@ public class CreateProductCommandHandler : IEndpointHandler
         {
             foreach (var variant in request.Variants)
             {
-                var newVariant = new ProductVariant(variant.Stock, variant.Price);
-
-                if (variant.Values.Count != 0)
-                {
-                    foreach (var value in variant.Values)
-                    {
-                        var newValue = new ProductVariantAttributeValue(value.Value)
-                        {
-                            ProductAttribute = selectedAttributes.Find(x => x.Id == value.ProductAttributeId)!
-
-                        };
-
-                        newVariant.AddAttributeValue(newValue);
-                    }
-                }
-
-                newProduct.AddVariant(newVariant);
+                AddVariantToProduct(newProduct, variant, selectedAttributes);
             }
         }
 
@@ -115,4 +101,24 @@ public class CreateProductCommandHandler : IEndpointHandler
 
         return TypedResults.Ok(new IdResponse(newProduct.Id.ToString()));
     };
+
+    private static void AddVariantToProduct(Product product, CreatingProductVariant variant, List<ProductAttribute> selectedAttributes)
+    {
+        var newVariant = new ProductVariant(variant.Stock, variant.Price);
+
+        if (variant.Values.Count != 0)
+        {
+            foreach (var value in variant.Values)
+            {
+                var newValue = new ProductVariantAttributeValue(value.Value)
+                {
+                    ProductAttribute = selectedAttributes.Find(x => x.Id == value.ProductAttributeId)!
+                };
+
+                newVariant.AddAttributeValue(newValue);
+            }
+        }
+
+        product.AddVariant(newVariant);
+    }
 }

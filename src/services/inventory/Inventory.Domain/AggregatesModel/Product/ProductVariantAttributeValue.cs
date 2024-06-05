@@ -8,7 +8,7 @@ public class ProductVariantAttributeValue(string value) : Entity()
     public ProductVariant? ProductVariant { get; set; }
     public Guid ProductAttributeId { get; set; }
     public ProductAttribute? ProductAttribute { get; set; }
-    public string Value { get; private set; } = value;
+    public string Value { get; private set; } = value.Trim();
 
     public override bool Equals(object? obj)
     {

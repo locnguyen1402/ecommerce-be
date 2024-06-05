@@ -14,7 +14,7 @@ public class GetProductsQueryHandler : IEndpointHandler
         CancellationToken cancellationToken
     ) =>
     {
-        var spec = new GetProductsSpecification(pagingQuery);
+        var spec = new GetProductsSpecification(pagingQuery: pagingQuery);
 
         return await productRepository.PaginateAsync(spec, cancellationToken);
     };

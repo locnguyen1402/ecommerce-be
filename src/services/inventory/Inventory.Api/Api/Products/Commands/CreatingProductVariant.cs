@@ -31,7 +31,7 @@ public class CreatingProductVariantAttributeValueVariantValidator : AbstractVali
             .NotEmpty()
             .Must(x => x != Guid.Empty && Guid.TryParse(x.ToString(), out _));
 
-        RuleFor(x => x.Value)
+        RuleFor(x => x.Value.Trim())
             .NotEmpty();
     }
 }

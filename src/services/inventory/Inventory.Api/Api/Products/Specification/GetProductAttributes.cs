@@ -6,11 +6,11 @@ using System.Linq.Expressions;
 
 namespace ECommerce.Inventory.Api.Products.Specifications;
 
-public class GetProductsSpecification : Specification<Product>
+public class GetProductAttributesSpecification : Specification<ProductAttribute>
 {
-    public GetProductsSpecification
+    public GetProductAttributesSpecification
     (
-        Expression<Func<Product, bool>>? criteria = null,
+        Expression<Func<ProductAttribute, bool>>? criteria = null,
         PagingQuery? pagingQuery = null
     )
     {
