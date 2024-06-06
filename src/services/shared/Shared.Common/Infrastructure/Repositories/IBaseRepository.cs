@@ -10,6 +10,7 @@ public interface IBaseRepository<TEntity> where TEntity : class
     ValueTask<TEntity?> FindAsync(object keyValues, CancellationToken cancellationToken = default);
     ValueTask<TEntity?> FindAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default);
     ValueTask<TEntity?> FindAsync(Specification<TEntity> specification, CancellationToken cancellationToken = default);
+    ValueTask<TResult?> FindAsync<TResult>(Specification<TEntity, TResult> specification, CancellationToken cancellationToken = default);
     ValueTask<bool> AnyAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default);
     ValueTask<int> CountAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default);
     TEntity Add(TEntity entity);
@@ -23,6 +24,8 @@ public interface IBaseRepository<TEntity> where TEntity : class
     void Delete(TEntity entity);
     Task DeleteAndSaveChangeAsync(TEntity entity, CancellationToken cancellationToken = default);
     ValueTask<IEnumerable<TEntity>> GetAsync(Specification<TEntity> specification, CancellationToken cancellationToken = default);
+    ValueTask<IEnumerable<TResult>> GetAsync<TResult>(Specification<TEntity, TResult> specification, CancellationToken cancellationToken = default);
     ValueTask<IPaginatedList<TEntity>> PaginateAsync(Specification<TEntity> specification, CancellationToken cancellationToken = default);
+    ValueTask<IPaginatedList<TResult>> PaginateAsync<TResult>(Specification<TEntity, TResult> specification, CancellationToken cancellationToken = default);
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }

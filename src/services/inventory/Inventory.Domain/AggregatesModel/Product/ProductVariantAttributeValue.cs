@@ -2,13 +2,36 @@ using ECommerce.Shared.Common.Infrastructure.Data;
 
 namespace ECommerce.Inventory.Domain.AggregatesModel;
 
-public class ProductVariantAttributeValue(string value) : Entity()
+public class ProductVariantAttributeValue : Entity
 {
     public Guid ProductVariantId { get; set; }
     public ProductVariant? ProductVariant { get; set; }
     public Guid ProductAttributeId { get; set; }
     public ProductAttribute? ProductAttribute { get; set; }
-    public string Value { get; private set; } = value.Trim();
+    public string Value { get; private set; }
+    public ProductVariantAttributeValue(string value)
+    {
+        if (value.Trim().Length == 0)
+        {
+            throw new Exception("Attribute value cannot be empty");
+        }
+
+        Value = value;
+    }
+    public ProductVariantAttributeValue(Guid attributeId, string value) : this(value)
+    {
+        ProductAttributeId = attributeId;
+        Value = value;
+    }
+    public void UpdateValue(string value)
+    {
+        if (value.Trim().Length == 0)
+        {
+            throw new Exception("Attribute value cannot be empty");
+        }
+
+        Value = value;
+    }
 
     public override bool Equals(object? obj)
     {

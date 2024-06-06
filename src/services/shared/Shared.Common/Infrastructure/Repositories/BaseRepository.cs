@@ -20,6 +20,8 @@ public class BaseRepository<TEntity>(BaseDbContext dbContext) : IBaseRepository<
         => await _dbSet.Where(predicate).FirstOrDefaultAsync(cancellationToken);
     public async ValueTask<TEntity?> FindAsync(Specification<TEntity> specification, CancellationToken cancellationToken = default)
         => await _dbSet.Specify(specification).FirstOrDefaultAsync(cancellationToken);
+    public async ValueTask<TResult?> FindAsync<TResult>(Specification<TEntity, TResult> specification, CancellationToken cancellationToken = default)
+        => await _dbSet.Specify(specification).FirstOrDefaultAsync(cancellationToken);
     public async ValueTask<bool> AnyAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
         => await _dbSet.AnyAsync(predicate, cancellationToken);
     public async ValueTask<int> CountAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
@@ -64,6 +66,10 @@ public class BaseRepository<TEntity>(BaseDbContext dbContext) : IBaseRepository<
         => await _dbContext.SaveChangesAsync(cancellationToken);
     public async ValueTask<IEnumerable<TEntity>> GetAsync(Specification<TEntity> specification, CancellationToken cancellationToken = default)
         => await _dbSet.Specify(specification).ToListAsync(cancellationToken);
+    public async ValueTask<IEnumerable<TResult>> GetAsync<TResult>(Specification<TEntity, TResult> specification, CancellationToken cancellationToken = default)
+        => await _dbSet.Specify(specification).ToListAsync(cancellationToken);
     public async ValueTask<IPaginatedList<TEntity>> PaginateAsync(Specification<TEntity> specification, CancellationToken cancellationToken = default)
+        => await _dbSet.Specify(specification).ToPaginatedListAsync(specification.PagingParams!, cancellationToken);
+    public async ValueTask<IPaginatedList<TResult>> PaginateAsync<TResult>(Specification<TEntity, TResult> specification, CancellationToken cancellationToken = default)
         => await _dbSet.Specify(specification).ToPaginatedListAsync(specification.PagingParams!, cancellationToken);
 }

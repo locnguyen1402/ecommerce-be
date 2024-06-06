@@ -16,7 +16,8 @@ public class GetProductByIdQueryHandler : IEndpointHandler
     {
         var spec = new GetProductByIdSpecification(id);
 
-        var product = await productRepository.FindAsync(spec, cancellationToken);
+        var product = await productRepository.FindAsync(id, cancellationToken);
+        // var product = await productRepository.FindAsync(spec, cancellationToken);
 
         if (product is null)
         {

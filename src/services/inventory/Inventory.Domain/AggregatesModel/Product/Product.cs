@@ -17,6 +17,12 @@ public class Product(string name, string slug, string? description) : Entity()
     public ICollection<ProductAttribute> ProductAttributes => _productAttributes;
     private readonly List<ProductProductAttribute> _productProductAttributes = [];
     public ICollection<ProductProductAttribute> ProductProductAttributes => _productProductAttributes;
+    public void UpdateGeneralInfo(string name, string slug, string? description)
+    {
+        Name = name;
+        Slug = slug;
+        Description = description ?? string.Empty;
+    }
     public void AddAttribute(ProductAttribute attribute)
     {
         if (_productAttributes.Any(x => x.Id == attribute.Id))
@@ -26,15 +32,25 @@ public class Product(string name, string slug, string? description) : Entity()
 
         _productAttributes.Add(attribute);
     }
-    public void AddAttributes(IEnumerable<ProductAttribute> attributes)
+    public void AddOrUpdateAttributes(IEnumerable<ProductAttribute> attributes)
     {
+        _productAttributes.RemoveAll(x => !attributes.Any(a => a.Id == x.Id));
+
         foreach (var attribute in attributes)
         {
-            AddAttribute(attribute);
+            if (!_productAttributes.Any(x => x.Id == attribute.Id))
+            {
+                _productAttributes.Add(attribute);
+            }
         }
     }
     public void AddVariant(ProductVariant variant)
     {
         _productVariants.Add(variant);
+    }
+    public void RemoveVariant(ProductVariant variant)
+    {
+        var test = _productVariants.Remove(variant);
+        Console.WriteLine(test);
     }
 }

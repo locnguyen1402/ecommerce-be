@@ -11,10 +11,12 @@ public class ProductEndpoints(WebApplication app) : MinimalEndpoint(app, "/produ
     {
         Builder.MapGet<GetProductsQueryHandler>("/");
         Builder.MapPost<CreateProductCommandHandler>("/");
+
         Builder.MapGet<GetProductByIdQueryHandler>("/{id:Guid}");
+        Builder.MapPut<UpdateProductCommandHandler>("/{id:Guid}");
+
         Builder.MapGet<GetProductBySlugQueryHandler>("/{slug}");
+
         Builder.MapPost<CreateProductAttributeCommandHandler>("/attributes");
-
-
     }
 }

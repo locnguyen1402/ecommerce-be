@@ -31,3 +31,8 @@ public class Specification<TEntity> : ISpecification<TEntity> where TEntity : cl
     public void AsSplitQuery()
         => EnableSplitQuery = true;
 }
+
+public class Specification<TEntity, TResult>(Expression<Func<TEntity, TResult>> selector) : Specification<TEntity>, ISpecification<TEntity, TResult> where TEntity : class
+{
+    public Expression<Func<TEntity, TResult>> Selector { get; private set; } = selector;
+}

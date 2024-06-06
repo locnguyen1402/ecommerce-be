@@ -4,33 +4,20 @@ using ECommerce.Shared.Common.Helper;
 
 namespace ECommerce.Inventory.Api.Products.Requests;
 
-public class CreatingProductVariantRequest
+public class UpdatingProductVariantRequest : CreatingProductVariantRequest
 {
-    public int Stock { get; set; }
-    public decimal Price { get; set; }
-    public HashSet<CreatingProductVariantAttributeRequest> Values { get; set; } = [];
-    public HashSet<Guid> ProductAttributeIds => Values.Select(x => x.ProductAttributeId).ToHashSet();
-
-    public override bool Equals(object? obj)
-    {
-        if (obj == null || GetType() != obj.GetType())
-        {
-            return false;
-        }
-
-        var other = (CreatingProductVariantRequest)obj;
-        return Values.SetEquals(other.Values);
-    }
-
-    public override int GetHashCode()
-        => HashCode.Combine(HashCodeHelper.GetListHashCode(Values, true));
+    public Guid? Id { get; set; }
 }
 
-public class CreatingProductVariantRequestValidator : AbstractValidator<CreatingProductVariantRequest>
+public class UpdatingProductVariantRequestValidator : AbstractValidator<UpdatingProductVariantRequest>
 {
-    private string PrefixErrorMessage => nameof(CreatingProductVariantRequestValidator);
-    public CreatingProductVariantRequestValidator()
+    private string PrefixErrorMessage => nameof(UpdatingProductVariantRequestValidator);
+    public UpdatingProductVariantRequestValidator()
     {
+        RuleFor(x => x.Id)
+            .Must(id => id == null || Guid.TryParse(id.ToString(), out _))
+            .WithMessage($"{PrefixErrorMessage} Invalid Id format");
+
         RuleFor(x => x.Stock)
             .GreaterThanOrEqualTo(0);
 
@@ -44,7 +31,7 @@ public class CreatingProductVariantRequestValidator : AbstractValidator<Creating
         RuleForEach(x => x.Values)
             .SetValidator(new CreatingProductVariantAttributeRequestValidator());
     }
-    public CreatingProductVariantRequestValidator(List<Guid> productAttributeIds) : this()
+    public UpdatingProductVariantRequestValidator(List<Guid> productAttributeIds) : this()
     {
         RuleFor(x => x.Values)
             .Must(x => x.Count == productAttributeIds.Count)

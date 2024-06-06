@@ -2,21 +2,26 @@ using FluentValidation;
 
 namespace ECommerce.Inventory.Api.Products.Requests;
 
-public class CreatingProductRequest
+public class UpdatingProductRequest
 {
+    public Guid Id { get; set; }
     public string Name { get; set; } = string.Empty;
     public string Slug { get; set; } = string.Empty;
     public string? Description { get; set; }
     public HashSet<Guid> Attributes { get; set; } = [];
-    public List<CreatingProductVariantRequest> Variants { get; set; } = [];
-    public HashSet<CreatingProductVariantRequest> HashedVariants => [.. Variants];
+    public List<UpdatingProductVariantRequest> Variants { get; set; } = [];
+    public HashSet<UpdatingProductVariantRequest> HashedVariants => [.. Variants];
 }
 
-public class CreatingProductRequestValidator : AbstractValidator<CreatingProductRequest>
+public class UpdatingProductRequestValidator : AbstractValidator<UpdatingProductRequest>
 {
-    private string PrefixErrorMessage => nameof(CreatingProductRequestValidator);
-    public CreatingProductRequestValidator()
+    private string PrefixErrorMessage => nameof(UpdatingProductRequestValidator);
+    public UpdatingProductRequestValidator()
     {
+        RuleFor(x => x.Id)
+            .Must(id => id != Guid.Empty && Guid.TryParse(id.ToString(), out _))
+            .WithMessage($"{PrefixErrorMessage} Invalid Id format");
+
         RuleFor(x => x.Name)
             .NotEmpty()
             .MaximumLength(200);

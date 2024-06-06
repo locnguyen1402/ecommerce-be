@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using FluentValidation;
 
 using ECommerce.Shared.Common.AggregatesModel.Response;
@@ -7,32 +8,46 @@ using ECommerce.Inventory.Domain.AggregatesModel;
 using ECommerce.Inventory.Api.Products.Specifications;
 using ECommerce.Inventory.Api.Products.Requests;
 using ECommerce.Inventory.Api.Utilities;
+using ECommerce.Inventory.Api.Products.Responses;
 
 namespace ECommerce.Inventory.Api.Products.Commands;
 
-public class CreateProductCommandHandler : IEndpointHandler
+public class UpdateProductCommandHandler : IEndpointHandler
 {
     public Delegate Handle
     => async (
-        CreatingProductRequest request,
-        IValidator<CreatingProductRequest> validator,
+        Guid id,
+        UpdatingProductRequest request,
+        IValidator<UpdatingProductRequest> validator,
         IProductRepository productRepository,
         IProductAttributeRepository productAttributeRepository,
         CancellationToken cancellationToken
     ) =>
     {
+        if (id != request.Id)
+        {
+            return Results.BadRequest();
+        }
+
         var validationResult = await validator.ValidateAsync(request, cancellationToken);
         if (!validationResult.IsValid)
         {
             return Results.ValidationProblem(validationResult.ToDictionary());
         }
 
-        if (await productRepository.AnyAsync(x => x.Slug == request.Slug, cancellationToken))
+        var product = await productRepository.Query
+                        .Include(p => p.ProductAttributes)
+                        .Include(p => p.ProductVariants)
+                            .ThenInclude(pv => pv.ProductVariantAttributeValues)
+                        .FirstOrDefaultAsync(p => p.Id == id, cancellationToken);
+
+        if (product == null)
         {
-            return Results.BadRequest("Slug is already taken");
+            return Results.NotFound();
         }
 
-        var newProduct = new Product(request.Name, request.Slug, request.Description);
+        product.UpdateGeneralInfo(request.Name, request.Slug, request.Description);
+
         List<ProductAttribute> selectedAttributes = [];
 
         if (request.Attributes.Count != 0)
@@ -45,19 +60,13 @@ public class CreateProductCommandHandler : IEndpointHandler
                 return Results.BadRequest("Some attributes are not found");
             }
 
-            newProduct.AddOrUpdateAttributes(selectedAttributes);
+            product.AddOrUpdateAttributes(selectedAttributes);
         }
 
-        if (request.Variants.Count != 0)
-        {
-            foreach (var variant in request.Variants)
-            {
-                ProductUtils.AddVariantToProduct(newProduct, variant);
-            }
-        }
+        ProductUtils.UpdateVariantsInProduct(product, request.Variants);
 
-        await productRepository.AddAndSaveChangeAsync(newProduct, cancellationToken);
+        await productRepository.UpdateAndSaveChangeAsync(product, cancellationToken);
 
-        return TypedResults.Ok(new IdResponse(newProduct.Id.ToString()));
+        return TypedResults.Ok(product.ToProductResponse());
     };
 }

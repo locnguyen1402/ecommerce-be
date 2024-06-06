@@ -19,7 +19,7 @@ public class ProductVariant(int stock, decimal price) : Entity()
         }
         Price = price;
     }
-    public void UpdateInStock(int stock)
+    public void UpdateStock(int stock)
     {
         if (stock < 0)
         {
@@ -27,9 +27,34 @@ public class ProductVariant(int stock, decimal price) : Entity()
         }
         Stock = stock;
     }
-    public void AddAttributeValue(ProductVariantAttributeValue value)
+    public void AddOrUpdateAttributeValue(Guid attributeId, string attributeValue)
     {
-        _productVariantAttributeValues.Add(value);
+        if (attributeValue.Trim().Length == 0)
+        {
+            throw new Exception("Attribute value cannot be empty");
+        }
+
+        var existingValue = _productVariantAttributeValues.FirstOrDefault(x => x.ProductAttributeId == attributeId);
+
+        if (existingValue != null)
+        {
+            existingValue.UpdateValue(attributeValue);
+        }
+        else
+        {
+            var value = new ProductVariantAttributeValue(attributeId, attributeValue);
+
+            _productVariantAttributeValues.Add(value);
+        }
+    }
+    public void RemoveAttributeValue(Guid attributeId)
+    {
+        var value = _productVariantAttributeValues.FirstOrDefault(x => x.ProductAttributeId == attributeId);
+
+        if (value != null)
+        {
+            _productVariantAttributeValues.Remove(value);
+        }
     }
 
     public override bool Equals(object? obj)
@@ -40,9 +65,11 @@ public class ProductVariant(int stock, decimal price) : Entity()
         }
 
         var other = (ProductVariant)obj;
-        return ProductVariantAttributeValues
-            .ToHashSet()
-            .SetEquals(other.ProductVariantAttributeValues.ToHashSet());
+        // return ProductVariantAttributeValues
+        //     .ToHashSet()
+        //     .SetEquals(other.ProductVariantAttributeValues.ToHashSet());
+        return HashCodeHelper.GetListHashCode(ProductVariantAttributeValues, true) ==
+                HashCodeHelper.GetListHashCode(other.ProductVariantAttributeValues, true);
     }
 
     public override int GetHashCode()
