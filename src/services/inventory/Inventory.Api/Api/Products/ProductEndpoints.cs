@@ -1,4 +1,3 @@
-using ECommerce.Shared.Common.Queries;
 using ECommerce.Shared.Common.Infrastructure.Endpoint;
 
 using ECommerce.Inventory.Api.Products.Queries;
@@ -12,7 +11,8 @@ public class ProductEndpoints(WebApplication app) : MinimalEndpoint(app, "/produ
     {
         Builder.MapGet<GetProductsQueryHandler>("/");
         Builder.MapPost<CreateProductCommandHandler>("/");
-        // Builder.MapGet("/{id:Guid}", (Guid id) => mediator.Send(new GetProductByIdQuery(id)));
+        Builder.MapGet<GetProductByIdQueryHandler>("/{id:Guid}");
+        Builder.MapGet<GetProductBySlugQueryHandler>("/{slug}");
         Builder.MapPost<CreateProductAttributeCommandHandler>("/attributes");
 
 

@@ -8,6 +8,8 @@ public interface IBaseRepository<TEntity> where TEntity : class
     IQueryable<TEntity> Query { get; }
     ValueTask<TEntity?> FindAsync(object[] keyValues, CancellationToken cancellationToken = default);
     ValueTask<TEntity?> FindAsync(object keyValues, CancellationToken cancellationToken = default);
+    ValueTask<TEntity?> FindAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default);
+    ValueTask<TEntity?> FindAsync(Specification<TEntity> specification, CancellationToken cancellationToken = default);
     ValueTask<bool> AnyAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default);
     ValueTask<int> CountAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default);
     TEntity Add(TEntity entity);

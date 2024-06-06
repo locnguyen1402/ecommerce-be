@@ -5,16 +5,16 @@ using ECommerce.Inventory.Api.Products.Specifications;
 
 namespace ECommerce.Inventory.Api.Products.Queries;
 
-public class GetProductByIdQueryHandler : IEndpointHandler
+public class GetProductBySlugQueryHandler : IEndpointHandler
 {
     public Delegate Handle
     => async (
-        Guid id,
+        string slug,
         IProductRepository productRepository,
         CancellationToken cancellationToken
     ) =>
     {
-        var spec = new GetProductByIdSpecification(id);
+        var spec = new GetProductBySlugSpecification(slug);
 
         var product = await productRepository.FindAsync(spec, cancellationToken);
 

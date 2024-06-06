@@ -16,6 +16,10 @@ public class BaseRepository<TEntity>(BaseDbContext dbContext) : IBaseRepository<
         => await _dbSet.FindAsync([keyValues], cancellationToken);
     public async ValueTask<TEntity?> FindAsync(object[] keyValues, CancellationToken cancellationToken = default)
         => await _dbSet.FindAsync(keyValues, cancellationToken);
+    public async ValueTask<TEntity?> FindAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
+        => await _dbSet.Where(predicate).FirstOrDefaultAsync(cancellationToken);
+    public async ValueTask<TEntity?> FindAsync(Specification<TEntity> specification, CancellationToken cancellationToken = default)
+        => await _dbSet.Specify(specification).FirstOrDefaultAsync(cancellationToken);
     public async ValueTask<bool> AnyAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
         => await _dbSet.AnyAsync(predicate, cancellationToken);
     public async ValueTask<int> CountAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
