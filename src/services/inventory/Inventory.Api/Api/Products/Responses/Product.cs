@@ -9,6 +9,7 @@ public record ProductResponse(
     string Name,
     string Slug,
     string Description,
+    List<ProductAttributeResponse> Attributes,
     List<ProductVariantResponse> Variants
 );
 
@@ -26,6 +27,10 @@ public static class ProductProjection
             x.Name,
             x.Slug,
             x.Description,
+            x.ProductAttributes
+                .AsQueryable()
+                .Select(ProductAttributeProjection.ToProductAttributeResponse())
+                .ToList(),
             x.ProductVariants
                 .AsQueryable()
                 .Select(ProductVariantProjection.ToProductVariantResponse())
