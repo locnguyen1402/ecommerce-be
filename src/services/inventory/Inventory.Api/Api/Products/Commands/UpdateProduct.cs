@@ -35,6 +35,13 @@ public class UpdateProductCommandHandler : IEndpointHandler
             return Results.ValidationProblem(validationResult.ToDictionary());
         }
 
+        if (await productRepository.AnyAsync(x => x.Slug == request.Slug && x.Id != id, cancellationToken))
+        {
+            return Results.BadRequest("Slug is already existed");
+        }
+
+        // var oldVariantIds = request.Variants.Where(x => x.Id != null).Select(x => x.Id).ToList();
+
         var product = await productRepository.Query
                         .Include(p => p.ProductAttributes)
                         .Include(p => p.ProductVariants)

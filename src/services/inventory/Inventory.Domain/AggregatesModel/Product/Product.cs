@@ -44,12 +44,26 @@ public class Product(string name, string slug, string? description) : Entity()
             }
         }
     }
-    public void AddVariant(ProductVariant variant)
+    public void AddVariant(int stock, decimal price, List<ProductVariantAttributeValue> attributeValues)
     {
+        var variant = new ProductVariant(stock, price);
+
+        foreach (var value in attributeValues)
+        {
+            variant.AddOrUpdateAttributeValue(value);
+        }
+
         _productVariants.Add(variant);
     }
     public void RemoveVariant(ProductVariant variant)
     {
         _productVariants.Remove(variant);
+    }
+    public void RemoveVariants(List<ProductVariant> variants)
+    {
+        foreach (var variant in variants)
+        {
+            _productVariants.Remove(variant);
+        }
     }
 }

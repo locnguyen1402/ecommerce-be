@@ -5,29 +5,13 @@ namespace ECommerce.Inventory.Api.Utilities;
 
 public static class ProductUtils
 {
-    public static void AddVariantToProduct(Product product, CreatingProductVariantRequest variant)
-    {
-        var newVariant = new ProductVariant(variant.Stock, variant.Price);
-
-        if (variant.Values.Count != 0)
-        {
-            foreach (var value in variant.Values)
-            {
-                newVariant.AddOrUpdateAttributeValue(value.ProductAttributeId, value.Value);
-            }
-        }
-
-        product.AddVariant(newVariant);
-    }
     public static void UpdateVariantsInProduct(Product product, List<UpdatingProductVariantRequest> variants)
     {
         var existingVariantIds = variants.Where(x => x.Id != null).Select(x => x.Id).ToList();
 
         var variantsToRemove = product.ProductVariants.Where(x => !existingVariantIds.Contains(x.Id)).ToList();
-        foreach (var variant in variantsToRemove)
-        {
-            product.RemoveVariant(variant);
-        }
+
+        product.RemoveVariants(variantsToRemove);
 
         foreach (var variant in variants)
         {
@@ -39,7 +23,14 @@ public static class ProductUtils
     {
         if (variant.Id == null)
         {
-            AddVariantToProduct(product, variant);
+            var attributeValues = new List<ProductVariantAttributeValue>();
+
+            foreach (var value in variant.Values)
+            {
+                attributeValues.Add(new (value.ProductAttributeId, value.Value));
+            }
+
+            product.AddVariant(variant.Stock, variant.Price, attributeValues);
         }
         else
         {

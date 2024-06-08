@@ -21,7 +21,10 @@ public class ProductVariantAttributeValue : Entity
     public ProductVariantAttributeValue(Guid attributeId, string value) : this(value)
     {
         ProductAttributeId = attributeId;
-        Value = value;
+    }
+    public ProductVariantAttributeValue(ProductAttribute attribute, string value) : this(value)
+    {
+        ProductAttribute = attribute;
     }
     public void UpdateValue(string value)
     {

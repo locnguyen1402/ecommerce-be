@@ -47,6 +47,10 @@ public class ProductVariant(int stock, decimal price) : Entity()
             _productVariantAttributeValues.Add(value);
         }
     }
+    public void AddOrUpdateAttributeValue(ProductVariantAttributeValue value)
+    {
+        AddOrUpdateAttributeValue(value.ProductAttributeId, value.Value);
+    }
     public void RemoveAttributeValue(Guid attributeId)
     {
         var value = _productVariantAttributeValues.FirstOrDefault(x => x.ProductAttributeId == attributeId);

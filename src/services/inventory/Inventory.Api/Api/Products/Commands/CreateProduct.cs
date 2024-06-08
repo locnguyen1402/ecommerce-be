@@ -48,11 +48,19 @@ public class CreateProductCommandHandler : IEndpointHandler
             newProduct.AddOrUpdateAttributes(selectedAttributes);
         }
 
+
         if (request.Variants.Count != 0)
         {
             foreach (var variant in request.Variants)
             {
-                ProductUtils.AddVariantToProduct(newProduct, variant);
+                var attributeValues = new List<ProductVariantAttributeValue>();
+
+                foreach (var value in variant.Values)
+                {
+                    attributeValues.Add(new (value.ProductAttributeId, value.Value));
+                }
+
+                newProduct.AddVariant(variant.Stock, variant.Price, attributeValues);
             }
         }
 
