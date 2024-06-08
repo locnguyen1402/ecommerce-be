@@ -13,14 +13,15 @@ public record ProductVariantResponse(
 
 public class ProductVariantProjection
 {
-    public static Expression<Func<ProductVariant, ProductVariantResponse>> FromProductVariant()
+    public static Expression<Func<ProductVariant, ProductVariantResponse>> ToProductVariantResponse()
         => x =>
         new ProductVariantResponse(
-            x.Id, 
+            x.Id,
             x.Stock, 
             x.Price,
             x.ProductVariantAttributeValues
-                .Select(ProductVariantAttributeValueProjection.FromProductVariantAttributeValue().Compile())
+                .AsQueryable()
+                .Select(ProductVariantAttributeValueProjection.ToProductVariantAttributeValueResponse())
                 .ToList()
         );
 }

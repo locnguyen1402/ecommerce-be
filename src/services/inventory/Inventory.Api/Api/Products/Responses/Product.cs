@@ -16,10 +16,10 @@ public static class ProductProjection
 {
     public static ProductResponse ToProductResponse(this Product product)
     {
-        return FromProduct().Compile().Invoke(product);
+        return ToProductResponse().Compile().Invoke(product);
     }
 
-    public static Expression<Func<Product, ProductResponse>> FromProduct()
+    public static Expression<Func<Product, ProductResponse>> ToProductResponse()
         => x =>
         new ProductResponse(
             x.Id,
@@ -27,7 +27,8 @@ public static class ProductProjection
             x.Slug,
             x.Description,
             x.ProductVariants
-                .Select(ProductVariantProjection.FromProductVariant().Compile())
+                .AsQueryable()
+                .Select(ProductVariantProjection.ToProductVariantResponse())
                 .ToList()
         );
 }

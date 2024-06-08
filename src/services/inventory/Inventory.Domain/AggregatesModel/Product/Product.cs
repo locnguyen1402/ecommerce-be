@@ -50,7 +50,6 @@ public class Product(string name, string slug, string? description) : Entity()
     }
     public void RemoveVariant(ProductVariant variant)
     {
-        var test = _productVariants.Remove(variant);
-        Console.WriteLine(test);
+        _productVariants.Remove(variant);
     }
 }

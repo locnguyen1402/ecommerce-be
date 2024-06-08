@@ -41,7 +41,9 @@ public class ProductVariantAttributeValue : Entity
         }
 
         var other = (ProductVariantAttributeValue)obj;
-        return ProductAttributeId == other.ProductAttributeId && Value == other.Value;
+        return ProductVariantId == other.ProductVariantId
+            && ProductAttributeId == other.ProductAttributeId
+            && Value == other.Value;
     }
 
     public override int GetHashCode()

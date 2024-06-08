@@ -1,3 +1,5 @@
+using System.Linq.Expressions;
+
 using ECommerce.Shared.Common.Infrastructure.Specification;
 
 using ECommerce.Inventory.Domain.AggregatesModel;
@@ -10,6 +12,18 @@ public class GetProductBySlugSpecification : Specification<Product>
     (
         string slug
     )
+    {
+        Builder.Where(p => p.Slug == slug);
+    }
+}
+
+public class GetProductBySlugSpecification<TResult> : Specification<Product, TResult>
+{
+    public GetProductBySlugSpecification
+    (
+        string slug,
+        Expression<Func<Product, TResult>> selector
+    ): base(selector)
     {
         Builder.Where(p => p.Slug == slug);
     }

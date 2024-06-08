@@ -56,22 +56,4 @@ public class ProductVariant(int stock, decimal price) : Entity()
             _productVariantAttributeValues.Remove(value);
         }
     }
-
-    public override bool Equals(object? obj)
-    {
-        if (obj == null || GetType() != obj.GetType())
-        {
-            return false;
-        }
-
-        var other = (ProductVariant)obj;
-        // return ProductVariantAttributeValues
-        //     .ToHashSet()
-        //     .SetEquals(other.ProductVariantAttributeValues.ToHashSet());
-        return HashCodeHelper.GetListHashCode(ProductVariantAttributeValues, true) ==
-                HashCodeHelper.GetListHashCode(other.ProductVariantAttributeValues, true);
-    }
-
-    public override int GetHashCode()
-        => HashCode.Combine(HashCodeHelper.GetListHashCode(ProductVariantAttributeValues, true));
 }

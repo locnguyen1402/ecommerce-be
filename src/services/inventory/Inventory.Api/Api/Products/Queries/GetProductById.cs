@@ -2,6 +2,7 @@ using ECommerce.Shared.Common.Infrastructure.Endpoint;
 
 using ECommerce.Inventory.Domain.AggregatesModel;
 using ECommerce.Inventory.Api.Products.Specifications;
+using ECommerce.Inventory.Api.Products.Responses;
 
 namespace ECommerce.Inventory.Api.Products.Queries;
 
@@ -14,10 +15,9 @@ public class GetProductByIdQueryHandler : IEndpointHandler
         CancellationToken cancellationToken
     ) =>
     {
-        var spec = new GetProductByIdSpecification(id);
+        var spec = new GetProductByIdSpecification<ProductResponse>(id, ProductProjection.ToProductResponse());
 
-        var product = await productRepository.FindAsync(id, cancellationToken);
-        // var product = await productRepository.FindAsync(spec, cancellationToken);
+        var product = await productRepository.FindAsync(spec, cancellationToken);
 
         if (product is null)
         {
