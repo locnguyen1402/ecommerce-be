@@ -17,8 +17,8 @@ public class UpdateProductCommandHandler : IEndpointHandler
     public Delegate Handle
     => async (
         Guid id,
-        UpdatingProductRequest request,
-        IValidator<UpdatingProductRequest> validator,
+        UpdateProductRequest request,
+        IValidator<UpdateProductRequest> validator,
         IProductRepository productRepository,
         IProductAttributeRepository productAttributeRepository,
         CancellationToken cancellationToken

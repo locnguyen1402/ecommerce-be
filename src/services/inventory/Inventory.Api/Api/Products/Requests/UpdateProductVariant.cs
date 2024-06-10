@@ -1,18 +1,16 @@
 using FluentValidation;
 
-using ECommerce.Shared.Common.Helper;
-
 namespace ECommerce.Inventory.Api.Products.Requests;
 
-public class UpdatingProductVariantRequest : CreatingProductVariantRequest
+public class UpdateProductVariantRequest : CreateProductVariantRequest
 {
     public Guid? Id { get; set; }
 }
 
-public class UpdatingProductVariantRequestValidator : AbstractValidator<UpdatingProductVariantRequest>
+public class UpdateProductVariantRequestValidator : AbstractValidator<UpdateProductVariantRequest>
 {
-    private string PrefixErrorMessage => nameof(UpdatingProductVariantRequestValidator);
-    public UpdatingProductVariantRequestValidator()
+    private string PrefixErrorMessage => nameof(UpdateProductVariantRequestValidator);
+    public UpdateProductVariantRequestValidator()
     {
         RuleFor(x => x.Id)
             .Must(id => id == null || Guid.TryParse(id.ToString(), out _))
@@ -29,9 +27,9 @@ public class UpdatingProductVariantRequestValidator : AbstractValidator<Updating
             .WithMessage($"{PrefixErrorMessage} Attributes in product variant must be unique");
 
         RuleForEach(x => x.Values)
-            .SetValidator(new CreatingProductVariantAttributeRequestValidator());
+            .SetValidator(new CreateProductVariantAttributeRequestValidator());
     }
-    public UpdatingProductVariantRequestValidator(List<Guid> productAttributeIds) : this()
+    public UpdateProductVariantRequestValidator(List<Guid> productAttributeIds) : this()
     {
         RuleFor(x => x.Values)
             .Must(x => x.Count == productAttributeIds.Count)

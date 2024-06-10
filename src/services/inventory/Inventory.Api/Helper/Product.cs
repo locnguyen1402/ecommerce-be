@@ -5,7 +5,7 @@ namespace ECommerce.Inventory.Api.Utilities;
 
 public static class ProductUtils
 {
-    public static void UpdateVariantsInProduct(Product product, List<UpdatingProductVariantRequest> variants)
+    public static void UpdateVariantsInProduct(Product product, List<UpdateProductVariantRequest> variants)
     {
         var existingVariantIds = variants.Where(x => x.Id != null).Select(x => x.Id).ToList();
 
@@ -19,7 +19,7 @@ public static class ProductUtils
         }
     }
 
-    public static void UpdateVariantInProduct(Product product, UpdatingProductVariantRequest variant)
+    public static void UpdateVariantInProduct(Product product, UpdateProductVariantRequest variant)
     {
         if (variant.Id == null)
         {

@@ -4,11 +4,11 @@ using ECommerce.Shared.Common.Helper;
 
 namespace ECommerce.Inventory.Api.Products.Requests;
 
-public class CreatingProductVariantRequest
+public class CreateProductVariantRequest
 {
     public int Stock { get; set; }
     public decimal Price { get; set; }
-    public HashSet<CreatingProductVariantAttributeRequest> Values { get; set; } = [];
+    public HashSet<CreateProductVariantAttributeRequest> Values { get; set; } = [];
     public HashSet<Guid> ProductAttributeIds => Values.Select(x => x.ProductAttributeId).ToHashSet();
 
     public override bool Equals(object? obj)
@@ -18,7 +18,7 @@ public class CreatingProductVariantRequest
             return false;
         }
 
-        var other = (CreatingProductVariantRequest)obj;
+        var other = (CreateProductVariantRequest)obj;
         return Values.SetEquals(other.Values);
     }
 
@@ -26,10 +26,10 @@ public class CreatingProductVariantRequest
         => HashCode.Combine(HashCodeHelper.GetListHashCode(Values, true));
 }
 
-public class CreatingProductVariantRequestValidator : AbstractValidator<CreatingProductVariantRequest>
+public class CreateProductVariantRequestValidator : AbstractValidator<CreateProductVariantRequest>
 {
-    private string PrefixErrorMessage => nameof(CreatingProductVariantRequestValidator);
-    public CreatingProductVariantRequestValidator()
+    private string PrefixErrorMessage => nameof(CreateProductVariantRequestValidator);
+    public CreateProductVariantRequestValidator()
     {
         RuleFor(x => x.Stock)
             .GreaterThanOrEqualTo(0);
@@ -42,9 +42,9 @@ public class CreatingProductVariantRequestValidator : AbstractValidator<Creating
             .WithMessage($"{PrefixErrorMessage} Attributes in product variant must be unique");
 
         RuleForEach(x => x.Values)
-            .SetValidator(new CreatingProductVariantAttributeRequestValidator());
+            .SetValidator(new CreateProductVariantAttributeRequestValidator());
     }
-    public CreatingProductVariantRequestValidator(List<Guid> productAttributeIds) : this()
+    public CreateProductVariantRequestValidator(List<Guid> productAttributeIds) : this()
     {
         RuleFor(x => x.Values)
             .Must(x => x.Count == productAttributeIds.Count)

@@ -2,26 +2,21 @@ using FluentValidation;
 
 namespace ECommerce.Inventory.Api.Products.Requests;
 
-public class UpdatingProductRequest
+public class CreateProductRequest
 {
-    public Guid Id { get; set; }
     public string Name { get; set; } = string.Empty;
     public string Slug { get; set; } = string.Empty;
     public string? Description { get; set; }
     public HashSet<Guid> Attributes { get; set; } = [];
-    public List<UpdatingProductVariantRequest> Variants { get; set; } = [];
-    public HashSet<UpdatingProductVariantRequest> HashedVariants => [.. Variants];
+    public List<CreateProductVariantRequest> Variants { get; set; } = [];
+    public HashSet<CreateProductVariantRequest> HashedVariants => [.. Variants];
 }
 
-public class UpdatingProductRequestValidator : AbstractValidator<UpdatingProductRequest>
+public class CreateProductRequestValidator : AbstractValidator<CreateProductRequest>
 {
-    private string PrefixErrorMessage => nameof(UpdatingProductRequestValidator);
-    public UpdatingProductRequestValidator()
+    private string PrefixErrorMessage => nameof(CreateProductRequestValidator);
+    public CreateProductRequestValidator()
     {
-        RuleFor(x => x.Id)
-            .Must(id => id != Guid.Empty && Guid.TryParse(id.ToString(), out _))
-            .WithMessage($"{PrefixErrorMessage} Invalid Id format");
-
         RuleFor(x => x.Name)
             .NotEmpty()
             .MaximumLength(200);
@@ -42,6 +37,6 @@ public class UpdatingProductRequestValidator : AbstractValidator<UpdatingProduct
             .WithMessage($"{PrefixErrorMessage} Variant must be unique");
 
         RuleForEach(x => x.Variants)
-            .SetValidator(x => new CreatingProductVariantRequestValidator([.. x.Attributes]));
+            .SetValidator(x => new CreateProductVariantRequestValidator([.. x.Attributes]));
     }
 }

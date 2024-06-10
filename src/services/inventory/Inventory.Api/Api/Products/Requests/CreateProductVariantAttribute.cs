@@ -2,7 +2,7 @@ using FluentValidation;
 
 namespace ECommerce.Inventory.Api.Products.Requests;
 
-public class CreatingProductVariantAttributeRequest
+public class CreateProductVariantAttributeRequest
 {
     public Guid ProductAttributeId { get; set; }
     public string Value { get; set; } = string.Empty;
@@ -14,7 +14,7 @@ public class CreatingProductVariantAttributeRequest
             return false;
         }
 
-        var other = (CreatingProductVariantAttributeRequest)obj;
+        var other = (CreateProductVariantAttributeRequest)obj;
         return ProductAttributeId == other.ProductAttributeId && Value == other.Value;
     }
 
@@ -22,9 +22,9 @@ public class CreatingProductVariantAttributeRequest
         => HashCode.Combine(ProductAttributeId, Value);
 }
 
-public class CreatingProductVariantAttributeRequestValidator : AbstractValidator<CreatingProductVariantAttributeRequest>
+public class CreateProductVariantAttributeRequestValidator : AbstractValidator<CreateProductVariantAttributeRequest>
 {
-    public CreatingProductVariantAttributeRequestValidator()
+    public CreateProductVariantAttributeRequestValidator()
     {
         RuleFor(x => x.ProductAttributeId)
             .NotEmpty()

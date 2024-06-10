@@ -14,8 +14,8 @@ public class CreateProductCommandHandler : IEndpointHandler
 {
     public Delegate Handle
     => async (
-        CreatingProductRequest request,
-        IValidator<CreatingProductRequest> validator,
+        CreateProductRequest request,
+        IValidator<CreateProductRequest> validator,
         IProductRepository productRepository,
         IProductAttributeRepository productAttributeRepository,
         CancellationToken cancellationToken
