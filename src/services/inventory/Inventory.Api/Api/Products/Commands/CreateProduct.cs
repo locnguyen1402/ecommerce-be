@@ -6,7 +6,6 @@ using ECommerce.Shared.Common.Infrastructure.Endpoint;
 using ECommerce.Inventory.Domain.AggregatesModel;
 using ECommerce.Inventory.Api.Products.Specifications;
 using ECommerce.Inventory.Api.Products.Requests;
-using ECommerce.Inventory.Api.Utilities;
 
 namespace ECommerce.Inventory.Api.Products.Commands;
 
@@ -57,7 +56,7 @@ public class CreateProductCommandHandler : IEndpointHandler
 
                 foreach (var value in variant.Values)
                 {
-                    attributeValues.Add(new (value.ProductAttributeId, value.Value));
+                    attributeValues.Add(new(value.ProductAttributeId, value.Value));
                 }
 
                 newProduct.AddVariant(variant.Stock, variant.Price, attributeValues);

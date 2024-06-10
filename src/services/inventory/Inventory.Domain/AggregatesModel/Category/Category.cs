@@ -2,11 +2,11 @@ using ECommerce.Shared.Common.Infrastructure.Data;
 
 namespace ECommerce.Inventory.Domain.AggregatesModel;
 
-public class Category(string name, string slug, string description, Guid? parentId) : Entity()
+public class Category(string name, string slug, string? description, Guid? parentId) : Entity()
 {
     public string Name { get; private set; } = name;
     public string Slug { get; private set; } = slug;
-    public string Description { get; private set; } = description;
+    public string Description { get; private set; } = description ?? string.Empty;
     public Guid? ParentId { get; private set; } = parentId;
     public Category? Parent { get; private set; }
     private readonly List<Category> _categories = [];
@@ -15,13 +15,15 @@ public class Category(string name, string slug, string description, Guid? parent
     public ICollection<CategoryProduct> CategoryProducts => _categoryProducts;
     private readonly List<Product> _products = [];
     public ICollection<Product> Products => _products;
-    public void ChangeParent(Guid parentId)
+    public void ChangeParent(Guid? parentId)
     {
         ParentId = parentId;
     }
-    public void ChangeDescription(string description)
+    public void UpdateGeneralInfo(string name, string slug, string? description)
     {
-        Description = description;
+        Name = name;
+        Slug = slug;
+        Description = description ?? string.Empty;
     }
     public void AddChild(Category category)
     {
