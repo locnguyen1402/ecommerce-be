@@ -7,7 +7,7 @@ public class Product(string name, string slug, string? description) : Entity()
     public string Slug { get; private set; } = slug;
     public string Name { get; private set; } = name;
     public string Description { get; private set; } = description ?? string.Empty;
-    public decimal Price => ProductVariants.Min(x => x.Price);
+    // public decimal Price => ProductVariants.Min(x => x.Price);
     private readonly List<Category> _categories = [];
     public ICollection<Category> Categories => _categories;
     private readonly List<CategoryProduct> _categoryProducts = [];
@@ -42,6 +42,18 @@ public class Product(string name, string slug, string? description) : Entity()
             if (!_productAttributes.Any(x => x.Id == attribute.Id))
             {
                 _productAttributes.Add(attribute);
+            }
+        }
+    }
+    public void AddOrUpdateCategories(IEnumerable<Category> categories)
+    {
+        _categories.RemoveAll(x => !categories.Any(a => a.Id == x.Id));
+
+        foreach (var category in categories)
+        {
+            if (!_categories.Any(x => x.Id == category.Id))
+            {
+                _categories.Add(category);
             }
         }
     }

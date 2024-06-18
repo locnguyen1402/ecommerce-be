@@ -6,6 +6,7 @@ using ECommerce.Shared.Common.Infrastructure.Endpoint;
 using ECommerce.Inventory.Domain.AggregatesModel;
 using ECommerce.Inventory.Api.Products.Specifications;
 using ECommerce.Inventory.Api.Products.Requests;
+using ECommerce.Inventory.Api.Categories.Specifications;
 
 namespace ECommerce.Inventory.Api.Products.Commands;
 
@@ -17,6 +18,7 @@ public class CreateProductCommandHandler : IEndpointHandler
         IValidator<CreateProductRequest> validator,
         IProductRepository productRepository,
         IProductAttributeRepository productAttributeRepository,
+        ICategoryRepository categoryRepository,
         CancellationToken cancellationToken
     ) =>
     {
@@ -32,9 +34,9 @@ public class CreateProductCommandHandler : IEndpointHandler
         }
 
         var newProduct = new Product(request.Name, request.Slug, request.Description);
-        List<ProductAttribute> selectedAttributes = [];
 
-        if (request.Attributes.Count != 0)
+        List<ProductAttribute> selectedAttributes = [];
+        if (request.Attributes.Count > 0)
         {
             var productAttributesSpec = new GetProductAttributesSpecification(x => request.Attributes.Contains(x.Id));
             selectedAttributes = (await productAttributeRepository.GetAsync(productAttributesSpec, cancellationToken)).ToList();
@@ -47,6 +49,19 @@ public class CreateProductCommandHandler : IEndpointHandler
             newProduct.AddOrUpdateAttributes(selectedAttributes);
         }
 
+        List<Category> selectedCategories = [];
+        if (request.Categories.Count > 0)
+        {
+            var categoriesSpec = new GetCategoriesSpecification(x => request.Categories.Contains(x.Id));
+            selectedCategories = (await categoryRepository.GetAsync(categoriesSpec, cancellationToken)).ToList();
+
+            if (selectedCategories.Count != request.Categories.Count)
+            {
+                return Results.BadRequest("Some categories are not found");
+            }
+
+            newProduct.AddOrUpdateCategories(selectedCategories);
+        }
 
         if (request.Variants.Count != 0)
         {

@@ -29,7 +29,12 @@ builder.Services
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.ConfigureSwaggerGen();
 
+builder.Services.AddCors();
+
 var app = builder.Build();
+
+// Enable CORS
+app.UseCors(builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
