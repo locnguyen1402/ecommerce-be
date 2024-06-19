@@ -10,18 +10,34 @@ public class GetProductAttributesSpecification : Specification<ProductAttribute>
 {
     public GetProductAttributesSpecification
     (
-        Expression<Func<ProductAttribute, bool>>? criteria = null,
-        PagingQuery? pagingQuery = null
+        string? keyword,
+        PagingQuery pagingQuery
     )
     {
-        if (criteria != null)
+        if (keyword != null && keyword.Length > 0)
         {
-            Builder.Where(criteria);
+            Builder.Where(x => x.Name.Contains(keyword));
         }
 
-        if (pagingQuery != null)
+
+        Builder.Paginate(pagingQuery.PageIndex, pagingQuery.PageSize);
+    }
+}
+
+public class GetProductAttributesSpecification<TResult> : Specification<ProductAttribute, TResult>
+{
+    public GetProductAttributesSpecification
+    (
+        string? keyword,
+        PagingQuery pagingQuery,
+        Expression<Func<ProductAttribute, TResult>> selector
+    ) : base(selector)
+    {
+        if (keyword != null && keyword.Length > 0)
         {
-            Builder.Paginate(pagingQuery.PageIndex, pagingQuery.PageSize);
+            Builder.Where(x => x.Name.Contains(keyword));
         }
+
+        Builder.Paginate(pagingQuery.PageIndex, pagingQuery.PageSize);
     }
 }

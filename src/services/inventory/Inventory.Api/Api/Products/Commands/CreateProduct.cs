@@ -38,7 +38,7 @@ public class CreateProductCommandHandler : IEndpointHandler
         List<ProductAttribute> selectedAttributes = [];
         if (request.Attributes.Count > 0)
         {
-            var productAttributesSpec = new GetProductAttributesSpecification(x => request.Attributes.Contains(x.Id));
+            var productAttributesSpec = new GetProductAttributesByIdsSpecification([.. request.Attributes]);
             selectedAttributes = (await productAttributeRepository.GetAsync(productAttributesSpec, cancellationToken)).ToList();
 
             if (selectedAttributes.Count != request.Attributes.Count)

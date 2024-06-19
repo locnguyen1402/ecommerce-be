@@ -9,8 +9,13 @@ public record ProductAttributeResponse(
     string Name
 );
 
-public class ProductAttributeProjection
+public static class ProductAttributeProjection
 {
+    public static ProductAttributeResponse ToProductAttributeResponse(this ProductAttribute attribute)
+    {
+        return ToProductAttributeResponse().Compile().Invoke(attribute);
+    }
+
     public static Expression<Func<ProductAttribute, ProductAttributeResponse>> ToProductAttributeResponse()
         => x =>
         new ProductAttributeResponse(
