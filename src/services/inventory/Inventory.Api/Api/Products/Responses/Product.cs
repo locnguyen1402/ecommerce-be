@@ -11,7 +11,10 @@ public record ProductResponse(
     string Description,
     List<ProductAttributeResponse> Attributes,
     List<ProductVariantResponse> Variants
-);
+)
+{
+    public decimal Price => Variants.Min(x => x.Price);
+};
 
 public static class ProductProjection
 {
