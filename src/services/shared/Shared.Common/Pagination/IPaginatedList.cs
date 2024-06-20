@@ -8,7 +8,7 @@ public interface IPaginatedList
     bool HasNextPage { get; }
 }
 
-public interface IPaginatedList<out T> : IPaginatedList
+public interface IPaginatedList<out T> : IPaginatedList, IReadOnlyList<T>
 {
     string ToJsonString();
     void PopulatePaginationInfo();

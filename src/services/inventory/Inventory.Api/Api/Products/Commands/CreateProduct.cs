@@ -52,7 +52,7 @@ public class CreateProductCommandHandler : IEndpointHandler
         List<Category> selectedCategories = [];
         if (request.Categories.Count > 0)
         {
-            var categoriesSpec = new GetCategoriesSpecification(x => request.Categories.Contains(x.Id));
+            var categoriesSpec = new GetCategoriesByIdsSpecification([.. request.Categories]);
             selectedCategories = (await categoryRepository.GetAsync(categoriesSpec, cancellationToken)).ToList();
 
             if (selectedCategories.Count != request.Categories.Count)
