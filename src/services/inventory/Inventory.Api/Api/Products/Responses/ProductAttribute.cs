@@ -9,6 +9,12 @@ public record ProductAttributeResponse(
     string Name
 );
 
+public record ProductAttributeWithValuesResponse(
+    Guid Id,
+    string Name,
+    HashSet<string> Values
+);
+
 public static class ProductAttributeProjection
 {
     public static ProductAttributeResponse ToProductAttributeResponse(this ProductAttribute attribute)
