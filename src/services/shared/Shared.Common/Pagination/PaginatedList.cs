@@ -14,14 +14,22 @@ public class PaginatedList<T> : List<T>, IPaginatedList<T>
     public int PageSize { get; private set; }
     public bool HasPreviousPage => PageIndex > 1;
     public bool HasNextPage { get; private set; } = false;
+    public int? TotalItems { get; private set; }
+    public int? TotalPages => TotalItems.HasValue ? (int)Math.Ceiling(TotalItems.Value / (double)PageSize) : null;
 
-    public PaginatedList(IEnumerable<T> items, int pageIndex, int pageSize, bool hasNextPage = false)
+    public PaginatedList(IEnumerable<T> items, int pageIndex, int pageSize, bool hasNextPage)
     {
         PageIndex = pageIndex;
         PageSize = pageSize;
         HasNextPage = hasNextPage;
 
         AddRange(items);
+    }
+
+    public PaginatedList(IEnumerable<T> items, int pageIndex, int pageSize, bool hasNextPage, int totalItems)
+        : this(items, pageIndex, pageSize, hasNextPage)
+    {
+        TotalItems = totalItems;
     }
 
     public static IPaginatedList<T> Create(IEnumerable<T> source, int page, int pageSize)
@@ -49,8 +57,21 @@ public class PaginatedList<T> : List<T>, IPaginatedList<T>
         return new PaginatedList<T>(items, page, pageSize, hasNextPage);
     }
 
+    public static async Task<IPaginatedList<T>> FullCreateAsync(IQueryable<T> source, int page, int pageSize, CancellationToken cancellationToken = default)
+    {
+        var totalItems = await source.CountAsync(cancellationToken);
+
+        var items = await source.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync(cancellationToken);
+
+        var hasNextPage = totalItems > page * pageSize;
+
+        return new PaginatedList<T>(items, page, pageSize, hasNextPage, totalItems);
+    }
+
     public static async Task<IPaginatedList<T>> CreateAsync(IQueryable<T> source, IPagingParams pagingParams, CancellationToken cancellationToken = default)
-        => await CreateAsync(source, pagingParams.PageIndex, pagingParams.PageSize, cancellationToken);
+        => pagingParams.FullPagingInfo
+            ? await FullCreateAsync(source, pagingParams.PageIndex, pagingParams.PageSize, cancellationToken)
+            : await CreateAsync(source, pagingParams.PageIndex, pagingParams.PageSize, cancellationToken);
 
     private IPaginatedList GetPaginationInfo()
     {
@@ -60,12 +81,5 @@ public class PaginatedList<T> : List<T>, IPaginatedList<T>
     public string ToJsonString()
     {
         return JsonSerializer.Serialize(GetPaginationInfo(), JsonConstant.JsonSerializerOptions);
-    }
-
-    public void PopulatePaginationInfo()
-    {
-        var httpContext = new HttpContextAccessor().HttpContext;
-
-        httpContext?.Response.Headers.Append(HeaderConstants.PAGINATION_KEY, ToJsonString());
     }
 }

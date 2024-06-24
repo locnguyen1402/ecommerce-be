@@ -24,8 +24,8 @@ public class Specification<TEntity> : ISpecification<TEntity> where TEntity : cl
         => IncludeStrings.Add(includeString);
     public void ApplyPaging(IPagingParams pagingParams)
         => PagingParams = pagingParams;
-    public void ApplyPaging(int pageIndex, int pageSize)
-        => PagingParams = new PagingParams(pageIndex, pageSize);
+    public void ApplyPaging(int pageIndex, int pageSize, bool fullPagingInfo)
+        => PagingParams = new PagingParams(pageIndex, pageSize, fullPagingInfo);
     public void AsNoTracking()
         => EnableTracking = false;
     public void AsSplitQuery()

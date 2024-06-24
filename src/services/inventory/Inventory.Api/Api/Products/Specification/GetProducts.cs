@@ -43,7 +43,7 @@ public class GetProductsSpecification<TResult> : Specification<Product, TResult>
 
         if (pagingQuery != null)
         {
-            Builder.Paginate(pagingQuery.PageIndex, pagingQuery.PageSize);
+            Builder.Paginate(pagingQuery.PageIndex, pagingQuery.PageSize, pagingQuery.FullPagingInfo);
         }
     }
 }

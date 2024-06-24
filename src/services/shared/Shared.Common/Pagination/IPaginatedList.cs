@@ -6,10 +6,11 @@ public interface IPaginatedList
     int PageSize { get; }
     bool HasPreviousPage { get; }
     bool HasNextPage { get; }
+    int? TotalPages { get; }
+    int? TotalItems { get; }
 }
 
 public interface IPaginatedList<out T> : IPaginatedList, IReadOnlyList<T>
 {
     string ToJsonString();
-    void PopulatePaginationInfo();
 }

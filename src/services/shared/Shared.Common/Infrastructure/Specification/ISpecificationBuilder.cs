@@ -11,5 +11,5 @@ public interface ISpecificationBuilder<TEntity> where TEntity : class
     SpecificationBuilder<TEntity> AsNoTracking();
     SpecificationBuilder<TEntity> AsSplitQuery();
     SpecificationBuilder<TEntity> Paginate(IPagingParams pagingParams);
-    SpecificationBuilder<TEntity> Paginate(int pageIndex, int pageSize);
+    SpecificationBuilder<TEntity> Paginate(int pageIndex, int pageSize, bool fullPagingInfo = false);
 }

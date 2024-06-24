@@ -50,9 +50,9 @@ public class SpecificationBuilder<TEntity>(Specification<TEntity> specification)
         return this;
     }
 
-    public SpecificationBuilder<TEntity> Paginate(int pageIndex, int pageSize)
+    public SpecificationBuilder<TEntity> Paginate(int pageIndex, int pageSize, bool fullPagingInfo = false)
     {
-        _specification.ApplyPaging(pageIndex, pageSize);
+        _specification.ApplyPaging(pageIndex, pageSize, fullPagingInfo);
 
         return this;
     }
