@@ -9,5 +9,6 @@ public static class HttpContextExtensions
     public static void AddPaginationInfo<T>(this HttpContext httpContext, IPaginatedList<T> source)
     {
         httpContext.Response.Headers.Append(HeaderConstants.PAGINATION_KEY, source.ToJsonString());
+        httpContext.Response.Headers.Append(HeaderConstants.ACCESS_CONTROL_EXPOSE_HEADERS, HeaderConstants.PAGINATION_KEY);
     }
 }

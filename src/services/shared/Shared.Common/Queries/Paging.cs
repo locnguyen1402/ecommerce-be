@@ -19,7 +19,7 @@ public class PagingQuery
     {
         if (int.TryParse(context.Request.Query[pageIndexKey], out var pageIndex))
         {
-            return pageIndex > 0 ? pageIndex : DefaultPageIndex;
+            return pageIndex >= 0 ? pageIndex + 1 : DefaultPageIndex;
         }
         else
         {
