@@ -7,6 +7,10 @@ namespace ECommerce.Inventory.Api.Endpoints;
 
 public class ProductEndpoints(WebApplication app) : MinimalEndpoint(app, "/products")
 {
+    public override void Configure(RouteGroupBuilder builder)
+    {
+        builder.WithTags("Products");
+    }
     public override void MapEndpoints()
     {
         Builder.MapGet<GetProductsQueryHandler>("/");

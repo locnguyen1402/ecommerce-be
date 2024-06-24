@@ -1,19 +1,27 @@
-using MediatR;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace ECommerce.Shared.Common.Infrastructure.Endpoint;
 
 public abstract class MinimalEndpoint : IMinimalEndpoint
 {
+    protected string BasePath { get; private set; }
     protected IEndpointRouteBuilder Builder { get; private set; } = null!;
     public MinimalEndpoint(WebApplication app, string basePath)
     {
-        Builder = app.MapGroup(basePath);
+        BasePath = basePath;
+        var groupBuilder = app.MapGroup(basePath);
+        Builder = groupBuilder;
+        Configure(groupBuilder);
         MapEndpoints();
     }
     public abstract void MapEndpoints();
+
+    public virtual void Configure(RouteGroupBuilder builder)
+    {
+        builder.WithTags(BasePath);
+    }
 }
 
 public static class MinimalEndpointExtensions
