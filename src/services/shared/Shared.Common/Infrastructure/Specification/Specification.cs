@@ -22,8 +22,6 @@ public class Specification<TEntity> : ISpecification<TEntity> where TEntity : cl
         => Includes.Add(includeExpression);
     public void AddInclude(string includeString)
         => IncludeStrings.Add(includeString);
-    public void ApplyPaging(IPagingParams pagingParams)
-        => PagingParams = pagingParams;
     public void ApplyPaging(int pageIndex, int pageSize, bool fullPagingInfo)
         => PagingParams = new PagingParams(pageIndex, pageSize, fullPagingInfo);
     public void AsNoTracking()

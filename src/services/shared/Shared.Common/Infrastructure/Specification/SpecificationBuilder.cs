@@ -1,5 +1,6 @@
 using System.Linq.Expressions;
 using ECommerce.Shared.Common.Infrastructure.Data;
+using ECommerce.Shared.Common.Queries;
 
 namespace ECommerce.Shared.Common.Infrastructure.Specification;
 
@@ -43,13 +44,6 @@ public class SpecificationBuilder<TEntity>(Specification<TEntity> specification)
         return this;
     }
 
-    public SpecificationBuilder<TEntity> Paginate(IPagingParams pagingParams)
-    {
-        _specification.ApplyPaging(pagingParams);
-
-        return this;
-    }
-
     public SpecificationBuilder<TEntity> Paginate(int pageIndex, int pageSize, bool fullPagingInfo = false)
     {
         _specification.ApplyPaging(pageIndex, pageSize, fullPagingInfo);
@@ -57,4 +51,8 @@ public class SpecificationBuilder<TEntity>(Specification<TEntity> specification)
         return this;
     }
 
+    public SpecificationBuilder<TEntity> Paginate(PagingQuery pagingQuery)
+    {
+        return Paginate(pagingQuery.PageIndex, pagingQuery.PageSize, pagingQuery.FullPagingInfo);
+    }
 }

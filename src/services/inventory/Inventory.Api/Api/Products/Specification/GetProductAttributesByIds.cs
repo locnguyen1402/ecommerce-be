@@ -17,7 +17,7 @@ public class GetProductAttributesByIdsSpecification : Specification<ProductAttri
 
         if (pagingQuery != null)
         {
-            Builder.Paginate(pagingQuery.PageIndex, pagingQuery.PageSize);
+            Builder.Paginate(pagingQuery);
         }
     }
 }

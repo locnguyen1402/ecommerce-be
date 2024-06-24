@@ -22,7 +22,7 @@ public class GetCategoriesSpecification : Specification<Category>
 
         if (pagingQuery != null)
         {
-            Builder.Paginate(pagingQuery.PageIndex, pagingQuery.PageSize);
+            Builder.Paginate(pagingQuery);
         }
     }
 }
@@ -43,7 +43,7 @@ public class GetCategoriesSpecification<TResult> : Specification<Category, TResu
 
         if (pagingQuery != null)
         {
-            Builder.Paginate(pagingQuery.PageIndex, pagingQuery.PageSize);
+            Builder.Paginate(pagingQuery);
         }
     }
 }

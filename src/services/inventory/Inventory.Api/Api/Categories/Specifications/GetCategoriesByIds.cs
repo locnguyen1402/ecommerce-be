@@ -17,7 +17,7 @@ public class GetCategoriesByIdsSpecification : Specification<Category>
 
         if (pagingQuery != null)
         {
-            Builder.Paginate(pagingQuery.PageIndex, pagingQuery.PageSize);
+            Builder.Paginate(pagingQuery);
         }
     }
 }
