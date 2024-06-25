@@ -13,7 +13,7 @@ public class GetProductsQueryHandler : IEndpointHandler
     public Delegate Handle
     => async (
         string? keyword,
-        [AsParameters] PagingQuery pagingQuery,
+        PagingQuery pagingQuery,
         IProductRepository productRepository,
         CancellationToken cancellationToken
     ) =>
