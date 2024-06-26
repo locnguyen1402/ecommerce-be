@@ -15,7 +15,7 @@ public class GetCategoryByIdQueryHandler : IEndpointHandler
         CancellationToken cancellationToken
     ) =>
     {
-        var spec = new GetCategoryByIdSpecification<CategoryResponse>(id, CategoryProjection.ToCategoryResponse());
+        var spec = new GetCategoryByIdSpecification<AdminCategoryDetailResponse>(id, CategoryProjection.ToAdminCategoryDetailResponse());
 
         var category = await categoryRepository.FindAsync(spec, cancellationToken);
 

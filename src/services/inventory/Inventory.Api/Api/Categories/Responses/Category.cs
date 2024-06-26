@@ -11,6 +11,35 @@ public record CategoryResponse(
     string Description
 );
 
+public record AdminCategoryDetailResponse(
+    Guid Id,
+    string Name,
+    string Slug,
+    string Description
+)
+{
+    public AdminCategoryDetailResponse(
+        Guid id,
+        string name,
+        string slug,
+        string description,
+        Category? categoryParent
+    ) : this(id, name, slug, description)
+    {
+        if (categoryParent != null)
+        {
+            Parent = categoryParent.ToCategoryResponse();
+        }
+    }
+
+    public CategoryResponse? Parent { get; }
+};
+
+public record CategoryOption(
+    Guid Id,
+    string Name
+);
+
 public static class CategoryProjection
 {
     public static CategoryResponse ToCategoryResponse(this Category category)
@@ -25,5 +54,22 @@ public static class CategoryProjection
             x.Name,
             x.Slug,
             x.Description
+        );
+
+    public static Expression<Func<Category, CategoryOption>> ToCategoryOption()
+        => x =>
+        new CategoryOption(
+            x.Id,
+            x.Name
+        );
+
+    public static Expression<Func<Category, AdminCategoryDetailResponse>> ToAdminCategoryDetailResponse()
+        => x =>
+        new AdminCategoryDetailResponse(
+            x.Id,
+            x.Name,
+            x.Slug,
+            x.Description,
+            x.Parent
         );
 }

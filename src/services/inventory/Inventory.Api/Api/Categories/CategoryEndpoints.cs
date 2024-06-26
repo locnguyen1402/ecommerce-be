@@ -12,6 +12,8 @@ public class CategoryEndpoints(WebApplication app) : MinimalEndpoint(app, "/cate
         Builder.MapGet<GetCategoriesQueryHandler>("/");
         Builder.MapPost<CreateCategoryCommandHandler>("/");
 
+        Builder.MapGet<GetCategoryOptionsQueryHandler>("/options");
+
         Builder.MapGet<GetCategoryByIdQueryHandler>("/{id:Guid}");
         Builder.MapPut<UpdateCategoryCommandHandler>("/{id:Guid}");
 
