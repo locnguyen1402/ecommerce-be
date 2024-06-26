@@ -11,4 +11,8 @@ public class ProductAttribute(string name) : Entity()
     public ICollection<Product> Products => _products;
     private readonly List<ProductProductAttribute> _productProductAttributes = [];
     public ICollection<ProductProductAttribute> ProductProductAttributes => _productProductAttributes;
+    public void UpdateName(string name)
+    {
+        Name = name.ToLower();
+    }
 }

@@ -23,5 +23,6 @@ public class ProductEndpoints(WebApplication app) : MinimalEndpoint(app, "/produ
 
         Builder.MapGet<GetProductAttributesQueryHandler>("/attributes");
         Builder.MapPost<CreateProductAttributeCommandHandler>("/attributes");
+        Builder.MapPut<UpdateProductAttributeCommandHandler>("/attributes/{id:Guid}");
     }
 }
