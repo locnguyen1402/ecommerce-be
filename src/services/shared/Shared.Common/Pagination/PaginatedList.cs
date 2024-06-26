@@ -12,7 +12,7 @@ public class PaginatedList<T> : List<T>, IPaginatedList<T>
 {
     public int PageIndex { get; private set; }
     public int PageSize { get; private set; }
-    public bool HasPreviousPage => PageIndex > 1;
+    public bool HasPreviousPage => PageIndex >= 1;
     public bool HasNextPage { get; private set; } = false;
     public int? TotalItems { get; private set; }
     public int? TotalPages => TotalItems.HasValue ? (int)Math.Ceiling(TotalItems.Value / (double)PageSize) : null;
@@ -34,7 +34,7 @@ public class PaginatedList<T> : List<T>, IPaginatedList<T>
 
     public static IPaginatedList<T> Create(IEnumerable<T> source, int page, int pageSize)
     {
-        var items = source.Skip((page - 1) * pageSize).Take(pageSize + 1).ToList();
+        var items = source.Skip(page * pageSize).Take(pageSize + 1).ToList();
 
         var hasNextPage = items.Count > pageSize;
 
@@ -46,7 +46,7 @@ public class PaginatedList<T> : List<T>, IPaginatedList<T>
 
     public static async Task<IPaginatedList<T>> CreateAsync(IQueryable<T> source, int page, int pageSize, CancellationToken cancellationToken = default)
     {
-        var items = await source.Skip((page - 1) * pageSize).Take(pageSize + 1).ToListAsync(cancellationToken);
+        var items = await source.Skip(page * pageSize).Take(pageSize + 1).ToListAsync(cancellationToken);
 
         var hasNextPage = items.Count > pageSize;
         if (hasNextPage)
@@ -61,7 +61,7 @@ public class PaginatedList<T> : List<T>, IPaginatedList<T>
     {
         var totalItems = await source.CountAsync(cancellationToken);
 
-        var items = await source.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync(cancellationToken);
+        var items = await source.Skip(page * pageSize).Take(pageSize).ToListAsync(cancellationToken);
 
         var hasNextPage = totalItems > page * pageSize;
 

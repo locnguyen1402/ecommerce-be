@@ -5,7 +5,7 @@ namespace ECommerce.Shared.Common.Queries;
 
 public class PagingQuery
 {
-    private const int DefaultPageIndex = 1;
+    private const int DefaultPageIndex = 0;
     private const int DefaultPageSize = 10;
     private const bool DefaultFullPagingInfo = false;
     private const string pageIndexKey = "pageIndex";
@@ -19,7 +19,7 @@ public class PagingQuery
     {
         if (int.TryParse(context.Request.Query[pageIndexKey], out var pageIndex))
         {
-            return pageIndex >= 0 ? pageIndex + 1 : DefaultPageIndex;
+            return pageIndex > 0 ? pageIndex : DefaultPageIndex;
         }
         else
         {
