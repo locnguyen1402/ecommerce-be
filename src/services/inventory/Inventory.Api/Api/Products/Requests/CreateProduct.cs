@@ -36,6 +36,10 @@ public class CreateProductRequestValidator : AbstractValidator<CreateProductRequ
             .NotEmpty()
             .Must(x => x != Guid.Empty && Guid.TryParse(x.ToString(), out _));
 
+        RuleFor(x => x.Categories)
+            .Must(x => x.Count == x.Distinct().Count())
+            .WithMessage($"{PrefixErrorMessage} Category id must be unique");
+
         RuleForEach(x => x.Categories)
             .NotEmpty()
             .Must(x => x != Guid.Empty && Guid.TryParse(x.ToString(), out _))

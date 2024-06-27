@@ -1,7 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using FluentValidation;
 
-using ECommerce.Shared.Common.AggregatesModel.Response;
 using ECommerce.Shared.Common.Infrastructure.Endpoint;
 
 using ECommerce.Inventory.Domain.AggregatesModel;
@@ -9,6 +8,7 @@ using ECommerce.Inventory.Api.Products.Specifications;
 using ECommerce.Inventory.Api.Products.Requests;
 using ECommerce.Inventory.Api.Utilities;
 using ECommerce.Inventory.Api.Products.Responses;
+using ECommerce.Inventory.Api.Categories.Specifications;
 
 namespace ECommerce.Inventory.Api.Products.Commands;
 
@@ -21,6 +21,7 @@ public class UpdateProductCommandHandler : IEndpointHandler
         IValidator<UpdateProductRequest> validator,
         IProductRepository productRepository,
         IProductAttributeRepository productAttributeRepository,
+        ICategoryRepository categoryRepository,
         CancellationToken cancellationToken
     ) =>
     {
@@ -40,9 +41,32 @@ public class UpdateProductCommandHandler : IEndpointHandler
             return Results.BadRequest("Slug is already existed");
         }
 
-        // var oldVariantIds = request.Variants.Where(x => x.Id != null).Select(x => x.Id).ToList();
+        List<Category> selectedCategories = [];
+        if (request.Categories.Count > 0)
+        {
+            var categoriesSpec = new GetCategoriesByIdsSpecification([.. request.Categories]);
+            selectedCategories = (await categoryRepository.GetAsync(categoriesSpec, cancellationToken)).ToList();
+
+            if (selectedCategories.Count != request.Categories.Count)
+            {
+                return Results.BadRequest("Some categories are not found");
+            }
+        }
+
+        List<ProductAttribute> selectedAttributes = [];
+        if (request.Attributes.Count != 0)
+        {
+            var productAttributesSpec = new GetProductAttributesByIdsSpecification([.. request.Attributes]);
+            selectedAttributes = (await productAttributeRepository.GetAsync(productAttributesSpec, cancellationToken)).ToList();
+
+            if (selectedAttributes.Count != request.Attributes.Count)
+            {
+                return Results.BadRequest("Some attributes are not found");
+            }
+        }
 
         var product = await productRepository.Query
+                        .Include(p => p.Categories)
                         .Include(p => p.ProductAttributes)
                         .Include(p => p.ProductVariants)
                             .ThenInclude(pv => pv.ProductVariantAttributeValues)
@@ -54,21 +78,8 @@ public class UpdateProductCommandHandler : IEndpointHandler
         }
 
         product.UpdateGeneralInfo(request.Name, request.Slug, request.Description);
-
-        List<ProductAttribute> selectedAttributes = [];
-
-        if (request.Attributes.Count != 0)
-        {
-            var productAttributesSpec = new GetProductAttributesByIdsSpecification([.. request.Attributes]);
-            selectedAttributes = (await productAttributeRepository.GetAsync(productAttributesSpec, cancellationToken)).ToList();
-
-            if (selectedAttributes.Count != request.Attributes.Count)
-            {
-                return Results.BadRequest("Some attributes are not found");
-            }
-
-            product.AddOrUpdateAttributes(selectedAttributes);
-        }
+        product.AddOrUpdateCategories(selectedCategories);
+        product.AddOrUpdateAttributes(selectedAttributes);
 
         ProductUtils.UpdateVariantsInProduct(product, request.Variants);
 
