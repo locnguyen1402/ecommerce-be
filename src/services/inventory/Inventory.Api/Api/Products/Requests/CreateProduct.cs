@@ -25,6 +25,9 @@ public class CreateProductRequestValidator : AbstractValidator<CreateProductRequ
         RuleFor(x => x.Slug)
             .NotEmpty();
 
+        RuleFor(x => x.Description)
+            .MaximumLength(500);
+
         RuleFor(x => x.Attributes)
             .Must(x => x.Count == x.Distinct().Count())
             .WithMessage($"{PrefixErrorMessage} Attribute id must be unique");
