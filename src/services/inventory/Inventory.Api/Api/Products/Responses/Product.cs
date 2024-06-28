@@ -26,7 +26,7 @@ public record AdminProductDetailResponse(
         ProductAttributes = productAttributes;
     }
 
-    public decimal Price => Variants.Min(x => x.Price);
+    public decimal Price => Variants.Count > 0 ? Variants.Min(x => x.Price) : 0;
     public List<ProductAttributeWithValuesResponse> Attributes
         => ProductAttributes
             .Select(x => new ProductAttributeWithValuesResponse(

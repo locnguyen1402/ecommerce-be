@@ -25,6 +25,9 @@ public class CreateProductRequestValidator : AbstractValidator<CreateProductRequ
         RuleFor(x => x.Slug)
             .NotEmpty();
 
+        RuleFor(x => x.Description)
+            .MaximumLength(500);
+
         RuleFor(x => x.Attributes)
             .Must(x => x.Count == x.Distinct().Count())
             .WithMessage($"{PrefixErrorMessage} Attribute id must be unique");
@@ -32,6 +35,10 @@ public class CreateProductRequestValidator : AbstractValidator<CreateProductRequ
         RuleForEach(x => x.Attributes)
             .NotEmpty()
             .Must(x => x != Guid.Empty && Guid.TryParse(x.ToString(), out _));
+
+        RuleFor(x => x.Categories)
+            .Must(x => x.Count == x.Distinct().Count())
+            .WithMessage($"{PrefixErrorMessage} Category id must be unique");
 
         RuleForEach(x => x.Categories)
             .NotEmpty()

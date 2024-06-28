@@ -25,5 +25,11 @@ public class UpdateCategoryRequestValidator : AbstractValidator<UpdateCategoryRe
 
         RuleFor(x => x.Description)
             .MaximumLength(500);
+
+        RuleFor(x => x.ParentId)
+            .NotEmpty()
+            .Must(x => x != Guid.Empty && Guid.TryParse(x.ToString(), out _))
+            .WithMessage($"{PrefixErrorMessage} Invalid parent id format")
+            .When(x => x.ParentId != null);
     }
 }
