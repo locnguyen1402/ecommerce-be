@@ -15,7 +15,7 @@ public class GetProductByIdQueryHandler : IEndpointHandler
         CancellationToken cancellationToken
     ) =>
     {
-        var spec = new GetProductByIdSpecification<ProductResponse>(id, ProductProjection.ToProductResponse());
+        var spec = new GetProductByIdSpecification<AdminProductDetailResponse>(id, ProductProjection.ToAdminProductDetailResponse());
 
         var product = await productRepository.FindAsync(spec, cancellationToken);
 

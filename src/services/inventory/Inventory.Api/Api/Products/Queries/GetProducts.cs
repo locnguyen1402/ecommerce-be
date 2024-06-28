@@ -18,8 +18,8 @@ public class GetProductsQueryHandler : IEndpointHandler
         CancellationToken cancellationToken
     ) =>
     {
-        var spec = new GetProductsSpecification<ProductResponse>(
-            ProductProjection.ToProductResponse()
+        var spec = new GetProductsSpecification<AdminProductDetailResponse>(
+            ProductProjection.ToAdminProductDetailResponse()
             , keyword
             , pagingQuery
             );

@@ -15,7 +15,7 @@ public class GetProductBySlugQueryHandler : IEndpointHandler
         CancellationToken cancellationToken
     ) =>
     {
-        var spec = new GetProductBySlugSpecification<ProductResponse>(slug, ProductProjection.ToProductResponse());
+        var spec = new GetProductBySlugSpecification<AdminProductDetailResponse>(slug, ProductProjection.ToAdminProductDetailResponse());
 
         var product = await productRepository.FindAsync(spec, cancellationToken);
 

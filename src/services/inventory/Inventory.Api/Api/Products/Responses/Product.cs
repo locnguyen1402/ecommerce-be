@@ -4,7 +4,7 @@ using ECommerce.Inventory.Domain.AggregatesModel;
 
 namespace ECommerce.Inventory.Api.Products.Responses;
 
-public record ProductResponse(
+public record AdminProductDetailResponse(
     Guid Id,
     string Name,
     string Slug,
@@ -14,7 +14,7 @@ public record ProductResponse(
 )
 {
     private List<ProductAttributeResponse> ProductAttributes { get; } = [];
-    public ProductResponse(
+    public AdminProductDetailResponse(
         Guid id,
         string name,
         string slug,
@@ -38,14 +38,14 @@ public record ProductResponse(
 
 public static class ProductProjection
 {
-    public static ProductResponse ToProductResponse(this Product product)
+    public static AdminProductDetailResponse ToAdminProductDetailResponse(this Product product)
     {
-        return ToProductResponse().Compile().Invoke(product);
+        return ToAdminProductDetailResponse().Compile().Invoke(product);
     }
 
-    public static Expression<Func<Product, ProductResponse>> ToProductResponse()
+    public static Expression<Func<Product, AdminProductDetailResponse>> ToAdminProductDetailResponse()
         => x =>
-        new ProductResponse(
+        new AdminProductDetailResponse(
             x.Id,
             x.Name,
             x.Slug,
