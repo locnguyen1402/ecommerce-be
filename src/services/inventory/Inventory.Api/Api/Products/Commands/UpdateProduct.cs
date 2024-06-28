@@ -85,6 +85,6 @@ public class UpdateProductCommandHandler : IEndpointHandler
 
         await productRepository.UpdateAndSaveChangeAsync(product, cancellationToken);
 
-        return TypedResults.Ok(product.ToProductResponse());
+        return TypedResults.Ok(product.ToAdminProductDetailResponse());
     };
 }
