@@ -4,6 +4,6 @@ using ECommerce.Shared.Common.Infrastructure.Repositories;
 
 namespace ECommerce.Inventory.Data.Repositories;
 
-public class CategoryRepository(InventoryDbContext dbContext) : EntityRepository<Category>(dbContext), ICategoryRepository
+public class CategoryRepository(InventoryDbContext dbContext) : Repository<Category>(dbContext), ICategoryRepository
 {
 }

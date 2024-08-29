@@ -2,7 +2,7 @@ using ECommerce.Shared.Common.Infrastructure.Data;
 
 namespace ECommerce.Inventory.Domain.AggregatesModel;
 
-public class Product(string name, string slug, string? description) : Entity()
+public class Product(string name, string slug, string? description) : EntityWithDiscounts
 {
     public string Slug { get; private set; } = slug;
     public string Name { get; private set; } = name;

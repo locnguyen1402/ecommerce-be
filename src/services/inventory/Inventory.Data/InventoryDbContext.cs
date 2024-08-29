@@ -15,6 +15,7 @@ public class InventoryDbContext(DbContextOptions<InventoryDbContext> options) : 
     public DbSet<ProductVariantAttributeValue> ProductVariantAttributeValues => Set<ProductVariantAttributeValue>();
     public DbSet<CategoryProduct> CategoryProducts => Set<CategoryProduct>();
     public DbSet<ProductProductAttribute> ProductProductAttributes => Set<ProductProductAttribute>();
+    public DbSet<Discount> Discounts => Set<Discount>();
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfiguration(new CategoryEntityConfiguration());
@@ -22,5 +23,6 @@ public class InventoryDbContext(DbContextOptions<InventoryDbContext> options) : 
         modelBuilder.ApplyConfiguration(new ProductAttributeEntityConfiguration());
         modelBuilder.ApplyConfiguration(new ProductVariantEntityConfiguration());
         modelBuilder.ApplyConfiguration(new ProductVariantAttributeValueEntityConfiguration());
+        modelBuilder.ApplyConfiguration(new DiscountEntityConfiguration());
     }
 }

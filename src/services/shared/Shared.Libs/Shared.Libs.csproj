@@ -1,0 +1,8 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <AssemblyName>ECommerce.Shared.Libs</AssemblyName>
+    <RootNamespace>ECommerce.Shared.Libs</RootNamespace>
+  </PropertyGroup>
+
+</Project>

@@ -8,6 +8,7 @@
   <!-- Dependencies -->
   <ItemGroup>
     <ProjectReference Include="../../shared/Shared.Common/Shared.Common.csproj" />
+    <ProjectReference Include="../../shared/Shared.Libs/Shared.Libs.csproj" />
   </ItemGroup>
 
 </Project>

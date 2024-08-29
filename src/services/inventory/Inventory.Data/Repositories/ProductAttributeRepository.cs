@@ -4,6 +4,6 @@ using ECommerce.Shared.Common.Infrastructure.Repositories;
 
 namespace ECommerce.Inventory.Data.Repositories;
 
-public class ProductAttributeRepository(InventoryDbContext dbContext) : EntityRepository<ProductAttribute>(dbContext), IProductAttributeRepository
+public class ProductAttributeRepository(InventoryDbContext dbContext) : Repository<ProductAttribute>(dbContext), IProductAttributeRepository
 {
 }
