@@ -1,0 +1,33 @@
+using System.Linq.Expressions;
+
+using ECommerce.Inventory.Domain.AggregatesModel;
+
+namespace ECommerce.Inventory.Api.Stores.Responses;
+
+public record StoreResponse(
+    Guid Id,
+    string Name,
+    string Slug,
+    string? Description,
+    bool IsActive
+)
+{
+};
+
+public static class StoreProjection
+{
+    public static StoreResponse ToStoreResponse(this Store store)
+    {
+        return ToStoreResponse().Compile().Invoke(store);
+    }
+
+    public static Expression<Func<Store, StoreResponse>> ToStoreResponse()
+        => x =>
+        new StoreResponse(
+            x.Id
+            , x.Name
+            , x.Slug
+            , x.Description
+            , x.IsActive
+        );
+}
