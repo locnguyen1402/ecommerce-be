@@ -22,4 +22,9 @@ public class Store(string name, string slug, Guid merchantId) : Entity
         Description = description;
         PhoneNumber = phoneNumber;
     }
+
+    public void SetMerchant(Guid merchantId)
+    {
+        MerchantId = merchantId;
+    }
 }

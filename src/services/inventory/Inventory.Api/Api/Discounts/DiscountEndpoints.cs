@@ -5,7 +5,7 @@ using ECommerce.Inventory.Api.Discounts.Commands;
 
 namespace ECommerce.Inventory.Api.Endpoints;
 
-public class DiscountEndpoints(WebApplication app) : MinimalEndpoint(app, "/discounts")
+public class DiscountEndpoints(WebApplication app) : MinimalEndpoint(app, "/inventory/discounts")
 {
     public override void Configure(RouteGroupBuilder builder)
     {

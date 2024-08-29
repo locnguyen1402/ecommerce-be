@@ -5,7 +5,7 @@ using ECommerce.Inventory.Api.Categories.Queries;
 
 namespace ECommerce.Inventory.Api.Endpoints;
 
-public class CategoryEndpoints(WebApplication app) : MinimalEndpoint(app, "/categories")
+public class CategoryEndpoints(WebApplication app) : MinimalEndpoint(app, "/inventory/categories")
 {
     public override void Configure(RouteGroupBuilder builder)
     {

@@ -5,7 +5,7 @@ using ECommerce.Inventory.Api.Products.Commands;
 
 namespace ECommerce.Inventory.Api.Endpoints;
 
-public class ProductEndpoints(WebApplication app) : MinimalEndpoint(app, "/products")
+public class ProductEndpoints(WebApplication app) : MinimalEndpoint(app, "/inventory/products")
 {
     public override void Configure(RouteGroupBuilder builder)
     {
