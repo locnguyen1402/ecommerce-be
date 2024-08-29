@@ -22,6 +22,7 @@ public class ProductVariantEntityConfiguration : BaseEntityConfiguration<Product
 
         builder.HasOne(p => p.Product)
             .WithMany(p => p.ProductVariants)
-            .HasForeignKey(p => p.ProductId);
+            .HasForeignKey(p => p.ProductId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

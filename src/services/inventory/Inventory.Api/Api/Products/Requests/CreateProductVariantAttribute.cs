@@ -5,6 +5,7 @@ namespace ECommerce.Inventory.Api.Products.Requests;
 public class CreateProductVariantAttributeRequest
 {
     public Guid ProductAttributeId { get; set; }
+    public Guid? AttributeValueId { get; set; }
     public string Value { get; set; } = string.Empty;
 
     public override bool Equals(object? obj)

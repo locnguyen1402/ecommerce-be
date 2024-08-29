@@ -27,7 +27,7 @@ public static class ProductUtils
 
             foreach (var value in variant.Values)
             {
-                attributeValues.Add(new (value.ProductAttributeId, value.Value));
+                attributeValues.Add(new(value.ProductAttributeId, value.Value, value.AttributeValueId));
             }
 
             product.AddVariant(variant.Stock, variant.Price, attributeValues);
@@ -56,7 +56,7 @@ public static class ProductUtils
             {
                 foreach (var value in variant.Values)
                 {
-                    existingVariant.AddOrUpdateAttributeValue(value.ProductAttributeId, value.Value);
+                    existingVariant.AddOrUpdateAttributeValue(value.ProductAttributeId, value.Value, value.AttributeValueId);
                 }
             }
         }

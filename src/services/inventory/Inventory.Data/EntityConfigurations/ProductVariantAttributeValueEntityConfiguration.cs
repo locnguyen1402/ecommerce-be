@@ -12,18 +12,21 @@ public class ProductVariantAttributeValueEntityConfiguration : BaseEntityConfigu
     {
         base.Configure(builder);
 
-        builder.HasAlternateKey(p => new { p.ProductVariantId, p.ProductAttributeId });
-
-        builder.Property(p => p.Value)
-            .IsRequired()
-            .HasMaxLength(200);
+        builder.HasAlternateKey(p => new { p.ProductVariantId, p.ProductAttributeId, p.AttributeValueId });
 
         builder.HasOne(p => p.ProductVariant)
             .WithMany(p => p.ProductVariantAttributeValues)
-            .HasForeignKey(p => p.ProductVariantId);
+            .HasForeignKey(p => p.ProductVariantId)
+            .OnDelete(DeleteBehavior.Cascade);
 
         builder.HasOne(p => p.ProductAttribute)
             .WithMany(p => p.ProductVariantAttributeValues)
-            .HasForeignKey(p => p.ProductAttributeId);
+            .HasForeignKey(p => p.ProductAttributeId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.HasOne(p => p.AttributeValue)
+            .WithMany(p => p.ProductVariantAttributeValues)
+            .HasForeignKey(p => p.AttributeValueId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

@@ -10,7 +10,7 @@ public class ProductVariant(int stock, decimal price) : Entity()
     public Guid ProductId { get; private set; }
     public Product? Product { get; set; }
     private readonly HashSet<ProductVariantAttributeValue> _productVariantAttributeValues = [];
-    public ICollection<ProductVariantAttributeValue> ProductVariantAttributeValues => _productVariantAttributeValues;
+    public IReadOnlyCollection<ProductVariantAttributeValue> ProductVariantAttributeValues => _productVariantAttributeValues;
     public void UpdatePrice(decimal price)
     {
         if (price < 0)
@@ -27,7 +27,7 @@ public class ProductVariant(int stock, decimal price) : Entity()
         }
         Stock = stock;
     }
-    public void AddOrUpdateAttributeValue(Guid attributeId, string attributeValue)
+    public void AddOrUpdateAttributeValue(Guid attributeId, string attributeValue, Guid? attributeValueId)
     {
         if (attributeValue.Trim().Length == 0)
         {
@@ -38,19 +38,21 @@ public class ProductVariant(int stock, decimal price) : Entity()
 
         if (existingValue != null)
         {
-            existingValue.UpdateValue(attributeValue);
+            existingValue.UpdateValue(attributeValue, attributeValueId);
         }
         else
         {
-            var value = new ProductVariantAttributeValue(attributeId, attributeValue);
+            var value = new ProductVariantAttributeValue(attributeId, attributeValue, attributeValueId);
 
             _productVariantAttributeValues.Add(value);
         }
     }
+
     public void AddOrUpdateAttributeValue(ProductVariantAttributeValue value)
     {
-        AddOrUpdateAttributeValue(value.ProductAttributeId, value.Value);
+        AddOrUpdateAttributeValue(value.ProductAttributeId, value.AttributeValue.Value, value.AttributeValueId);
     }
+
     public void RemoveAttributeValue(Guid attributeId)
     {
         var value = _productVariantAttributeValues.FirstOrDefault(x => x.ProductAttributeId == attributeId);

@@ -10,11 +10,11 @@ public class Category(string name, string slug, string? description, Guid? paren
     public Guid? ParentId { get; private set; } = parentId;
     public Category? Parent { get; private set; }
     private readonly List<Category> _categories = [];
-    public ICollection<Category> Categories => _categories;
+    public IReadOnlyCollection<Category> Categories => _categories;
     private readonly List<CategoryProduct> _categoryProducts = [];
-    public ICollection<CategoryProduct> CategoryProducts => _categoryProducts;
+    public IReadOnlyCollection<CategoryProduct> CategoryProducts => _categoryProducts;
     private readonly List<Product> _products = [];
-    public ICollection<Product> Products => _products;
+    public IReadOnlyCollection<Product> Products => _products;
     public void ChangeParent(Guid? parentId)
     {
         ParentId = parentId;

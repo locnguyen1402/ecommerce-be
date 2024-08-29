@@ -7,6 +7,7 @@ using ECommerce.Shared.Data.Extensions;
 using ECommerce.Shared.Common.Constants;
 
 using ECommerce.Inventory.Data;
+using ECommerce.Inventory.DbMigrator.Seeds;
 
 namespace ECommerce.Inventory.DbMigrator;
 
@@ -26,7 +27,7 @@ class Program
             })
             .Build();
 
-        await host.MigrateDbContext<InventoryDbContext>();
+        await host.MigrateDbContext<InventoryDbContext>(Seed_Release_001.SeedAsync);
 
         Environment.Exit(-1);
     }

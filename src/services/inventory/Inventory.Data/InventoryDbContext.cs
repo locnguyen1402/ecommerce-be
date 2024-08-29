@@ -20,20 +20,25 @@ public class InventoryDbContext(DbContextOptions<InventoryDbContext> options) : 
     public DbSet<Store> Stores => Set<Store>();
     public DbSet<MerchantProduct> MerchantProducts => Set<MerchantProduct>();
     public DbSet<MerchantCategory> MerchantCategories => Set<MerchantCategory>();
+    public DbSet<AttributeValue> AttributeValues => Set<AttributeValue>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        // Product & Category
         modelBuilder.ApplyConfiguration(new CategoryEntityConfiguration());
         modelBuilder.ApplyConfiguration(new ProductEntityConfiguration());
         modelBuilder.ApplyConfiguration(new ProductAttributeEntityConfiguration());
         modelBuilder.ApplyConfiguration(new ProductVariantEntityConfiguration());
         modelBuilder.ApplyConfiguration(new ProductVariantAttributeValueEntityConfiguration());
+        modelBuilder.ApplyConfiguration(new AttributeValueEntityConfiguration());
+
+        // Discount
         modelBuilder.ApplyConfiguration(new DiscountEntityConfiguration());
 
+        // Merchant & Store
         modelBuilder.ApplyConfiguration(new MerchantEntityConfiguration());
         modelBuilder.ApplyConfiguration(new MerchantCategoryEntityConfiguration());
         modelBuilder.ApplyConfiguration(new MerchantProductEntityConfiguration());
         modelBuilder.ApplyConfiguration(new StoreEntityConfiguration());
-
     }
 }

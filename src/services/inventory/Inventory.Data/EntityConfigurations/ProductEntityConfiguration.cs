@@ -29,27 +29,33 @@ public class ProductEntityConfiguration : BaseEntityConfiguration<Product>
 
                     p.HasOne(cp => cp.Category)
                         .WithMany(c => c.CategoryProducts)
-                        .HasForeignKey(cp => cp.CategoryId);
+                        .HasForeignKey(cp => cp.CategoryId)
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     p.HasOne(cp => cp.Product)
                         .WithMany(c => c.CategoryProducts)
-                        .HasForeignKey(cp => cp.ProductId);
+                        .HasForeignKey(cp => cp.ProductId)
+                        .OnDelete(DeleteBehavior.Cascade);
+
                 }
             );
 
         builder.HasMany(p => p.ProductAttributes)
             .WithMany(p => p.Products)
             .UsingEntity<ProductProductAttribute>(
-                p => {
+                p =>
+                {
                     p.HasKey(ppa => new { ppa.ProductId, ppa.ProductAttributeId });
 
                     p.HasOne(ppa => ppa.Product)
                         .WithMany(p => p.ProductProductAttributes)
-                        .HasForeignKey(ppa => ppa.ProductId);
+                        .HasForeignKey(ppa => ppa.ProductId)
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     p.HasOne(ppa => ppa.ProductAttribute)
                         .WithMany(p => p.ProductProductAttributes)
-                        .HasForeignKey(ppa => ppa.ProductAttributeId);
+                        .HasForeignKey(ppa => ppa.ProductAttributeId)
+                        .OnDelete(DeleteBehavior.Cascade);
                 }
             );
     }

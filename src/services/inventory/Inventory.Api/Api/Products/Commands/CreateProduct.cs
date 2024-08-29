@@ -71,7 +71,7 @@ public class CreateProductCommandHandler : IEndpointHandler
 
                 foreach (var value in variant.Values)
                 {
-                    attributeValues.Add(new(value.ProductAttributeId, value.Value));
+                    attributeValues.Add(new(value.ProductAttributeId, value.Value, value.AttributeValueId));
                 }
 
                 newProduct.AddVariant(variant.Stock, variant.Price, attributeValues);
