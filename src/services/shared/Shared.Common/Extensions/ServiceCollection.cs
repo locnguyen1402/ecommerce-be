@@ -1,6 +1,8 @@
 using System.Reflection;
 
 using Microsoft.EntityFrameworkCore;
+using Npgsql;
+
 using Microsoft.Extensions.DependencyInjection;
 
 using FluentValidation;
@@ -53,15 +55,33 @@ public static class ServiceCollectionExtensions
 
     public static IServiceCollection ConfigDbContext<TDbContext>(this IServiceCollection services, string connectionString, string assembly) where TDbContext : DbContext
     {
-        services.AddDbContext<TDbContext>(option =>
+        services.AddDbContext<TDbContext>(options =>
         {
-            option
-                .UseNpgsql(connectionString, opt =>
+            var dataSourceBuilder = new NpgsqlSlimDataSourceBuilder(connectionString);
+
+            dataSourceBuilder.EnableDynamicJson(jsonbClrTypes: [typeof(IReadOnlyCollection<string>)]);
+            dataSourceBuilder.EnableArrays();
+
+            var dataSource = dataSourceBuilder.Build();
+
+            options.UseNpgsql(
+                dataSource,
+                sqlOptions =>
                 {
-                    opt.MigrationsAssembly(assembly);
-                })
-                .UseSnakeCaseNamingConvention();
+                    sqlOptions.MigrationsAssembly(assembly);
+                }).UseSnakeCaseNamingConvention();
         });
+
+        // Old version
+        // services.AddDbContext<TDbContext>(option =>
+        // {
+        //     option
+        //         .UseNpgsql(connectionString, opt =>
+        //         {
+        //             opt.MigrationsAssembly(assembly);
+        //         })
+        //         .UseSnakeCaseNamingConvention();
+        // });
 
         return services;
     }
