@@ -29,27 +29,42 @@ public class CreateDiscountCommandHandler : IEndpointHandler
             return Results.ValidationProblem(validationResult.ToDictionary());
         }
 
-        var newDiscount = new Discount(request.Name, request.Code, request.Type);
-
-        newDiscount.Update(request.Description, request.DiscountPercentage, request.DiscountAmount, request.MaxDiscountAmount, request.StartDate, request.EndDate);
-
-        List<Product> selectedProducts = [];
-        if (request.Type == DiscountType.ASSIGNED_TO_PRODUCT && request.AppliedEntityIds.Count > 0)
+        if (await discountRepository.AnyAsync(x => x.Slug == request.Slug, cancellationToken))
         {
-            var productsSpec = new GetProductByIdsSpecification([.. request.AppliedEntityIds]);
-            selectedProducts = (await productRepository.GetAsync(productsSpec, cancellationToken)).ToList();
-
-            newDiscount.AddOrUpdateAppliedToProducts(selectedProducts);
+            return Results.BadRequest("Slug is already taken");
         }
 
-        List<Category> selectedCategories = [];
-        if (request.Type == DiscountType.ASSIGNED_TO_CATEGORY && request.AppliedEntityIds.Count > 0)
-        {
-            var categoriesSpec = new GetCategoriesByIdsSpecification([.. request.AppliedEntityIds]);
-            selectedCategories = (await categoryRepository.GetAsync(categoriesSpec, cancellationToken)).ToList();
+        var newDiscount = new Discount(request.Name, request.Slug, request.Code);
 
-            newDiscount.AddOrUpdateAppliedToCategories(selectedCategories);
-        }
+        newDiscount.Update(
+            request.Description
+            , request.DiscountValue
+            , request.MinOrderValue
+            , request.MaxDiscountAmount
+            , request.StartDate
+            , request.EndDate);
+
+        newDiscount.SetDiscountType(request.DiscountType);
+        newDiscount.SetDiscountUnit(request.DiscountUnit);
+        newDiscount.SetLimitation(request.LimitationTimes, request.LimitationType);
+
+        // List<Product> selectedProducts = [];
+        // if (request.Type == DiscountType.ASSIGNED_TO_PRODUCT && request.AppliedEntityIds.Count > 0)
+        // {
+        //     var productsSpec = new GetProductByIdsSpecification([.. request.AppliedEntityIds]);
+        //     selectedProducts = (await productRepository.GetAsync(productsSpec, cancellationToken)).ToList();
+
+        //     newDiscount.AddOrUpdateAppliedToProducts(selectedProducts);
+        // }
+
+        // List<Category> selectedCategories = [];
+        // if (request.Type == DiscountType.ASSIGNED_TO_CATEGORY && request.AppliedEntityIds.Count > 0)
+        // {
+        //     var categoriesSpec = new GetCategoriesByIdsSpecification([.. request.AppliedEntityIds]);
+        //     selectedCategories = (await categoryRepository.GetAsync(categoriesSpec, cancellationToken)).ToList();
+
+        //     newDiscount.AddOrUpdateAppliedToCategories(selectedCategories);
+        // }
 
         await discountRepository.AddAndSaveChangeAsync(newDiscount, cancellationToken);
 

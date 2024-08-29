@@ -14,8 +14,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ECommerce.Inventory.DbMigrator.PostgreSQL.Migrations
 {
     [DbContext(typeof(InventoryDbContext))]
-    [Migration("20240829031608_AddDiscount")]
-    partial class AddDiscount
+    [Migration("20240829090306_AddMerchant")]
+    partial class AddMerchant
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -124,11 +124,11 @@ namespace ECommerce.Inventory.DbMigrator.PostgreSQL.Migrations
 
             modelBuilder.Entity("ECommerce.Inventory.Domain.AggregatesModel.CategoryProduct", b =>
                 {
-                    b.Property<Guid>("CategoryId")
+                    b.Property<Guid?>("CategoryId")
                         .HasColumnType("uuid")
                         .HasColumnName("category_id");
 
-                    b.Property<Guid>("ProductId")
+                    b.Property<Guid?>("ProductId")
                         .HasColumnType("uuid")
                         .HasColumnName("product_id");
 
@@ -151,7 +151,8 @@ namespace ECommerce.Inventory.DbMigrator.PostgreSQL.Migrations
 
                     b.Property<string>("Code")
                         .IsRequired()
-                        .HasColumnType("text")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
                         .HasColumnName("code");
 
                     b.Property<DateTime>("CreatedAt")
@@ -167,17 +168,25 @@ namespace ECommerce.Inventory.DbMigrator.PostgreSQL.Migrations
                         .HasColumnName("description")
                         .HasDefaultValueSql("''");
 
-                    b.Property<decimal?>("DiscountAmount")
-                        .HasColumnType("numeric")
-                        .HasColumnName("discount_amount");
-
                     b.Property<Guid?>("DiscountId")
                         .HasColumnType("uuid")
                         .HasColumnName("discount_id");
 
-                    b.Property<decimal?>("DiscountPercentage")
-                        .HasColumnType("numeric")
-                        .HasColumnName("discount_percentage");
+                    b.Property<string>("DiscountType")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("discount_type")
+                        .HasDefaultValueSql("'UNSPECIFIED'");
+
+                    b.Property<string>("DiscountUnit")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("discount_unit")
+                        .HasDefaultValueSql("'UNSPECIFIED'");
 
                     b.Property<IReadOnlyCollection<DiscountUsageHistory>>("DiscountUsageHistory")
                         .IsRequired()
@@ -185,6 +194,10 @@ namespace ECommerce.Inventory.DbMigrator.PostgreSQL.Migrations
                         .HasColumnType("jsonb")
                         .HasColumnName("discount_usage_history")
                         .HasDefaultValueSql("'[]'");
+
+                    b.Property<decimal?>("DiscountValue")
+                        .HasColumnType("numeric")
+                        .HasColumnName("discount_value");
 
                     b.Property<DateTimeOffset?>("EndDate")
                         .HasColumnType("timestamp with time zone")
@@ -215,9 +228,9 @@ namespace ECommerce.Inventory.DbMigrator.PostgreSQL.Migrations
                         .HasColumnType("numeric")
                         .HasColumnName("max_discount_amount");
 
-                    b.Property<int?>("MaxRedemptions")
-                        .HasColumnType("integer")
-                        .HasColumnName("max_redemptions");
+                    b.Property<decimal?>("MinOrderValue")
+                        .HasColumnType("numeric")
+                        .HasColumnName("min_order_value");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -225,32 +238,126 @@ namespace ECommerce.Inventory.DbMigrator.PostgreSQL.Migrations
                         .HasColumnType("character varying(200)")
                         .HasColumnName("name");
 
-                    b.Property<int?>("RedemptionQuantity")
-                        .HasColumnType("integer")
-                        .HasColumnName("redemption_quantity");
+                    b.Property<string>("Slug")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("character varying(150)")
+                        .HasColumnName("slug");
 
                     b.Property<DateTimeOffset?>("StartDate")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("start_date");
 
-                    b.Property<string>("Type")
-                        .IsRequired()
-                        .ValueGeneratedOnAdd()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)")
-                        .HasColumnName("type")
-                        .HasDefaultValueSql("'UNSPECIFIED'");
-
                     b.HasKey("Id")
                         .HasName("pk_discounts");
 
                     b.HasIndex("Code")
+                        .IsUnique()
                         .HasDatabaseName("ix_discounts_code");
 
                     b.HasIndex("DiscountId")
                         .HasDatabaseName("ix_discounts_discount_id");
 
                     b.ToTable("discounts", (string)null);
+                });
+
+            modelBuilder.Entity("ECommerce.Inventory.Domain.AggregatesModel.Merchant", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id")
+                        .HasDefaultValueSql("gen_random_uuid()");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at")
+                        .HasDefaultValueSql("now()");
+
+                    b.Property<string>("Description")
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)")
+                        .HasColumnName("description")
+                        .HasDefaultValueSql("''");
+
+                    b.Property<bool>("IsActive")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(true)
+                        .HasColumnName("is_active");
+
+                    b.Property<string>("MerchantNumber")
+                        .HasColumnType("text")
+                        .HasColumnName("merchant_number");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("name");
+
+                    b.Property<string>("Slug")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("character varying(150)")
+                        .HasColumnName("slug");
+
+                    b.HasKey("Id")
+                        .HasName("pk_merchants");
+
+                    b.ToTable("merchants", (string)null);
+                });
+
+            modelBuilder.Entity("ECommerce.Inventory.Domain.AggregatesModel.MerchantCategory", b =>
+                {
+                    b.Property<Guid>("MerchantId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("merchant_id");
+
+                    b.Property<Guid>("CategoryId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("category_id");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at")
+                        .HasDefaultValueSql("now()");
+
+                    b.HasKey("MerchantId", "CategoryId")
+                        .HasName("pk_merchant_categories");
+
+                    b.HasIndex("CategoryId")
+                        .HasDatabaseName("ix_merchant_categories_category_id");
+
+                    b.ToTable("merchant_categories", (string)null);
+                });
+
+            modelBuilder.Entity("ECommerce.Inventory.Domain.AggregatesModel.MerchantProduct", b =>
+                {
+                    b.Property<Guid>("MerchantId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("merchant_id");
+
+                    b.Property<Guid>("ProductId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("product_id");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at")
+                        .HasDefaultValueSql("now()");
+
+                    b.HasKey("MerchantId", "ProductId")
+                        .HasName("pk_merchant_products");
+
+                    b.HasIndex("ProductId")
+                        .HasDatabaseName("ix_merchant_products_product_id");
+
+                    b.ToTable("merchant_products", (string)null);
                 });
 
             modelBuilder.Entity("ECommerce.Inventory.Domain.AggregatesModel.Product", b =>
@@ -418,6 +525,70 @@ namespace ECommerce.Inventory.DbMigrator.PostgreSQL.Migrations
                     b.ToTable("product_variant_attribute_values", (string)null);
                 });
 
+            modelBuilder.Entity("ECommerce.Inventory.Domain.AggregatesModel.Store", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id")
+                        .HasDefaultValueSql("gen_random_uuid()");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at")
+                        .HasDefaultValueSql("now()");
+
+                    b.Property<string>("Description")
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)")
+                        .HasColumnName("description")
+                        .HasDefaultValueSql("''");
+
+                    b.Property<bool>("IsActive")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(true)
+                        .HasColumnName("is_active");
+
+                    b.Property<Guid>("MerchantId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("merchant_id");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("name");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("text")
+                        .HasColumnName("phone_number");
+
+                    b.Property<string>("Slug")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("character varying(150)")
+                        .HasColumnName("slug");
+
+                    b.Property<string>("StoreAddress")
+                        .HasColumnType("text")
+                        .HasColumnName("store_address");
+
+                    b.Property<string>("StoreNumber")
+                        .HasColumnType("text")
+                        .HasColumnName("store_number");
+
+                    b.HasKey("Id")
+                        .HasName("pk_stores");
+
+                    b.HasIndex("MerchantId")
+                        .HasDatabaseName("ix_stores_merchant_id");
+
+                    b.ToTable("stores", (string)null);
+                });
+
             modelBuilder.Entity("Discount_AppliedToCategories", b =>
                 {
                     b.HasOne("ECommerce.Inventory.Domain.AggregatesModel.Category", null)
@@ -491,6 +662,48 @@ namespace ECommerce.Inventory.DbMigrator.PostgreSQL.Migrations
                         .HasConstraintName("fk_discounts_discounts_discount_id");
                 });
 
+            modelBuilder.Entity("ECommerce.Inventory.Domain.AggregatesModel.MerchantCategory", b =>
+                {
+                    b.HasOne("ECommerce.Inventory.Domain.AggregatesModel.Category", "Category")
+                        .WithMany()
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_merchant_categories_categories_category_id");
+
+                    b.HasOne("ECommerce.Inventory.Domain.AggregatesModel.Merchant", "Merchant")
+                        .WithMany("Categories")
+                        .HasForeignKey("MerchantId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_merchant_categories_merchants_merchant_id");
+
+                    b.Navigation("Category");
+
+                    b.Navigation("Merchant");
+                });
+
+            modelBuilder.Entity("ECommerce.Inventory.Domain.AggregatesModel.MerchantProduct", b =>
+                {
+                    b.HasOne("ECommerce.Inventory.Domain.AggregatesModel.Merchant", "Merchant")
+                        .WithMany("Products")
+                        .HasForeignKey("MerchantId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_merchant_products_merchants_merchant_id");
+
+                    b.HasOne("ECommerce.Inventory.Domain.AggregatesModel.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_merchant_products_products_product_id");
+
+                    b.Navigation("Merchant");
+
+                    b.Navigation("Product");
+                });
+
             modelBuilder.Entity("ECommerce.Inventory.Domain.AggregatesModel.ProductProductAttribute", b =>
                 {
                     b.HasOne("ECommerce.Inventory.Domain.AggregatesModel.ProductAttribute", "ProductAttribute")
@@ -545,6 +758,18 @@ namespace ECommerce.Inventory.DbMigrator.PostgreSQL.Migrations
                     b.Navigation("ProductVariant");
                 });
 
+            modelBuilder.Entity("ECommerce.Inventory.Domain.AggregatesModel.Store", b =>
+                {
+                    b.HasOne("ECommerce.Inventory.Domain.AggregatesModel.Merchant", "Merchant")
+                        .WithMany("Stores")
+                        .HasForeignKey("MerchantId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_stores_merchants_merchant_id");
+
+                    b.Navigation("Merchant");
+                });
+
             modelBuilder.Entity("ECommerce.Inventory.Domain.AggregatesModel.Category", b =>
                 {
                     b.Navigation("Categories");
@@ -555,6 +780,15 @@ namespace ECommerce.Inventory.DbMigrator.PostgreSQL.Migrations
             modelBuilder.Entity("ECommerce.Inventory.Domain.AggregatesModel.Discount", b =>
                 {
                     b.Navigation("AppliedDiscounts");
+                });
+
+            modelBuilder.Entity("ECommerce.Inventory.Domain.AggregatesModel.Merchant", b =>
+                {
+                    b.Navigation("Categories");
+
+                    b.Navigation("Products");
+
+                    b.Navigation("Stores");
                 });
 
             modelBuilder.Entity("ECommerce.Inventory.Domain.AggregatesModel.Product", b =>

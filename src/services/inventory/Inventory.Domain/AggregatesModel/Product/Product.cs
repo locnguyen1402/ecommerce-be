@@ -18,6 +18,7 @@ public class Product(string name, string slug, string? description) : EntityWith
     public ICollection<ProductAttribute> ProductAttributes => _productAttributes;
     private readonly List<ProductProductAttribute> _productProductAttributes = [];
     public ICollection<ProductProductAttribute> ProductProductAttributes => _productProductAttributes;
+
     public void UpdateGeneralInfo(string name, string slug, string? description)
     {
         Name = name;

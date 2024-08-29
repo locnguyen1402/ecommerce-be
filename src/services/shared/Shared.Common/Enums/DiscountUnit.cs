@@ -1,8 +1,8 @@
 namespace ECommerce.Shared.Common.Enums;
 
-public enum DiscountType
+public enum DiscountUnit
 {
     UNSPECIFIED,
-    SHIPPING,
-    VOUCHER,
+    PERCENTAGE,
+    AMOUNT,
 }

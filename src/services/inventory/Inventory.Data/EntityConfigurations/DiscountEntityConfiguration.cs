@@ -17,15 +17,31 @@ public class DiscountEntityConfiguration : BaseEntityConfiguration<Discount>
             .IsRequired()
             .HasMaxLength(200);
 
-        builder
-            .HasIndex(t => t.Code);
+        builder.Property(p => p.Slug)
+            .IsRequired()
+            .HasMaxLength(150);
+
+        builder.Property(p => p.Code)
+            .IsRequired()
+            .HasMaxLength(100);
 
         builder
-            .Property(t => t.Type)
+            .HasIndex(t => t.Code)
+            .IsUnique();
+
+        builder
+            .Property(t => t.DiscountType)
             .IsRequired()
             .HasConversion<string>()
             .HasMaxLength(50)
             .HasDefaultValueSql($"'{DiscountType.UNSPECIFIED}'");
+
+        builder
+            .Property(t => t.DiscountUnit)
+            .IsRequired()
+            .HasConversion<string>()
+            .HasMaxLength(50)
+            .HasDefaultValueSql($"'{DiscountUnit.UNSPECIFIED}'");
 
         builder
             .Property(t => t.LimitationType)

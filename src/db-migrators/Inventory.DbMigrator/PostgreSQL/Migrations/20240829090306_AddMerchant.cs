@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace ECommerce.Inventory.DbMigrator.PostgreSQL.Migrations
 {
     /// <inheritdoc />
-    public partial class AddDiscount : Migration
+    public partial class AddMerchant : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -33,16 +33,16 @@ namespace ECommerce.Inventory.DbMigrator.PostgreSQL.Migrations
                 {
                     id = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
                     name = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
-                    code = table.Column<string>(type: "text", nullable: false),
+                    slug = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: false),
+                    code = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     description = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true, defaultValueSql: "''"),
-                    type = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false, defaultValueSql: "'UNSPECIFIED'"),
-                    discount_percentage = table.Column<decimal>(type: "numeric", nullable: true),
-                    discount_amount = table.Column<decimal>(type: "numeric", nullable: true),
+                    discount_type = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false, defaultValueSql: "'UNSPECIFIED'"),
+                    discount_value = table.Column<decimal>(type: "numeric", nullable: true),
+                    discount_unit = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false, defaultValueSql: "'UNSPECIFIED'"),
+                    min_order_value = table.Column<decimal>(type: "numeric", nullable: true),
                     max_discount_amount = table.Column<decimal>(type: "numeric", nullable: true),
                     start_date = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true),
                     end_date = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true),
-                    max_redemptions = table.Column<int>(type: "integer", nullable: true),
-                    redemption_quantity = table.Column<int>(type: "integer", nullable: true),
                     is_active = table.Column<bool>(type: "boolean", nullable: false, defaultValue: true),
                     limitation_times = table.Column<int>(type: "integer", nullable: true),
                     limitation_type = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true, defaultValueSql: "'UNSPECIFIED'"),
@@ -59,6 +59,23 @@ namespace ECommerce.Inventory.DbMigrator.PostgreSQL.Migrations
                         column: x => x.discount_id,
                         principalTable: "discounts",
                         principalColumn: "id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "merchants",
+                columns: table => new
+                {
+                    id = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
+                    name = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
+                    slug = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: false),
+                    merchant_number = table.Column<string>(type: "text", nullable: true),
+                    description = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true, defaultValueSql: "''"),
+                    is_active = table.Column<bool>(type: "boolean", nullable: false, defaultValue: true),
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "now()")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_merchants", x => x.id);
                 });
 
             migrationBuilder.CreateTable(
@@ -109,6 +126,82 @@ namespace ECommerce.Inventory.DbMigrator.PostgreSQL.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "merchant_categories",
+                columns: table => new
+                {
+                    merchant_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    category_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "now()")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_merchant_categories", x => new { x.merchant_id, x.category_id });
+                    table.ForeignKey(
+                        name: "fk_merchant_categories_categories_category_id",
+                        column: x => x.category_id,
+                        principalTable: "categories",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "fk_merchant_categories_merchants_merchant_id",
+                        column: x => x.merchant_id,
+                        principalTable: "merchants",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "merchant_products",
+                columns: table => new
+                {
+                    merchant_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    product_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "now()")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_merchant_products", x => new { x.merchant_id, x.product_id });
+                    table.ForeignKey(
+                        name: "fk_merchant_products_merchants_merchant_id",
+                        column: x => x.merchant_id,
+                        principalTable: "merchants",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "fk_merchant_products_products_product_id",
+                        column: x => x.product_id,
+                        principalTable: "products",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "stores",
+                columns: table => new
+                {
+                    id = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
+                    name = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
+                    slug = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: false),
+                    store_number = table.Column<string>(type: "text", nullable: true),
+                    description = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true, defaultValueSql: "''"),
+                    phone_number = table.Column<string>(type: "text", nullable: true),
+                    is_active = table.Column<bool>(type: "boolean", nullable: false, defaultValue: true),
+                    store_address = table.Column<string>(type: "text", nullable: true),
+                    merchant_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "now()")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_stores", x => x.id);
+                    table.ForeignKey(
+                        name: "fk_stores_merchants_merchant_id",
+                        column: x => x.merchant_id,
+                        principalTable: "merchants",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "ix_discount_applied_to_categories_category_id",
                 table: "discount_applied_to_categories",
@@ -132,12 +225,28 @@ namespace ECommerce.Inventory.DbMigrator.PostgreSQL.Migrations
             migrationBuilder.CreateIndex(
                 name: "ix_discounts_code",
                 table: "discounts",
-                column: "code");
+                column: "code",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "ix_discounts_discount_id",
                 table: "discounts",
                 column: "discount_id");
+
+            migrationBuilder.CreateIndex(
+                name: "ix_merchant_categories_category_id",
+                table: "merchant_categories",
+                column: "category_id");
+
+            migrationBuilder.CreateIndex(
+                name: "ix_merchant_products_product_id",
+                table: "merchant_products",
+                column: "product_id");
+
+            migrationBuilder.CreateIndex(
+                name: "ix_stores_merchant_id",
+                table: "stores",
+                column: "merchant_id");
         }
 
         /// <inheritdoc />
@@ -150,7 +259,19 @@ namespace ECommerce.Inventory.DbMigrator.PostgreSQL.Migrations
                 name: "discount_applied_to_products");
 
             migrationBuilder.DropTable(
+                name: "merchant_categories");
+
+            migrationBuilder.DropTable(
+                name: "merchant_products");
+
+            migrationBuilder.DropTable(
+                name: "stores");
+
+            migrationBuilder.DropTable(
                 name: "discounts");
+
+            migrationBuilder.DropTable(
+                name: "merchants");
 
             migrationBuilder.DropColumn(
                 name: "has_discounts_applied",

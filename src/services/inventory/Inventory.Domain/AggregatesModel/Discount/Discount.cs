@@ -1,21 +1,23 @@
 using ECommerce.Shared.Common.Enums;
-using ECommerce.Shared.Common.Infrastructure.Data;
 
 namespace ECommerce.Inventory.Domain.AggregatesModel;
 
-public class Discount(string name, string code, DiscountType type) : EntityWithDiscounts
+public class Discount(
+    string name
+    , string slug
+    , string code) : EntityWithDiscounts
 {
     public string Name { get; private set; } = name;
+    public string Slug { get; private set; } = slug;
     public string Code { get; private set; } = code;
     public string? Description { get; private set; }
-    public DiscountType Type { get; private set; } = type;
-    public decimal? DiscountPercentage { get; private set; }
-    public decimal? DiscountAmount { get; set; }
+    public DiscountType DiscountType { get; private set; } = DiscountType.UNSPECIFIED;
+    public decimal? DiscountValue { get; private set; }
+    public DiscountUnit DiscountUnit { get; private set; } = DiscountUnit.UNSPECIFIED;
+    public decimal? MinOrderValue { get; private set; }
     public decimal? MaxDiscountAmount { get; private set; }
     public DateTimeOffset? StartDate { get; private set; }
     public DateTimeOffset? EndDate { get; private set; }
-    public int? MaxRedemptions { get; private set; }
-    public int? RedemptionQuantity { get; private set; }
     public bool IsActive { get; private set; }
     public int? LimitationTimes { get; private set; }
     public DiscountLimitationType? LimitationType { get; private set; }
@@ -29,16 +31,17 @@ public class Discount(string name, string code, DiscountType type) : EntityWithD
     public readonly List<Category> _appliedToCategories = [];
     public IReadOnlyCollection<Category> AppliedToCategories => _appliedToCategories;
 
-    public void Update(string? description
-        , decimal? discountPercentage
-        , decimal? discountAmount
+    public void Update(
+        string? description
+        , decimal? discountValue
+        , decimal? minOrderValue
         , decimal? maxDiscountAmount
         , DateTimeOffset? startDate
         , DateTimeOffset? endDate)
     {
         Description = description;
-        DiscountPercentage = discountPercentage;
-        DiscountAmount = discountAmount;
+        DiscountValue = discountValue;
+        MinOrderValue = minOrderValue;
         MaxDiscountAmount = maxDiscountAmount;
         StartDate = startDate;
         EndDate = endDate;
@@ -46,7 +49,18 @@ public class Discount(string name, string code, DiscountType type) : EntityWithD
 
     public void SetDiscountType(DiscountType type)
     {
-        Type = type;
+        DiscountType = type;
+    }
+
+    public void SetDiscountUnit(DiscountUnit unit)
+    {
+        DiscountUnit = unit;
+    }
+
+    public void SetLimitation(int? times, DiscountLimitationType? type)
+    {
+        LimitationTimes = times;
+        LimitationType = type;
     }
 
     public void Activate()
@@ -57,18 +71,6 @@ public class Discount(string name, string code, DiscountType type) : EntityWithD
     public void Deactivate()
     {
         IsActive = false;
-    }
-
-    public void IncreaseRedemptionQuantity()
-    {
-        if (RedemptionQuantity < MaxRedemptions)
-            RedemptionQuantity++;
-    }
-
-    public void DecreaseRedemptionQuantity()
-    {
-        if (RedemptionQuantity > 0)
-            RedemptionQuantity--;
     }
 
     public void AddDiscountUsageHistory(Guid orderId, string orderNumber, DiscountUsageHistoryStatus historyStatus)
