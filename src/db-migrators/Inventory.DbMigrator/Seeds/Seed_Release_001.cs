@@ -97,7 +97,6 @@ namespace ECommerce.Inventory.DbMigrator.Seeds
                     continue;
 
                 var newValue = new AttributeValue(value.Value);
-                newValue.SetPredefined();
 
                 if (attribute != null)
                     newValue.SetAttribute(attribute.Id);

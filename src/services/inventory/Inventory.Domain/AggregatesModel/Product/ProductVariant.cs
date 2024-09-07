@@ -50,7 +50,7 @@ public class ProductVariant(int stock, decimal price) : Entity()
 
     public void AddOrUpdateAttributeValue(ProductVariantAttributeValue value)
     {
-        AddOrUpdateAttributeValue(value.ProductAttributeId, value.AttributeValue.Value, value.AttributeValueId);
+        AddOrUpdateAttributeValue(value.ProductAttributeId, value.Value, value.AttributeValueId);
     }
 
     public void RemoveAttributeValue(Guid attributeId)

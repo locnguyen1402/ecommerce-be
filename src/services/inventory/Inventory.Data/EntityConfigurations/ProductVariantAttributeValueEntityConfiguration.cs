@@ -12,7 +12,11 @@ public class ProductVariantAttributeValueEntityConfiguration : BaseEntityConfigu
     {
         base.Configure(builder);
 
-        builder.HasAlternateKey(p => new { p.ProductVariantId, p.ProductAttributeId, p.AttributeValueId });
+        builder.HasAlternateKey(p => new { p.ProductVariantId, p.ProductAttributeId });
+
+        builder.Property(p => p.Value)
+            .IsRequired()
+            .HasMaxLength(200);
 
         builder.HasOne(p => p.ProductVariant)
             .WithMany(p => p.ProductVariantAttributeValues)

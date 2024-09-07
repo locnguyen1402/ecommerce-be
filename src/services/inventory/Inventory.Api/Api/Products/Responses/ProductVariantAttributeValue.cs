@@ -9,5 +9,5 @@ public record ProductVariantAttributeValueResponse(Guid AttributeId, string Valu
 public class ProductVariantAttributeValueProjection
 {
     public static Expression<Func<ProductVariantAttributeValue, ProductVariantAttributeValueResponse>> ToProductVariantAttributeValueResponse()
-        => x => new ProductVariantAttributeValueResponse(x.ProductAttributeId, x.AttributeValue.Value);
+        => x => new ProductVariantAttributeValueResponse(x.ProductAttributeId, x.Value);
 }

@@ -8,8 +8,10 @@ public class ProductVariantAttributeValue : Entity
     public ProductVariant? ProductVariant { get; set; }
     public Guid ProductAttributeId { get; set; }
     public ProductAttribute? ProductAttribute { get; set; }
-    public Guid AttributeValueId { get; private set; }
-    public virtual AttributeValue AttributeValue { get; private set; } = null!;
+    public string Value { get; private set; }
+    public Guid? AttributeValueId { get; private set; }
+    public virtual AttributeValue? AttributeValue { get; private set; }
+
     public ProductVariantAttributeValue(string value, Guid? attributeValueId)
     {
         if (value.Trim().Length == 0)
@@ -17,18 +19,22 @@ public class ProductVariantAttributeValue : Entity
             throw new Exception("Attribute value cannot be empty");
         }
 
-        AddOrUpdateAttributeValue(value, attributeValueId);
+        Value = value;
+
+        if (attributeValueId != null && attributeValueId != Guid.Empty)
+        {
+            AttributeValueId = attributeValueId;
+        }
     }
 
     public ProductVariantAttributeValue(Guid attributeId, string value, Guid? attributeValueId) : this(value, attributeValueId)
     {
         ProductAttributeId = attributeId;
-        AddOrUpdateAttributeValue(value, attributeValueId);
     }
+
     public ProductVariantAttributeValue(ProductAttribute attribute, string value, Guid? attributeValueId) : this(value, attributeValueId)
     {
         ProductAttribute = attribute;
-        AddOrUpdateAttributeValue(value, attributeValueId);
     }
 
     public void UpdateValue(string value, Guid? attributeValueId)
@@ -38,7 +44,12 @@ public class ProductVariantAttributeValue : Entity
             throw new Exception("Attribute value cannot be empty");
         }
 
-        AddOrUpdateAttributeValue(value, attributeValueId);
+        Value = value;
+
+        if (attributeValueId != null && attributeValueId != Guid.Empty)
+        {
+            AttributeValueId = attributeValueId;
+        }
     }
 
     public override bool Equals(object? obj)
@@ -51,30 +62,9 @@ public class ProductVariantAttributeValue : Entity
         var other = (ProductVariantAttributeValue)obj;
         return ProductVariantId == other.ProductVariantId
             && ProductAttributeId == other.ProductAttributeId
-            && AttributeValueId == other.AttributeValueId;
+            && Value == other.Value;
     }
 
     public override int GetHashCode()
-        => HashCode.Combine(ProductAttributeId, AttributeValueId);
-
-    public void AddOrUpdateAttributeValue(string value, Guid? attributeValueId = null)
-    {
-        if (attributeValueId == null || attributeValueId == Guid.Empty)
-        {
-            AddAttributeValue(value);
-        }
-        else
-        {
-            AttributeValueId = attributeValueId.Value;
-            AttributeValue.UpdateValue(value);
-        }
-    }
-
-
-    public void AddAttributeValue(string value)
-    {
-        var attributeValue = new AttributeValue(value);
-        attributeValue.SetAttribute(ProductAttributeId);
-        AttributeValue = attributeValue;
-    }
+        => HashCode.Combine(ProductAttributeId, Value);
 }

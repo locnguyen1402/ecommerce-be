@@ -5,8 +5,6 @@ namespace ECommerce.Inventory.Domain.AggregatesModel;
 public class AttributeValue(string value) : Entity()
 {
     public string Value { get; private set; } = value;
-    public bool Predefined { get; private set; } = false;
-
     public Guid? ProductAttributeId { get; private set; }
     public ProductAttribute? ProductAttribute { get; private set; }
 
@@ -21,10 +19,5 @@ public class AttributeValue(string value) : Entity()
     public void SetAttribute(Guid attributeId)
     {
         ProductAttributeId = attributeId;
-    }
-
-    public void SetPredefined()
-    {
-        Predefined = true;
     }
 }
