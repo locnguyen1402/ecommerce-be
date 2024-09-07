@@ -6,23 +6,23 @@ using ECommerce.Shared.Common.Infrastructure.EntityConfigurations;
 
 namespace ECommerce.Inventory.Data.EntityConfigurations;
 
-public class MerchantProductEntityConfiguration : BaseEntityConfiguration<MerchantProduct>
+public class StoreCollectionProductEntityConfiguration : BaseEntityConfiguration<StoreCollectionProduct>
 {
-    public override void Configure(EntityTypeBuilder<MerchantProduct> builder)
+    public override void Configure(EntityTypeBuilder<StoreCollectionProduct> builder)
     {
         base.Configure(builder);
 
         builder.Ignore(x => x.Id);
 
-        builder.HasKey(p => new { p.MerchantId, p.ProductId });
+        builder.HasKey(p => new { p.StoreCollectionId, p.ProductId });
 
-        builder.HasOne(p => p.Merchant)
-            .WithMany(c => c.MerchantProducts)
-            .HasForeignKey(c => c.MerchantId)
+        builder.HasOne(p => p.StoreCollection)
+            .WithMany(c => c.StoreCollectionProducts)
+            .HasForeignKey(c => c.StoreCollectionId)
             .OnDelete(DeleteBehavior.Cascade);
 
         builder.HasOne(p => p.Product)
-            .WithMany(c => c.MerchantProducts)
+            .WithMany(c => c.StoreCollectionProducts)
             .HasForeignKey(c => c.ProductId)
             .OnDelete(DeleteBehavior.Cascade);
     }

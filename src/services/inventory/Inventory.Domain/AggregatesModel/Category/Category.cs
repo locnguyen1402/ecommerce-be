@@ -15,6 +15,10 @@ public class Category(string name, string slug, string? description, Guid? paren
     public IReadOnlyCollection<CategoryProduct> CategoryProducts => _categoryProducts;
     private readonly List<Product> _products = [];
     public IReadOnlyCollection<Product> Products => _products;
+
+    public readonly List<StoreCollection> _storeCollections = [];
+    public virtual IReadOnlyCollection<StoreCollection> StoreCollections => _storeCollections;
+
     public void ChangeParent(Guid? parentId)
     {
         ParentId = parentId;
@@ -33,7 +37,7 @@ public class Category(string name, string slug, string? description, Guid? paren
     {
         foreach (var category in categories)
         {
-            _categories.Add(category);
+            AddChild(category);
         }
     }
 }
