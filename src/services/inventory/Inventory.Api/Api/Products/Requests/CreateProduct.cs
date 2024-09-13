@@ -11,6 +11,7 @@ public class CreateProductRequest
     public HashSet<Guid> Attributes { get; set; } = [];
     public List<CreateProductVariantRequest> Variants { get; set; } = [];
     public HashSet<CreateProductVariantRequest> HashedVariants => [.. Variants];
+    public Guid MerchantId { get; set; }
 }
 
 public class CreateProductRequestValidator : AbstractValidator<CreateProductRequest>
@@ -51,5 +52,9 @@ public class CreateProductRequestValidator : AbstractValidator<CreateProductRequ
 
         RuleForEach(x => x.Variants)
             .SetValidator(x => new CreateProductVariantRequestValidator([.. x.Attributes]));
+
+        RuleFor(x => x.MerchantId)
+            .Must(x => x != Guid.Empty && Guid.TryParse(x.ToString(), out _))
+            .WithMessage($"{PrefixErrorMessage} Invalid merchant id format");
     }
 }

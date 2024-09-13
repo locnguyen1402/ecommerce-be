@@ -5,6 +5,7 @@ using ECommerce.Shared.Common.Infrastructure.Endpoint;
 
 using ECommerce.Inventory.Domain.AggregatesModel;
 using ECommerce.Inventory.Api.Merchants.Requests;
+using ECommerce.Inventory.Api.Categories.Specifications;
 
 namespace ECommerce.Inventory.Api.Merchants.Commands;
 
@@ -15,6 +16,7 @@ public class CreateMerchantCommandHandler : IEndpointHandler
         CreateMerchantRequest request,
         IValidator<CreateMerchantRequest> validator,
         IMerchantRepository merchantRepository,
+        ICategoryRepository categoryRepository,
         CancellationToken cancellationToken
     ) =>
     {
@@ -33,7 +35,27 @@ public class CreateMerchantCommandHandler : IEndpointHandler
 
         newMerchant.Update(
             request.Name
+            , request.Slug
             , request.Description);
+
+        if (request.CategoryIds.Count > 0)
+        {
+            var categorySpec = new GetCategoriesByIdsSpecification(request.CategoryIds);
+            var categories = await categoryRepository.GetAsync(categorySpec, cancellationToken);
+
+            if (categories.Count() != request.CategoryIds.Count)
+            {
+                return Results.BadRequest("Some categories are not existed");
+            }
+
+            var listMerchantCategories = new List<MerchantCategory>();
+            foreach (var categoryId in request.CategoryIds)
+            {
+                var newMerchantCategory = new MerchantCategory(newMerchant.Id, categoryId);
+                listMerchantCategories.Add(newMerchantCategory);
+            }
+            newMerchant.AddOrUpdateCategories(listMerchantCategories);
+        }
 
         await merchantRepository.AddAndSaveChangeAsync(newMerchant, cancellationToken);
 

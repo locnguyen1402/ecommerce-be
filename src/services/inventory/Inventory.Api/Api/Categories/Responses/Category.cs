@@ -8,7 +8,8 @@ public record CategoryResponse(
     Guid Id,
     string Name,
     string Slug,
-    string Description
+    string Description,
+    List<CategoryResponse>? Children
 );
 
 public record AdminCategoryDetailResponse(
@@ -47,13 +48,19 @@ public static class CategoryProjection
         return ToCategoryResponse().Compile().Invoke(category);
     }
 
+    public static List<CategoryResponse>? ToListCategoryResponse(this IEnumerable<Category> categories)
+    {
+        return categories.Any() ? categories.Select(ToCategoryResponse().Compile()).ToList() : null;
+    }
+
     public static Expression<Func<Category, CategoryResponse>> ToCategoryResponse()
         => x =>
         new CategoryResponse(
             x.Id,
             x.Name,
             x.Slug,
-            x.Description
+            x.Description,
+            x.Categories.ToListCategoryResponse()
         );
 
     public static Expression<Func<Category, CategoryOption>> ToCategoryOption()

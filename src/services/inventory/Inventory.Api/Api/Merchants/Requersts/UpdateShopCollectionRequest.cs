@@ -2,19 +2,18 @@ using FluentValidation;
 
 namespace ECommerce.Inventory.Api.Merchants.Requests;
 
-public class UpdateMerchantRequest
+public class UpdateShopCollectionRequest
 {
     public Guid Id { get; set; }
     public string Name { get; set; } = string.Empty;
     public string Slug { get; set; } = string.Empty;
-    public string? Description { get; set; }
-    public List<Guid> CategoryIds { get; set; } = [];
+    public Guid? ParentId { get; set; }
 }
 
-public class UpdateMerchantRequestValidator : AbstractValidator<UpdateMerchantRequest>
+public class UpdateShopCollectionRequestValidator : AbstractValidator<UpdateShopCollectionRequest>
 {
-    private string PrefixErrorMessage => nameof(UpdateMerchantRequestValidator);
-    public UpdateMerchantRequestValidator()
+    private string PrefixErrorMessage => nameof(UpdateShopCollectionRequestValidator);
+    public UpdateShopCollectionRequestValidator()
     {
         RuleFor(x => x.Id)
             .Must(x => x != Guid.Empty && Guid.TryParse(x.ToString(), out _))
@@ -27,11 +26,9 @@ public class UpdateMerchantRequestValidator : AbstractValidator<UpdateMerchantRe
         RuleFor(x => x.Slug)
             .NotEmpty();
 
-        RuleFor(x => x.Description)
-            .MaximumLength(500);
-
-        RuleForEach(x => x.CategoryIds)
+        RuleFor(x => x.ParentId)
             .Must(x => x != Guid.Empty && Guid.TryParse(x.ToString(), out _))
-            .WithMessage($"{PrefixErrorMessage} Invalid category id format");
+            .When(x => x.ParentId != null)
+            .WithMessage($"{PrefixErrorMessage} Invalid parent id format");
     }
 }

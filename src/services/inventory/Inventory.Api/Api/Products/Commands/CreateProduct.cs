@@ -19,6 +19,7 @@ public class CreateProductCommandHandler : IEndpointHandler
         IProductRepository productRepository,
         IProductAttributeRepository productAttributeRepository,
         ICategoryRepository categoryRepository,
+        IMerchantRepository merchantRepository,
         CancellationToken cancellationToken
     ) =>
     {
@@ -31,6 +32,14 @@ public class CreateProductCommandHandler : IEndpointHandler
         if (await productRepository.AnyAsync(x => x.Slug == request.Slug, cancellationToken))
         {
             return Results.BadRequest("Slug is already taken");
+        }
+
+        var merchantSpec = new GetMerchantByIdSpecification(request.MerchantId);
+        var merchant = await merchantRepository.FindAsync(merchantSpec, cancellationToken);
+
+        if (merchant == null)
+        {
+            return Results.BadRequest("Merchant is not found");
         }
 
         var newProduct = new Product(request.Name, request.Slug, request.Description);
@@ -77,6 +86,14 @@ public class CreateProductCommandHandler : IEndpointHandler
                 newProduct.AddVariant(variant.Stock, variant.Price, attributeValues);
             }
         }
+
+        var merchantProduct = new MerchantProduct(merchant.Id, newProduct.Id);
+        merchant.AddProduct(merchantProduct);
+        merchantRepository.Update(merchant);
+
+        await merchantRepository.AddAndSaveChangeAsync(merchant, cancellationToken);
+
+        newProduct.SetMerchantProduct(merchantProduct.Id);
 
         await productRepository.AddAndSaveChangeAsync(newProduct, cancellationToken);
 

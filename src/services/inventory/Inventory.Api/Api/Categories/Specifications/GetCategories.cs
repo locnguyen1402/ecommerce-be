@@ -38,7 +38,11 @@ public class GetCategoriesSpecification<TResult> : Specification<Category, TResu
     {
         if (keyword != null && keyword.Length > 0)
         {
-            Builder.Where(x => x.Name.Contains(keyword));
+            Builder.Where(x => x.Name.Contains(keyword) && x.ParentId == null);
+        }
+        else
+        {
+            Builder.Where(x => x.ParentId == null);
         }
 
         if (pagingQuery != null)
