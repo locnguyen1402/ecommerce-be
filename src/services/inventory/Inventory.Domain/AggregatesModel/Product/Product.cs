@@ -16,11 +16,8 @@ public class Product(string name, string slug, string? description) : EntityWith
     public IReadOnlyCollection<ProductAttribute> ProductAttributes => _productAttributes;
     private readonly List<ProductProductAttribute> _productProductAttributes = [];
     public IReadOnlyCollection<ProductProductAttribute> ProductProductAttributes => _productProductAttributes;
-
-    public readonly List<MerchantProduct> _merchantProducts = [];
-    public virtual IReadOnlyCollection<MerchantProduct> MerchantProducts => _merchantProducts;
-    public readonly List<StoreCollectionProduct> _storeCollectionProducts = [];
-    public virtual IReadOnlyCollection<StoreCollectionProduct> StoreCollectionProducts => _storeCollectionProducts;
+    public Guid MerchantProductId { get; private set; }
+    public virtual MerchantProduct MerchantProduct { get; private set; } = null!;
 
     public void UpdateGeneralInfo(string name, string slug, string? description)
     {
@@ -82,5 +79,10 @@ public class Product(string name, string slug, string? description) : EntityWith
         {
             _productVariants.Remove(variant);
         }
+    }
+
+    public void SetMerchantProduct(Guid merchantProductId)
+    {
+        MerchantProductId = merchantProductId;
     }
 }

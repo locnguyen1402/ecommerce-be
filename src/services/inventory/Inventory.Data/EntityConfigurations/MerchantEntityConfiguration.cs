@@ -34,7 +34,12 @@ namespace ECommerce.Inventory.Data.EntityConfigurations
                  .HasForeignKey(c => c.MerchantId)
                  .OnDelete(DeleteBehavior.Cascade);
 
-            builder.HasMany(p => p.MerchantProducts)
+            builder.HasMany(p => p.Products)
+                 .WithOne(c => c.Merchant)
+                 .HasForeignKey(c => c.MerchantId)
+                 .OnDelete(DeleteBehavior.Cascade);
+
+            builder.HasMany(p => p.ShopCollections)
                  .WithOne(c => c.Merchant)
                  .HasForeignKey(c => c.MerchantId)
                  .OnDelete(DeleteBehavior.Cascade);

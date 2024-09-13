@@ -13,8 +13,11 @@ public class Merchant(string name, string slug) : Entity
     public virtual IReadOnlyCollection<Store> Stores => _stores;
     public readonly List<MerchantCategory> _categories = [];
     public virtual IReadOnlyCollection<MerchantCategory> Categories => _categories;
-    public readonly List<MerchantProduct> _merchantProduct = [];
-    public virtual IReadOnlyCollection<MerchantProduct> MerchantProducts => _merchantProduct;
+    public readonly List<MerchantProduct> _products = [];
+    public virtual IReadOnlyCollection<MerchantProduct> Products => _products;
+    public readonly List<ShopCollection> _shopCollections = [];
+    public virtual IReadOnlyCollection<ShopCollection> ShopCollections => _shopCollections;
+
     public void Update(string name, string? description)
     {
         Name = name;
@@ -23,8 +26,8 @@ public class Merchant(string name, string slug) : Entity
 
     public void AddOrUpdateProducts(List<MerchantProduct> products)
     {
-        _merchantProduct.Clear();
-        _merchantProduct.AddRange(products.Count > 0 ? products : []);
+        _products.Clear();
+        _products.AddRange(products.Count > 0 ? products : []);
     }
 
     public void AddOrUpdateCategories(List<MerchantCategory> categories)

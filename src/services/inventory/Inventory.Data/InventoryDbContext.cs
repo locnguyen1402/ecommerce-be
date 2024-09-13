@@ -21,8 +21,7 @@ public class InventoryDbContext(DbContextOptions<InventoryDbContext> options) : 
     public DbSet<MerchantProduct> MerchantProducts => Set<MerchantProduct>();
     public DbSet<MerchantCategory> MerchantCategories => Set<MerchantCategory>();
     public DbSet<Store> Stores => Set<Store>();
-    public DbSet<StoreCollection> StoreCollections => Set<StoreCollection>();
-    public DbSet<StoreCollectionProduct> StoreCollectionProducts => Set<StoreCollectionProduct>();
+    public DbSet<ShopCollection> ShopCollections => Set<ShopCollection>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -42,7 +41,6 @@ public class InventoryDbContext(DbContextOptions<InventoryDbContext> options) : 
         modelBuilder.ApplyConfiguration(new MerchantCategoryEntityConfiguration());
         modelBuilder.ApplyConfiguration(new MerchantProductEntityConfiguration());
         modelBuilder.ApplyConfiguration(new StoreEntityConfiguration());
-        modelBuilder.ApplyConfiguration(new StoreCollectionEntityConfiguration());
-        modelBuilder.ApplyConfiguration(new StoreCollectionProductEntityConfiguration());
+        modelBuilder.ApplyConfiguration(new ShopCollectionEntityConfiguration());
     }
 }
