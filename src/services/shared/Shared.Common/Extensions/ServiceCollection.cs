@@ -55,15 +55,14 @@ public static class ServiceCollectionExtensions
 
     public static IServiceCollection ConfigDbContext<TDbContext>(this IServiceCollection services, string connectionString, string assembly) where TDbContext : DbContext
     {
+        var dataSourceBuilder = new NpgsqlSlimDataSourceBuilder(connectionString);
+        dataSourceBuilder.EnableDynamicJson(jsonbClrTypes: [typeof(IReadOnlyCollection<string>)]);
+        dataSourceBuilder.EnableArrays();
+
+        var dataSource = dataSourceBuilder.Build();
+
         services.AddDbContext<TDbContext>(options =>
         {
-            var dataSourceBuilder = new NpgsqlSlimDataSourceBuilder(connectionString);
-
-            dataSourceBuilder.EnableDynamicJson(jsonbClrTypes: [typeof(IReadOnlyCollection<string>)]);
-            dataSourceBuilder.EnableArrays();
-
-            var dataSource = dataSourceBuilder.Build();
-
             options.UseNpgsql(
                 dataSource,
                 sqlOptions =>
