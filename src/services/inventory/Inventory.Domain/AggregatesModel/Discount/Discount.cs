@@ -18,7 +18,7 @@ public class Discount(
     public decimal? MaxDiscountAmount { get; private set; }
     public DateTimeOffset? StartDate { get; private set; }
     public DateTimeOffset? EndDate { get; private set; }
-    public bool IsActive { get; private set; }
+    public bool IsActive { get; private set; } = true;
     public int? LimitationTimes { get; private set; }
     public DiscountLimitationType? LimitationType { get; private set; }
 

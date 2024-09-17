@@ -9,7 +9,7 @@ public class Store(string name, string slug, Guid merchantId) : Entity
     public string? StoreNumber { get; private set; }
     public string? Description { get; private set; }
     public string? PhoneNumber { get; private set; }
-    public bool IsActive { get; private set; }
+    public bool IsActive { get; private set; } = true;
 
     // TODO: Using value object for address later
     public string? StoreAddress { get; private set; }

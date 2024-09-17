@@ -41,4 +41,9 @@ public class Merchant(string name, string slug) : Entity
         _categories.Clear();
         _categories.AddRange(categories.Count > 0 ? categories : []);
     }
+
+    public void AddStore(Store store)
+    {
+        _stores.Add(store);
+    }
 }
