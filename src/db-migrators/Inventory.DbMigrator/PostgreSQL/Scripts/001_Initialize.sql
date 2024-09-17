@@ -9,7 +9,7 @@ START TRANSACTION;
 
 DO $EF$
 BEGIN
-    IF NOT EXISTS(SELECT 1 FROM "__EFMigrationsHistory" WHERE "migration_id" = '20240917140902_Initialize') THEN
+    IF NOT EXISTS(SELECT 1 FROM "__EFMigrationsHistory" WHERE "migration_id" = '20240917150840_Initialize') THEN
     CREATE TABLE categories (
         id uuid NOT NULL DEFAULT (gen_random_uuid()),
         name character varying(100) NOT NULL,
@@ -26,7 +26,7 @@ END $EF$;
 
 DO $EF$
 BEGIN
-    IF NOT EXISTS(SELECT 1 FROM "__EFMigrationsHistory" WHERE "migration_id" = '20240917140902_Initialize') THEN
+    IF NOT EXISTS(SELECT 1 FROM "__EFMigrationsHistory" WHERE "migration_id" = '20240917150840_Initialize') THEN
     CREATE TABLE discounts (
         id uuid NOT NULL DEFAULT (gen_random_uuid()),
         name character varying(200) NOT NULL,
@@ -55,7 +55,7 @@ END $EF$;
 
 DO $EF$
 BEGIN
-    IF NOT EXISTS(SELECT 1 FROM "__EFMigrationsHistory" WHERE "migration_id" = '20240917140902_Initialize') THEN
+    IF NOT EXISTS(SELECT 1 FROM "__EFMigrationsHistory" WHERE "migration_id" = '20240917150840_Initialize') THEN
     CREATE TABLE merchants (
         id uuid NOT NULL DEFAULT (gen_random_uuid()),
         name character varying(200) NOT NULL,
@@ -71,7 +71,7 @@ END $EF$;
 
 DO $EF$
 BEGIN
-    IF NOT EXISTS(SELECT 1 FROM "__EFMigrationsHistory" WHERE "migration_id" = '20240917140902_Initialize') THEN
+    IF NOT EXISTS(SELECT 1 FROM "__EFMigrationsHistory" WHERE "migration_id" = '20240917150840_Initialize') THEN
     CREATE TABLE product_attributes (
         id uuid NOT NULL DEFAULT (gen_random_uuid()),
         name character varying(100) NOT NULL,
@@ -85,23 +85,7 @@ END $EF$;
 
 DO $EF$
 BEGIN
-    IF NOT EXISTS(SELECT 1 FROM "__EFMigrationsHistory" WHERE "migration_id" = '20240917140902_Initialize') THEN
-    CREATE TABLE products (
-        id uuid NOT NULL DEFAULT (gen_random_uuid()),
-        slug character varying(150) NOT NULL,
-        name character varying(100) NOT NULL,
-        description text NOT NULL,
-        merchant_product_id uuid NOT NULL,
-        created_at timestamp with time zone NOT NULL DEFAULT (now()),
-        has_discounts_applied boolean NOT NULL,
-        CONSTRAINT pk_products PRIMARY KEY (id)
-    );
-    END IF;
-END $EF$;
-
-DO $EF$
-BEGIN
-    IF NOT EXISTS(SELECT 1 FROM "__EFMigrationsHistory" WHERE "migration_id" = '20240917140902_Initialize') THEN
+    IF NOT EXISTS(SELECT 1 FROM "__EFMigrationsHistory" WHERE "migration_id" = '20240917150840_Initialize') THEN
     CREATE TABLE discount_applied_to_categories (
         discount_id uuid NOT NULL,
         category_id uuid NOT NULL,
@@ -114,7 +98,7 @@ END $EF$;
 
 DO $EF$
 BEGIN
-    IF NOT EXISTS(SELECT 1 FROM "__EFMigrationsHistory" WHERE "migration_id" = '20240917140902_Initialize') THEN
+    IF NOT EXISTS(SELECT 1 FROM "__EFMigrationsHistory" WHERE "migration_id" = '20240917150840_Initialize') THEN
     CREATE TABLE merchant_categories (
         merchant_id uuid NOT NULL,
         category_id uuid NOT NULL,
@@ -128,7 +112,7 @@ END $EF$;
 
 DO $EF$
 BEGIN
-    IF NOT EXISTS(SELECT 1 FROM "__EFMigrationsHistory" WHERE "migration_id" = '20240917140902_Initialize') THEN
+    IF NOT EXISTS(SELECT 1 FROM "__EFMigrationsHistory" WHERE "migration_id" = '20240917150840_Initialize') THEN
     CREATE TABLE shop_collections (
         id uuid NOT NULL DEFAULT (gen_random_uuid()),
         name character varying(200) NOT NULL,
@@ -145,7 +129,7 @@ END $EF$;
 
 DO $EF$
 BEGIN
-    IF NOT EXISTS(SELECT 1 FROM "__EFMigrationsHistory" WHERE "migration_id" = '20240917140902_Initialize') THEN
+    IF NOT EXISTS(SELECT 1 FROM "__EFMigrationsHistory" WHERE "migration_id" = '20240917150840_Initialize') THEN
     CREATE TABLE stores (
         id uuid NOT NULL DEFAULT (gen_random_uuid()),
         name character varying(200) NOT NULL,
@@ -165,7 +149,7 @@ END $EF$;
 
 DO $EF$
 BEGIN
-    IF NOT EXISTS(SELECT 1 FROM "__EFMigrationsHistory" WHERE "migration_id" = '20240917140902_Initialize') THEN
+    IF NOT EXISTS(SELECT 1 FROM "__EFMigrationsHistory" WHERE "migration_id" = '20240917150840_Initialize') THEN
     CREATE TABLE attribute_values (
         id uuid NOT NULL DEFAULT (gen_random_uuid()),
         value character varying(200) NOT NULL,
@@ -179,7 +163,26 @@ END $EF$;
 
 DO $EF$
 BEGIN
-    IF NOT EXISTS(SELECT 1 FROM "__EFMigrationsHistory" WHERE "migration_id" = '20240917140902_Initialize') THEN
+    IF NOT EXISTS(SELECT 1 FROM "__EFMigrationsHistory" WHERE "migration_id" = '20240917150840_Initialize') THEN
+    CREATE TABLE products (
+        id uuid NOT NULL DEFAULT (gen_random_uuid()),
+        slug character varying(150) NOT NULL,
+        name character varying(100) NOT NULL,
+        description text NOT NULL,
+        merchant_id uuid NOT NULL,
+        shop_collection_id uuid,
+        created_at timestamp with time zone NOT NULL DEFAULT (now()),
+        has_discounts_applied boolean NOT NULL,
+        CONSTRAINT pk_products PRIMARY KEY (id),
+        CONSTRAINT fk_products_merchants_merchant_id FOREIGN KEY (merchant_id) REFERENCES merchants (id) ON DELETE CASCADE,
+        CONSTRAINT fk_products_shop_collections_shop_collection_id FOREIGN KEY (shop_collection_id) REFERENCES shop_collections (id)
+    );
+    END IF;
+END $EF$;
+
+DO $EF$
+BEGIN
+    IF NOT EXISTS(SELECT 1 FROM "__EFMigrationsHistory" WHERE "migration_id" = '20240917150840_Initialize') THEN
     CREATE TABLE category_products (
         category_id uuid NOT NULL,
         product_id uuid NOT NULL,
@@ -192,7 +195,7 @@ END $EF$;
 
 DO $EF$
 BEGIN
-    IF NOT EXISTS(SELECT 1 FROM "__EFMigrationsHistory" WHERE "migration_id" = '20240917140902_Initialize') THEN
+    IF NOT EXISTS(SELECT 1 FROM "__EFMigrationsHistory" WHERE "migration_id" = '20240917150840_Initialize') THEN
     CREATE TABLE discount_applied_to_products (
         discount_id uuid NOT NULL,
         product_id uuid NOT NULL,
@@ -205,7 +208,21 @@ END $EF$;
 
 DO $EF$
 BEGIN
-    IF NOT EXISTS(SELECT 1 FROM "__EFMigrationsHistory" WHERE "migration_id" = '20240917140902_Initialize') THEN
+    IF NOT EXISTS(SELECT 1 FROM "__EFMigrationsHistory" WHERE "migration_id" = '20240917150840_Initialize') THEN
+    CREATE TABLE merchant_products (
+        merchant_id uuid NOT NULL,
+        product_id uuid NOT NULL,
+        created_at timestamp with time zone NOT NULL DEFAULT (now()),
+        CONSTRAINT pk_merchant_products PRIMARY KEY (merchant_id, product_id),
+        CONSTRAINT fk_merchant_products_merchants_merchant_id FOREIGN KEY (merchant_id) REFERENCES merchants (id) ON DELETE CASCADE,
+        CONSTRAINT fk_merchant_products_products_product_id FOREIGN KEY (product_id) REFERENCES products (id) ON DELETE CASCADE
+    );
+    END IF;
+END $EF$;
+
+DO $EF$
+BEGIN
+    IF NOT EXISTS(SELECT 1 FROM "__EFMigrationsHistory" WHERE "migration_id" = '20240917150840_Initialize') THEN
     CREATE TABLE product_product_attributes (
         product_id uuid NOT NULL,
         product_attribute_id uuid NOT NULL,
@@ -218,7 +235,7 @@ END $EF$;
 
 DO $EF$
 BEGIN
-    IF NOT EXISTS(SELECT 1 FROM "__EFMigrationsHistory" WHERE "migration_id" = '20240917140902_Initialize') THEN
+    IF NOT EXISTS(SELECT 1 FROM "__EFMigrationsHistory" WHERE "migration_id" = '20240917150840_Initialize') THEN
     CREATE TABLE product_variants (
         id uuid NOT NULL DEFAULT (gen_random_uuid()),
         stock integer NOT NULL DEFAULT 0,
@@ -233,23 +250,7 @@ END $EF$;
 
 DO $EF$
 BEGIN
-    IF NOT EXISTS(SELECT 1 FROM "__EFMigrationsHistory" WHERE "migration_id" = '20240917140902_Initialize') THEN
-    CREATE TABLE merchant_products (
-        merchant_id uuid NOT NULL,
-        product_id uuid NOT NULL,
-        shop_collection_id uuid,
-        created_at timestamp with time zone NOT NULL DEFAULT (now()),
-        CONSTRAINT pk_merchant_products PRIMARY KEY (merchant_id, product_id),
-        CONSTRAINT fk_merchant_products_merchants_merchant_id FOREIGN KEY (merchant_id) REFERENCES merchants (id) ON DELETE CASCADE,
-        CONSTRAINT fk_merchant_products_products_product_id FOREIGN KEY (product_id) REFERENCES products (id) ON DELETE CASCADE,
-        CONSTRAINT fk_merchant_products_shop_collections_shop_collection_id FOREIGN KEY (shop_collection_id) REFERENCES shop_collections (id)
-    );
-    END IF;
-END $EF$;
-
-DO $EF$
-BEGIN
-    IF NOT EXISTS(SELECT 1 FROM "__EFMigrationsHistory" WHERE "migration_id" = '20240917140902_Initialize') THEN
+    IF NOT EXISTS(SELECT 1 FROM "__EFMigrationsHistory" WHERE "migration_id" = '20240917150840_Initialize') THEN
     CREATE TABLE product_variant_attribute_values (
         id uuid NOT NULL DEFAULT (gen_random_uuid()),
         product_variant_id uuid NOT NULL,
@@ -268,142 +269,149 @@ END $EF$;
 
 DO $EF$
 BEGIN
-    IF NOT EXISTS(SELECT 1 FROM "__EFMigrationsHistory" WHERE "migration_id" = '20240917140902_Initialize') THEN
+    IF NOT EXISTS(SELECT 1 FROM "__EFMigrationsHistory" WHERE "migration_id" = '20240917150840_Initialize') THEN
     CREATE INDEX ix_attribute_values_product_attribute_id ON attribute_values (product_attribute_id);
     END IF;
 END $EF$;
 
 DO $EF$
 BEGIN
-    IF NOT EXISTS(SELECT 1 FROM "__EFMigrationsHistory" WHERE "migration_id" = '20240917140902_Initialize') THEN
+    IF NOT EXISTS(SELECT 1 FROM "__EFMigrationsHistory" WHERE "migration_id" = '20240917150840_Initialize') THEN
     CREATE INDEX ix_categories_parent_id ON categories (parent_id);
     END IF;
 END $EF$;
 
 DO $EF$
 BEGIN
-    IF NOT EXISTS(SELECT 1 FROM "__EFMigrationsHistory" WHERE "migration_id" = '20240917140902_Initialize') THEN
+    IF NOT EXISTS(SELECT 1 FROM "__EFMigrationsHistory" WHERE "migration_id" = '20240917150840_Initialize') THEN
     CREATE INDEX ix_category_products_product_id ON category_products (product_id);
     END IF;
 END $EF$;
 
 DO $EF$
 BEGIN
-    IF NOT EXISTS(SELECT 1 FROM "__EFMigrationsHistory" WHERE "migration_id" = '20240917140902_Initialize') THEN
+    IF NOT EXISTS(SELECT 1 FROM "__EFMigrationsHistory" WHERE "migration_id" = '20240917150840_Initialize') THEN
     CREATE INDEX ix_discount_applied_to_categories_category_id ON discount_applied_to_categories (category_id);
     END IF;
 END $EF$;
 
 DO $EF$
 BEGIN
-    IF NOT EXISTS(SELECT 1 FROM "__EFMigrationsHistory" WHERE "migration_id" = '20240917140902_Initialize') THEN
+    IF NOT EXISTS(SELECT 1 FROM "__EFMigrationsHistory" WHERE "migration_id" = '20240917150840_Initialize') THEN
     CREATE INDEX ix_discount_applied_to_categories_discount_id ON discount_applied_to_categories (discount_id);
     END IF;
 END $EF$;
 
 DO $EF$
 BEGIN
-    IF NOT EXISTS(SELECT 1 FROM "__EFMigrationsHistory" WHERE "migration_id" = '20240917140902_Initialize') THEN
+    IF NOT EXISTS(SELECT 1 FROM "__EFMigrationsHistory" WHERE "migration_id" = '20240917150840_Initialize') THEN
     CREATE INDEX ix_discount_applied_to_products_discount_id ON discount_applied_to_products (discount_id);
     END IF;
 END $EF$;
 
 DO $EF$
 BEGIN
-    IF NOT EXISTS(SELECT 1 FROM "__EFMigrationsHistory" WHERE "migration_id" = '20240917140902_Initialize') THEN
+    IF NOT EXISTS(SELECT 1 FROM "__EFMigrationsHistory" WHERE "migration_id" = '20240917150840_Initialize') THEN
     CREATE INDEX ix_discount_applied_to_products_product_id ON discount_applied_to_products (product_id);
     END IF;
 END $EF$;
 
 DO $EF$
 BEGIN
-    IF NOT EXISTS(SELECT 1 FROM "__EFMigrationsHistory" WHERE "migration_id" = '20240917140902_Initialize') THEN
+    IF NOT EXISTS(SELECT 1 FROM "__EFMigrationsHistory" WHERE "migration_id" = '20240917150840_Initialize') THEN
     CREATE UNIQUE INDEX ix_discounts_code ON discounts (code);
     END IF;
 END $EF$;
 
 DO $EF$
 BEGIN
-    IF NOT EXISTS(SELECT 1 FROM "__EFMigrationsHistory" WHERE "migration_id" = '20240917140902_Initialize') THEN
+    IF NOT EXISTS(SELECT 1 FROM "__EFMigrationsHistory" WHERE "migration_id" = '20240917150840_Initialize') THEN
     CREATE INDEX ix_discounts_discount_id ON discounts (discount_id);
     END IF;
 END $EF$;
 
 DO $EF$
 BEGIN
-    IF NOT EXISTS(SELECT 1 FROM "__EFMigrationsHistory" WHERE "migration_id" = '20240917140902_Initialize') THEN
+    IF NOT EXISTS(SELECT 1 FROM "__EFMigrationsHistory" WHERE "migration_id" = '20240917150840_Initialize') THEN
     CREATE INDEX ix_merchant_categories_category_id ON merchant_categories (category_id);
     END IF;
 END $EF$;
 
 DO $EF$
 BEGIN
-    IF NOT EXISTS(SELECT 1 FROM "__EFMigrationsHistory" WHERE "migration_id" = '20240917140902_Initialize') THEN
-    CREATE UNIQUE INDEX ix_merchant_products_product_id ON merchant_products (product_id);
+    IF NOT EXISTS(SELECT 1 FROM "__EFMigrationsHistory" WHERE "migration_id" = '20240917150840_Initialize') THEN
+    CREATE INDEX ix_merchant_products_product_id ON merchant_products (product_id);
     END IF;
 END $EF$;
 
 DO $EF$
 BEGIN
-    IF NOT EXISTS(SELECT 1 FROM "__EFMigrationsHistory" WHERE "migration_id" = '20240917140902_Initialize') THEN
-    CREATE INDEX ix_merchant_products_shop_collection_id ON merchant_products (shop_collection_id);
-    END IF;
-END $EF$;
-
-DO $EF$
-BEGIN
-    IF NOT EXISTS(SELECT 1 FROM "__EFMigrationsHistory" WHERE "migration_id" = '20240917140902_Initialize') THEN
+    IF NOT EXISTS(SELECT 1 FROM "__EFMigrationsHistory" WHERE "migration_id" = '20240917150840_Initialize') THEN
     CREATE INDEX ix_product_product_attributes_product_attribute_id ON product_product_attributes (product_attribute_id);
     END IF;
 END $EF$;
 
 DO $EF$
 BEGIN
-    IF NOT EXISTS(SELECT 1 FROM "__EFMigrationsHistory" WHERE "migration_id" = '20240917140902_Initialize') THEN
+    IF NOT EXISTS(SELECT 1 FROM "__EFMigrationsHistory" WHERE "migration_id" = '20240917150840_Initialize') THEN
     CREATE INDEX ix_product_variant_attribute_values_attribute_value_id ON product_variant_attribute_values (attribute_value_id);
     END IF;
 END $EF$;
 
 DO $EF$
 BEGIN
-    IF NOT EXISTS(SELECT 1 FROM "__EFMigrationsHistory" WHERE "migration_id" = '20240917140902_Initialize') THEN
+    IF NOT EXISTS(SELECT 1 FROM "__EFMigrationsHistory" WHERE "migration_id" = '20240917150840_Initialize') THEN
     CREATE INDEX ix_product_variant_attribute_values_product_attribute_id ON product_variant_attribute_values (product_attribute_id);
     END IF;
 END $EF$;
 
 DO $EF$
 BEGIN
-    IF NOT EXISTS(SELECT 1 FROM "__EFMigrationsHistory" WHERE "migration_id" = '20240917140902_Initialize') THEN
+    IF NOT EXISTS(SELECT 1 FROM "__EFMigrationsHistory" WHERE "migration_id" = '20240917150840_Initialize') THEN
     CREATE INDEX ix_product_variants_product_id ON product_variants (product_id);
     END IF;
 END $EF$;
 
 DO $EF$
 BEGIN
-    IF NOT EXISTS(SELECT 1 FROM "__EFMigrationsHistory" WHERE "migration_id" = '20240917140902_Initialize') THEN
+    IF NOT EXISTS(SELECT 1 FROM "__EFMigrationsHistory" WHERE "migration_id" = '20240917150840_Initialize') THEN
+    CREATE INDEX ix_products_merchant_id ON products (merchant_id);
+    END IF;
+END $EF$;
+
+DO $EF$
+BEGIN
+    IF NOT EXISTS(SELECT 1 FROM "__EFMigrationsHistory" WHERE "migration_id" = '20240917150840_Initialize') THEN
+    CREATE INDEX ix_products_shop_collection_id ON products (shop_collection_id);
+    END IF;
+END $EF$;
+
+DO $EF$
+BEGIN
+    IF NOT EXISTS(SELECT 1 FROM "__EFMigrationsHistory" WHERE "migration_id" = '20240917150840_Initialize') THEN
     CREATE INDEX ix_shop_collections_merchant_id ON shop_collections (merchant_id);
     END IF;
 END $EF$;
 
 DO $EF$
 BEGIN
-    IF NOT EXISTS(SELECT 1 FROM "__EFMigrationsHistory" WHERE "migration_id" = '20240917140902_Initialize') THEN
+    IF NOT EXISTS(SELECT 1 FROM "__EFMigrationsHistory" WHERE "migration_id" = '20240917150840_Initialize') THEN
     CREATE INDEX ix_shop_collections_parent_id ON shop_collections (parent_id);
     END IF;
 END $EF$;
 
 DO $EF$
 BEGIN
-    IF NOT EXISTS(SELECT 1 FROM "__EFMigrationsHistory" WHERE "migration_id" = '20240917140902_Initialize') THEN
+    IF NOT EXISTS(SELECT 1 FROM "__EFMigrationsHistory" WHERE "migration_id" = '20240917150840_Initialize') THEN
     CREATE INDEX ix_stores_merchant_id ON stores (merchant_id);
     END IF;
 END $EF$;
 
 DO $EF$
 BEGIN
-    IF NOT EXISTS(SELECT 1 FROM "__EFMigrationsHistory" WHERE "migration_id" = '20240917140902_Initialize') THEN
+    IF NOT EXISTS(SELECT 1 FROM "__EFMigrationsHistory" WHERE "migration_id" = '20240917150840_Initialize') THEN
     INSERT INTO "__EFMigrationsHistory" (migration_id, product_version)
-    VALUES ('20240917140902_Initialize', '8.0.1');
+    VALUES ('20240917150840_Initialize', '8.0.1');
     END IF;
 END $EF$;
 COMMIT;

@@ -87,13 +87,7 @@ public class CreateProductCommandHandler : IEndpointHandler
             }
         }
 
-        var merchantProduct = new MerchantProduct(merchant.Id, newProduct.Id);
-        merchant.AddProduct(merchantProduct);
-        merchantRepository.Update(merchant);
-
-        await merchantRepository.AddAndSaveChangeAsync(merchant, cancellationToken);
-
-        newProduct.SetMerchantProduct(merchantProduct.Id);
+        newProduct.SetMerchant(merchant.Id);
 
         await productRepository.AddAndSaveChangeAsync(newProduct, cancellationToken);
 

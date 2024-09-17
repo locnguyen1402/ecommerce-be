@@ -15,6 +15,10 @@ public class Category(string name, string slug, string? description, Guid? paren
     public IReadOnlyCollection<CategoryProduct> CategoryProducts => _categoryProducts;
     private readonly List<Product> _products = [];
     public IReadOnlyCollection<Product> Products => _products;
+    public readonly List<Merchant> _merchants = [];
+    public virtual IReadOnlyCollection<Merchant> Merchants => _merchants;
+    public readonly List<MerchantCategory> _merchantCategories = [];
+    public virtual IReadOnlyCollection<MerchantCategory> MerchantCategories => _merchantCategories;
     public void ChangeParent(Guid? parentId)
     {
         ParentId = parentId;

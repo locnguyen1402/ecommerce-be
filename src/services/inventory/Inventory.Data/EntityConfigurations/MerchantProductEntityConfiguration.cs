@@ -15,10 +15,5 @@ public class MerchantProductEntityConfiguration : BaseEntityConfiguration<Mercha
         builder.Ignore(x => x.Id);
 
         builder.HasKey(p => new { p.MerchantId, p.ProductId });
-
-        builder.HasOne(p => p.Merchant)
-            .WithMany(c => c.Products)
-            .HasForeignKey(c => c.MerchantId)
-            .OnDelete(DeleteBehavior.Cascade);
     }
 }

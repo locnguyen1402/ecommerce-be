@@ -14,7 +14,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ECommerce.Inventory.DbMigrator.PostgreSQL.Migrations
 {
     [DbContext(typeof(InventoryDbContext))]
-    [Migration("20240917140902_Initialize")]
+    [Migration("20240917150840_Initialize")]
     partial class Initialize
     {
         /// <inheritdoc />
@@ -384,19 +384,11 @@ namespace ECommerce.Inventory.DbMigrator.PostgreSQL.Migrations
                         .HasColumnName("created_at")
                         .HasDefaultValueSql("now()");
 
-                    b.Property<Guid?>("ShopCollectionId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("shop_collection_id");
-
                     b.HasKey("MerchantId", "ProductId")
                         .HasName("pk_merchant_products");
 
                     b.HasIndex("ProductId")
-                        .IsUnique()
                         .HasDatabaseName("ix_merchant_products_product_id");
-
-                    b.HasIndex("ShopCollectionId")
-                        .HasDatabaseName("ix_merchant_products_shop_collection_id");
 
                     b.ToTable("merchant_products", (string)null);
                 });
@@ -424,15 +416,19 @@ namespace ECommerce.Inventory.DbMigrator.PostgreSQL.Migrations
                         .HasColumnType("boolean")
                         .HasColumnName("has_discounts_applied");
 
-                    b.Property<Guid>("MerchantProductId")
+                    b.Property<Guid>("MerchantId")
                         .HasColumnType("uuid")
-                        .HasColumnName("merchant_product_id");
+                        .HasColumnName("merchant_id");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)")
                         .HasColumnName("name");
+
+                    b.Property<Guid?>("ShopCollectionId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("shop_collection_id");
 
                     b.Property<string>("Slug")
                         .IsRequired()
@@ -442,6 +438,12 @@ namespace ECommerce.Inventory.DbMigrator.PostgreSQL.Migrations
 
                     b.HasKey("Id")
                         .HasName("pk_products");
+
+                    b.HasIndex("MerchantId")
+                        .HasDatabaseName("ix_products_merchant_id");
+
+                    b.HasIndex("ShopCollectionId")
+                        .HasDatabaseName("ix_products_shop_collection_id");
 
                     b.ToTable("products", (string)null);
                 });
@@ -782,14 +784,14 @@ namespace ECommerce.Inventory.DbMigrator.PostgreSQL.Migrations
             modelBuilder.Entity("ECommerce.Inventory.Domain.AggregatesModel.MerchantCategory", b =>
                 {
                     b.HasOne("ECommerce.Inventory.Domain.AggregatesModel.Category", "Category")
-                        .WithMany()
+                        .WithMany("MerchantCategories")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_merchant_categories_categories_category_id");
 
                     b.HasOne("ECommerce.Inventory.Domain.AggregatesModel.Merchant", "Merchant")
-                        .WithMany("Categories")
+                        .WithMany("MerchantCategories")
                         .HasForeignKey("MerchantId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
@@ -803,27 +805,39 @@ namespace ECommerce.Inventory.DbMigrator.PostgreSQL.Migrations
             modelBuilder.Entity("ECommerce.Inventory.Domain.AggregatesModel.MerchantProduct", b =>
                 {
                     b.HasOne("ECommerce.Inventory.Domain.AggregatesModel.Merchant", "Merchant")
-                        .WithMany("Products")
+                        .WithMany()
                         .HasForeignKey("MerchantId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_merchant_products_merchants_merchant_id");
 
                     b.HasOne("ECommerce.Inventory.Domain.AggregatesModel.Product", "Product")
-                        .WithOne("MerchantProduct")
-                        .HasForeignKey("ECommerce.Inventory.Domain.AggregatesModel.MerchantProduct", "ProductId")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_merchant_products_products_product_id");
 
-                    b.HasOne("ECommerce.Inventory.Domain.AggregatesModel.ShopCollection", null)
-                        .WithMany("Products")
-                        .HasForeignKey("ShopCollectionId")
-                        .HasConstraintName("fk_merchant_products_shop_collections_shop_collection_id");
-
                     b.Navigation("Merchant");
 
                     b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("ECommerce.Inventory.Domain.AggregatesModel.Product", b =>
+                {
+                    b.HasOne("ECommerce.Inventory.Domain.AggregatesModel.Merchant", "Merchant")
+                        .WithMany("Products")
+                        .HasForeignKey("MerchantId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_products_merchants_merchant_id");
+
+                    b.HasOne("ECommerce.Inventory.Domain.AggregatesModel.ShopCollection", null)
+                        .WithMany("Products")
+                        .HasForeignKey("ShopCollectionId")
+                        .HasConstraintName("fk_products_shop_collections_shop_collection_id");
+
+                    b.Navigation("Merchant");
                 });
 
             modelBuilder.Entity("ECommerce.Inventory.Domain.AggregatesModel.ProductProductAttribute", b =>
@@ -929,6 +943,8 @@ namespace ECommerce.Inventory.DbMigrator.PostgreSQL.Migrations
                     b.Navigation("Categories");
 
                     b.Navigation("CategoryProducts");
+
+                    b.Navigation("MerchantCategories");
                 });
 
             modelBuilder.Entity("ECommerce.Inventory.Domain.AggregatesModel.Discount", b =>
@@ -938,7 +954,7 @@ namespace ECommerce.Inventory.DbMigrator.PostgreSQL.Migrations
 
             modelBuilder.Entity("ECommerce.Inventory.Domain.AggregatesModel.Merchant", b =>
                 {
-                    b.Navigation("Categories");
+                    b.Navigation("MerchantCategories");
 
                     b.Navigation("Products");
 
@@ -950,9 +966,6 @@ namespace ECommerce.Inventory.DbMigrator.PostgreSQL.Migrations
             modelBuilder.Entity("ECommerce.Inventory.Domain.AggregatesModel.Product", b =>
                 {
                     b.Navigation("CategoryProducts");
-
-                    b.Navigation("MerchantProduct")
-                        .IsRequired();
 
                     b.Navigation("ProductProductAttributes");
 

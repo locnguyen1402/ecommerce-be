@@ -16,8 +16,8 @@ public class Product(string name, string slug, string? description) : EntityWith
     public IReadOnlyCollection<ProductAttribute> ProductAttributes => _productAttributes;
     private readonly List<ProductProductAttribute> _productProductAttributes = [];
     public IReadOnlyCollection<ProductProductAttribute> ProductProductAttributes => _productProductAttributes;
-    public Guid MerchantProductId { get; private set; }
-    public virtual MerchantProduct MerchantProduct { get; private set; } = null!;
+    public Guid MerchantId { get; private set; }
+    public virtual Merchant Merchant { get; private set; } = null!;
 
     public void UpdateGeneralInfo(string name, string slug, string? description)
     {
@@ -81,8 +81,8 @@ public class Product(string name, string slug, string? description) : EntityWith
         }
     }
 
-    public void SetMerchantProduct(Guid merchantProductId)
+    public void SetMerchant(Guid merchantId)
     {
-        MerchantProductId = merchantProductId;
+        MerchantId = merchantId;
     }
 }

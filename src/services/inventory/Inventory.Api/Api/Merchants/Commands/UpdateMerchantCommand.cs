@@ -55,14 +55,7 @@ public class UpdateMerchantCommandHandler : IEndpointHandler
             {
                 return Results.BadRequest("Some categories are not existed");
             }
-
-            var listMerchantCategories = new List<MerchantCategory>();
-            foreach (var categoryId in request.CategoryIds)
-            {
-                var newMerchantCategory = new MerchantCategory(merchant.Id, categoryId);
-                listMerchantCategories.Add(newMerchantCategory);
-            }
-            merchant.AddOrUpdateCategories(listMerchantCategories);
+            merchant.AddOrUpdateCategories(categories);
         }
 
         merchant.Update(
