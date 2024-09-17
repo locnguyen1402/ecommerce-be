@@ -48,13 +48,7 @@ public class CreateMerchantCommandHandler : IEndpointHandler
                 return Results.BadRequest("Some categories are not existed");
             }
 
-            var listMerchantCategories = new List<MerchantCategory>();
-            foreach (var categoryId in request.CategoryIds)
-            {
-                var newMerchantCategory = new MerchantCategory(newMerchant.Id, categoryId);
-                listMerchantCategories.Add(newMerchantCategory);
-            }
-            newMerchant.AddOrUpdateCategories(listMerchantCategories);
+            newMerchant.AddOrUpdateCategories(categories);
         }
 
         await merchantRepository.AddAndSaveChangeAsync(newMerchant, cancellationToken);

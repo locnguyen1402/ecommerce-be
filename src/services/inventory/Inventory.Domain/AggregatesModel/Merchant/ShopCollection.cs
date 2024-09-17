@@ -10,8 +10,8 @@ public class ShopCollection(string name, string slug, Guid? parentId) : Entity
     public ShopCollection? Parent { get; private set; }
     public Guid MerchantId { get; private set; }
     public virtual Merchant Merchant { get; private set; } = null!;
-    public readonly List<MerchantProduct> _products = [];
-    public virtual IReadOnlyCollection<MerchantProduct> Products => _products;
+    public readonly List<Product> _products = [];
+    public virtual IReadOnlyCollection<Product> Products => _products;
 
     public void Update(string name, string slug, Guid? parentId)
     {
@@ -25,18 +25,18 @@ public class ShopCollection(string name, string slug, Guid? parentId) : Entity
         MerchantId = merchantId;
     }
 
-    public void AddProduct(MerchantProduct product)
+    public void AddProduct(Product product)
     {
-        var existedProduct = _products.FirstOrDefault(x => x.ProductId == product.ProductId && x.MerchantId == product.MerchantId);
+        var existedProduct = _products.FirstOrDefault(x => x.Id == product.Id);
         if (existedProduct == null)
         {
             _products.Add(product);
         }
     }
 
-    public void RemoveProduct(MerchantProduct product)
+    public void RemoveProduct(Product product)
     {
-        var existedProduct = _products.FirstOrDefault(x => x.ProductId == product.ProductId && x.MerchantId == product.MerchantId);
+        var existedProduct = _products.FirstOrDefault(x => x.Id == product.Id);
         if (product != null)
         {
             _products.Remove(product);

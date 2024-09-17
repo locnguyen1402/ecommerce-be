@@ -30,9 +30,24 @@ namespace ECommerce.Inventory.Data.EntityConfigurations
                 .HasDefaultValueSql("''");
 
             builder.HasMany(p => p.Categories)
-                 .WithOne(c => c.Merchant)
-                 .HasForeignKey(c => c.MerchantId)
-                 .OnDelete(DeleteBehavior.Cascade);
+                .WithMany(c => c.Merchants)
+                .UsingEntity<MerchantCategory>(
+                    p =>
+                    {
+                        p.HasKey(cp => new { cp.MerchantId, cp.CategoryId });
+
+                        p.HasOne(cp => cp.Category)
+                            .WithMany(c => c.MerchantCategories)
+                            .HasForeignKey(cp => cp.CategoryId)
+                            .OnDelete(DeleteBehavior.Cascade);
+
+                        p.HasOne(cp => cp.Merchant)
+                            .WithMany(c => c.MerchantCategories)
+                            .HasForeignKey(cp => cp.MerchantId)
+                            .OnDelete(DeleteBehavior.Cascade);
+
+                    }
+                );
 
             builder.HasMany(p => p.Products)
                  .WithOne(c => c.Merchant)

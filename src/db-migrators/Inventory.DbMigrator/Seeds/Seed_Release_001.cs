@@ -1,4 +1,5 @@
 using System.Linq;
+using System.Threading.Tasks;
 using ECommerce.Inventory.Data;
 using ECommerce.Inventory.Domain.AggregatesModel;
 using Microsoft.EntityFrameworkCore;
@@ -17,6 +18,7 @@ namespace ECommerce.Inventory.DbMigrator.Seeds
             await InitAttributes(services);
             await InitAttributeValues(services);
             await InitCategories(services);
+            await InitMerchants(services);
         }
 
         private static async Task InitAttributes(IServiceProvider serviceProvider)
@@ -507,6 +509,40 @@ namespace ECommerce.Inventory.DbMigrator.Seeds
             }
         }
 
+        private static async Task InitMerchants(IServiceProvider serviceProvider)
+        {
+            var merchants = new MerchantInfo[] {
+                new("POLOMANOR", "polomaner", "POLOMANOR Mall", "polomanor-mall"),
+                new("GUTEK", "gutek", "GUTEK Mall", "gutek-mall"),
+                new("Sói gear", "soi-gear", "Sói gear Yêu thích", "soi-gear-yeu-thich"),
+                new("Trang sức bạc Miuu Silver", "trang-suc-bac-miuu-silver", "Miuu Silver Mall", "miuu-silver-mall"),
+                new("Gấu bông vân anh", "gau-bong-van-anh", "Gấu bông vân anh yêu thích", "gau-bong-van-anh-yeu-thich"),
+                new("Romano Vietnam", "romano-vietnam", "Romano Vietnam Mall", "romano-vietnam-mall")
+            };
+
+            await InitMerchants(serviceProvider, merchants);
+        }
+
+        private static async Task InitMerchants(IServiceProvider serviceProvider, params MerchantInfo[] merchants)
+        {
+            var scope = serviceProvider.CreateScope();
+            var dbContext = scope.ServiceProvider.GetRequiredService<InventoryDbContext>();
+
+            foreach (var merchant in merchants)
+            {
+                if (await dbContext.Merchants.AnyAsync(t => t.Slug == merchant.Slug))
+                    continue;
+
+                var newMerchant = new Merchant(merchant.Name, merchant.Slug);
+
+                var newStore = new Store(merchant.Store.Name, merchant.Store.Slug, newMerchant.Id);
+                newMerchant.AddStore(newStore);
+
+                dbContext.Merchants.Add(newMerchant);
+                var result = await dbContext.SaveChangesAsync();
+            }
+        }
+
         internal class AttributeValueInfo(string value, string attributeName)
         {
             public string Value { get; set; } = value;
@@ -518,6 +554,21 @@ namespace ECommerce.Inventory.DbMigrator.Seeds
             public string Name { get; set; } = name;
             public string Slug { get; set; } = slug;
             public List<Category>? ChildCategories { get; set; } = childCategories;
+        }
+
+        internal class MerchantInfo(string name, string slug, string nameStore, string slugStore)
+        {
+            public string Name { get; set; } = name;
+            public string Slug { get; set; } = slug;
+            public bool IsActive { get; set; } = true;
+            public StoreInfo Store { get; set; } = new StoreInfo(nameStore, slugStore);
+        }
+
+        internal class StoreInfo(string name, string slug)
+        {
+            public string Name { get; set; } = name;
+            public string Slug { get; set; } = slug;
+            public bool IsActive { get; set; } = true;
         }
     }
 }
