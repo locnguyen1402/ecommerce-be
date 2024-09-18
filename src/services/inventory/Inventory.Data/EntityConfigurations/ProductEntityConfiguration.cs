@@ -20,26 +20,6 @@ public class ProductEntityConfiguration : BaseEntityConfiguration<Product>
             .IsRequired()
             .HasMaxLength(150);
 
-        builder.HasMany(p => p.Categories)
-            .WithMany(c => c.Products)
-            .UsingEntity<CategoryProduct>(
-                p =>
-                {
-                    p.HasKey(cp => new { cp.CategoryId, cp.ProductId });
-
-                    p.HasOne(cp => cp.Category)
-                        .WithMany(c => c.CategoryProducts)
-                        .HasForeignKey(cp => cp.CategoryId)
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    p.HasOne(cp => cp.Product)
-                        .WithMany(c => c.CategoryProducts)
-                        .HasForeignKey(cp => cp.ProductId)
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                }
-            );
-
         builder.HasMany(p => p.ProductAttributes)
             .WithMany(p => p.Products)
             .UsingEntity<ProductProductAttribute>(

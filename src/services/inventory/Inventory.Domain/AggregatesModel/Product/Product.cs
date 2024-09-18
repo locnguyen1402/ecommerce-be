@@ -6,10 +6,6 @@ public class Product(string name, string slug, string? description) : EntityWith
     public string Name { get; private set; } = name;
     public string Description { get; private set; } = description ?? string.Empty;
     // public decimal Price => ProductVariants.Min(x => x.Price);
-    private readonly List<Category> _categories = [];
-    public IReadOnlyCollection<Category> Categories => _categories;
-    private readonly List<CategoryProduct> _categoryProducts = [];
-    public IReadOnlyCollection<CategoryProduct> CategoryProducts => _categoryProducts;
     private readonly List<ShopCollection> _shopCollections = [];
     public IReadOnlyCollection<ShopCollection> ShopCollections => _shopCollections;
     private readonly List<ShopCollectionProduct> _shopCollectionProducts = [];
@@ -50,15 +46,15 @@ public class Product(string name, string slug, string? description) : EntityWith
             }
         }
     }
-    public void AddOrUpdateCategories(IEnumerable<Category> categories)
+    public void AddOrUpdateCollections(IEnumerable<ShopCollection> categories)
     {
-        _categories.RemoveAll(x => !categories.Any(a => a.Id == x.Id));
+        _shopCollections.RemoveAll(x => !categories.Any(a => a.Id == x.Id));
 
         foreach (var category in categories)
         {
-            if (!_categories.Any(x => x.Id == category.Id))
+            if (!_shopCollections.Any(x => x.Id == category.Id))
             {
-                _categories.Add(category);
+                _shopCollections.Add(category);
             }
         }
     }

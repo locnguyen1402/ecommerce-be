@@ -11,10 +11,6 @@ public class Category(string name, string slug, string? description, Guid? paren
     public Category? Parent { get; private set; }
     private readonly List<Category> _categories = [];
     public IReadOnlyCollection<Category> Categories => _categories;
-    private readonly List<CategoryProduct> _categoryProducts = [];
-    public IReadOnlyCollection<CategoryProduct> CategoryProducts => _categoryProducts;
-    private readonly List<Product> _products = [];
-    public IReadOnlyCollection<Product> Products => _products;
     public readonly List<Merchant> _merchants = [];
     public virtual IReadOnlyCollection<Merchant> Merchants => _merchants;
     public readonly List<MerchantCategory> _merchantCategories = [];

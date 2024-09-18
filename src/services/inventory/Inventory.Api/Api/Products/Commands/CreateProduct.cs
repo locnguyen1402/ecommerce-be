@@ -19,7 +19,7 @@ public class CreateProductCommandHandler : IEndpointHandler
         IValidator<CreateProductRequest> validator,
         IProductRepository productRepository,
         IProductAttributeRepository productAttributeRepository,
-        ICategoryRepository categoryRepository,
+        IShopCollectionRepository shopCollectionRepository,
         IMerchantRepository merchantRepository,
         CancellationToken cancellationToken
     ) =>
@@ -59,19 +59,19 @@ public class CreateProductCommandHandler : IEndpointHandler
             newProduct.AddOrUpdateAttributes(selectedAttributes);
         }
 
-        List<Category> selectedCategories = [];
-        if (request.Categories.Count > 0)
-        {
-            var categoriesSpec = new GetCategoriesByIdsSpecification([.. request.Categories]);
-            selectedCategories = (await categoryRepository.GetAsync(categoriesSpec, cancellationToken)).ToList();
+        // List<Category> selectedCategories = [];
+        // if (request.Categories.Count > 0)
+        // {
+        //     var categoriesSpec = new GetCategoriesByIdsSpecification([.. request.Categories]);
+        //     selectedCategories = (await categoryRepository.GetAsync(categoriesSpec, cancellationToken)).ToList();
 
-            if (selectedCategories.Count != request.Categories.Count)
-            {
-                return Results.BadRequest("Some categories are not found");
-            }
+        //     if (selectedCategories.Count != request.Categories.Count)
+        //     {
+        //         return Results.BadRequest("Some categories are not found");
+        //     }
 
-            newProduct.AddOrUpdateCategories(selectedCategories);
-        }
+        //     newProduct.AddOrUpdateCollections(selectedCategories);
+        // }
 
         if (request.Variants.Count != 0)
         {

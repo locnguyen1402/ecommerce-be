@@ -41,17 +41,17 @@ public class UpdateProductCommandHandler : IEndpointHandler
             return Results.BadRequest("Slug is already existed");
         }
 
-        List<Category> selectedCategories = [];
-        if (request.Categories.Count > 0)
-        {
-            var categoriesSpec = new GetCategoriesByIdsSpecification([.. request.Categories]);
-            selectedCategories = (await categoryRepository.GetAsync(categoriesSpec, cancellationToken)).ToList();
+        // List<Category> selectedCategories = [];
+        // if (request.Categories.Count > 0)
+        // {
+        //     var categoriesSpec = new GetCategoriesByIdsSpecification([.. request.Categories]);
+        //     selectedCategories = (await categoryRepository.GetAsync(categoriesSpec, cancellationToken)).ToList();
 
-            if (selectedCategories.Count != request.Categories.Count)
-            {
-                return Results.BadRequest("Some categories are not found");
-            }
-        }
+        //     if (selectedCategories.Count != request.Categories.Count)
+        //     {
+        //         return Results.BadRequest("Some categories are not found");
+        //     }
+        // }
 
         List<ProductAttribute> selectedAttributes = [];
         if (request.Attributes.Count != 0)
@@ -66,7 +66,7 @@ public class UpdateProductCommandHandler : IEndpointHandler
         }
 
         var product = await productRepository.Query
-                        .Include(p => p.Categories)
+                        .Include(p => p.ShopCollections)
                         .Include(p => p.ProductAttributes)
                         .Include(p => p.ProductVariants)
                             .ThenInclude(pv => pv.ProductVariantAttributeValues)
@@ -78,7 +78,7 @@ public class UpdateProductCommandHandler : IEndpointHandler
         }
 
         product.UpdateGeneralInfo(request.Name, request.Slug, request.Description);
-        product.AddOrUpdateCategories(selectedCategories);
+        // product.AddOrUpdateCollections(selectedCategories);
         product.AddOrUpdateAttributes(selectedAttributes);
 
         ProductUtils.UpdateVariantsInProduct(product, request.Variants);
