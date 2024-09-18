@@ -13,6 +13,7 @@ public class GetMerchantsQueryHandler : IEndpointHandler
     public Delegate Handle
     => async (
         string? keyword,
+        bool? hasStores,
         PagingQuery pagingQuery,
         IMerchantRepository merchantRepository,
         CancellationToken cancellationToken
@@ -21,6 +22,7 @@ public class GetMerchantsQueryHandler : IEndpointHandler
         var spec = new GetMerchantsSpecification<MerchantResponse>(
             MerchantProjection.ToMerchantResponse()
             , keyword
+            , hasStores
             , pagingQuery
             );
 
