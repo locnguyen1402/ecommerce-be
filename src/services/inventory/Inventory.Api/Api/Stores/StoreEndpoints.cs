@@ -14,8 +14,9 @@ public class StoreEndpoints(WebApplication app) : MinimalEndpoint(app, "/invento
     public override void MapEndpoints()
     {
         Builder.MapGet<GetStoresQueryHandler>("/");
-
         Builder.MapPost<CreateStoreCommandHandler>("/");
+
+        Builder.MapGet<GetStoreByIdQueryHandler>("/{id:Guid}");
         Builder.MapPut<UpdateStoreCommandHandler>("/{id:Guid}");
 
     }
