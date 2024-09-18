@@ -7,6 +7,7 @@ using ECommerce.Inventory.Domain.AggregatesModel;
 using ECommerce.Inventory.Api.Products.Specifications;
 using ECommerce.Inventory.Api.Products.Requests;
 using ECommerce.Inventory.Api.Categories.Specifications;
+using ECommerce.Inventory.Api.Merchants.Specifications;
 
 namespace ECommerce.Inventory.Api.Products.Commands;
 

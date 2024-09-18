@@ -4,7 +4,7 @@ using ECommerce.Shared.Common.Infrastructure.Specification;
 
 using ECommerce.Inventory.Domain.AggregatesModel;
 
-namespace ECommerce.Inventory.Api.Categories.Specifications;
+namespace ECommerce.Inventory.Api.Merchants.Specifications;
 
 public class GetMerchantByIdSpecification : Specification<Merchant>
 {
