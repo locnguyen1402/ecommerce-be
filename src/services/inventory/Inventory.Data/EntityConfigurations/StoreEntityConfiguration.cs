@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 using ECommerce.Inventory.Domain.AggregatesModel;
 using ECommerce.Shared.Common.Infrastructure.EntityConfigurations;
-using ECommerce.Shared.Common.Enums;
 
 namespace ECommerce.Inventory.Data.EntityConfigurations;
 

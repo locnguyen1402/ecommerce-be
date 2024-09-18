@@ -1,20 +1,20 @@
 using FluentValidation;
+using Microsoft.EntityFrameworkCore;
 
 using ECommerce.Shared.Common.Infrastructure.Endpoint;
 
 using ECommerce.Inventory.Domain.AggregatesModel;
-using ECommerce.Inventory.Api.Merchants.Requests;
-using Microsoft.EntityFrameworkCore;
+using ECommerce.Inventory.Api.Products.Requests;
 
-namespace ECommerce.Inventory.Api.Merchants.Commands;
+namespace ECommerce.Inventory.Api.Products.Commands;
 
 public class AssignProductToShopCollectionCommandHandler : IEndpointHandler
 {
     public Delegate Handle
     => async (
-        AssignProductToShopCollectionRequest request,
-        IValidator<AssignProductToShopCollectionRequest> validator,
-        IMerchantRepository merchantRepository,
+        AssignProductsToCollectionRequest request,
+        IValidator<AssignProductsToCollectionRequest> validator,
+        IProductRepository productRepository,
         IShopCollectionRepository shopCollectionRepository,
         CancellationToken cancellationToken
     ) =>
@@ -25,15 +25,7 @@ public class AssignProductToShopCollectionCommandHandler : IEndpointHandler
             return Results.ValidationProblem(validationResult.ToDictionary());
         }
 
-        var merchant = await merchantRepository.Query
-            .Include(x => x.Products)
-            .FirstOrDefaultAsync(p => p.Id == request.MerchantId, cancellationToken);
-
-        if (merchant == null)
-        {
-            return Results.NotFound("Merchant not found");
-        }
-
+        // TODO: get shop collection by merchant id in logged in user
         var shopCollection = await shopCollectionRepository.Query
             .FirstOrDefaultAsync(p => p.Id == request.ShopCollectionId, cancellationToken);
 
@@ -42,19 +34,12 @@ public class AssignProductToShopCollectionCommandHandler : IEndpointHandler
             return Results.NotFound("ShopCollection not found");
         }
 
-        merchant.Products.ToList().ForEach(x =>
-        {
-            if (!request.ProductIds.Any(p => p == x.Id))
-            {
-                Results.BadRequest($"Product with Id ({x.Id}) is not existed in merchant");
-            }
-        });
+        // TODO: get products by merchant id in logged in user
+        var products = await productRepository.Query
+            .Where(p => request.ProductIds.Contains(p.Id))
+            .ToListAsync(cancellationToken);
 
-        foreach (var productId in request.ProductIds)
-        {
-            var merchantProduct = merchant.Products.First(x => x.Id == productId);
-            shopCollection.AddProduct(merchantProduct);
-        }
+        shopCollection.ReplaceProducts(products);
 
         shopCollectionRepository.Update(shopCollection);
 

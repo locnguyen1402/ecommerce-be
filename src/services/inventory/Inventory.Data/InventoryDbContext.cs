@@ -18,7 +18,6 @@ public class InventoryDbContext(DbContextOptions<InventoryDbContext> options) : 
     public DbSet<AttributeValue> AttributeValues => Set<AttributeValue>();
     public DbSet<Discount> Discounts => Set<Discount>();
     public DbSet<Merchant> Merchants => Set<Merchant>();
-    public DbSet<MerchantProduct> MerchantProducts => Set<MerchantProduct>();
     public DbSet<MerchantCategory> MerchantCategories => Set<MerchantCategory>();
     public DbSet<Store> Stores => Set<Store>();
     public DbSet<ShopCollection> ShopCollections => Set<ShopCollection>();
@@ -39,7 +38,6 @@ public class InventoryDbContext(DbContextOptions<InventoryDbContext> options) : 
         // Merchant & Store
         modelBuilder.ApplyConfiguration(new MerchantEntityConfiguration());
         modelBuilder.ApplyConfiguration(new MerchantCategoryEntityConfiguration());
-        modelBuilder.ApplyConfiguration(new MerchantProductEntityConfiguration());
         modelBuilder.ApplyConfiguration(new StoreEntityConfiguration());
         modelBuilder.ApplyConfiguration(new ShopCollectionEntityConfiguration());
     }

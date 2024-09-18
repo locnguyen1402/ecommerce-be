@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 using ECommerce.Inventory.Domain.AggregatesModel;
@@ -18,5 +19,24 @@ public class ShopCollectionEntityConfiguration : BaseEntityConfiguration<ShopCol
         builder.Property(p => p.Slug)
             .IsRequired()
             .HasMaxLength(150);
+
+        builder.HasMany(p => p.Products)
+            .WithMany(c => c.ShopCollections)
+            .UsingEntity<ShopCollectionProduct>(
+                p =>
+                {
+                    p.HasKey(cp => new { cp.ShopCollectionId, cp.ProductId });
+
+                    p.HasOne(cp => cp.ShopCollection)
+                        .WithMany(c => c.ShopCollectionProducts)
+                        .HasForeignKey(cp => cp.ShopCollectionId)
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    p.HasOne(cp => cp.Product)
+                        .WithMany(c => c.ShopCollectionProducts)
+                        .HasForeignKey(cp => cp.ProductId)
+                        .OnDelete(DeleteBehavior.Cascade);
+                }
+            );
     }
 }

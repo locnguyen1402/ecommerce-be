@@ -27,17 +27,6 @@ public class Merchant(string name, string slug) : Entity
         Description = description;
     }
 
-    public void AddOrUpdateProducts(List<Product> products)
-    {
-        _products.Clear();
-        _products.AddRange(products.Count > 0 ? products : []);
-    }
-
-    public void AddProduct(Product product)
-    {
-        _products.Add(product);
-    }
-
     public void AddOrUpdateCategories(IEnumerable<Category> categories)
     {
         _categories.RemoveAll(x => !categories.Any(a => a.Id == x.Id));

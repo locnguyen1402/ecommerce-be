@@ -10,6 +10,10 @@ public class Product(string name, string slug, string? description) : EntityWith
     public IReadOnlyCollection<Category> Categories => _categories;
     private readonly List<CategoryProduct> _categoryProducts = [];
     public IReadOnlyCollection<CategoryProduct> CategoryProducts => _categoryProducts;
+    private readonly List<ShopCollection> _shopCollections = [];
+    public IReadOnlyCollection<ShopCollection> ShopCollections => _shopCollections;
+    private readonly List<ShopCollectionProduct> _shopCollectionProducts = [];
+    public IReadOnlyCollection<ShopCollectionProduct> ShopCollectionProducts => _shopCollectionProducts;
     private readonly HashSet<ProductVariant> _productVariants = [];
     public IReadOnlyCollection<ProductVariant> ProductVariants => _productVariants;
     private readonly List<ProductAttribute> _productAttributes = [];
