@@ -23,4 +23,8 @@
     <PackageReference Include="FluentValidation.AspNetCore" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Shared.Libs\Shared.Libs.csproj" />
+  </ItemGroup>
+
 </Project>
