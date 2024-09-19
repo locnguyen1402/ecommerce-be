@@ -17,7 +17,6 @@ public class UpdateShopCollectionCommandHandler : IEndpointHandler
         UpdateShopCollectionRequest request,
         IValidator<UpdateShopCollectionRequest> validator,
         IShopCollectionRepository shopCollectionRepository,
-        IMerchantRepository merchantRepository,
         CancellationToken cancellationToken
     ) =>
     {

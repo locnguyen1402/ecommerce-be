@@ -6,9 +6,7 @@ using ECommerce.Shared.Common.Infrastructure.Endpoint;
 using ECommerce.Inventory.Domain.AggregatesModel;
 using ECommerce.Inventory.Api.Products.Specifications;
 using ECommerce.Inventory.Api.Products.Requests;
-using ECommerce.Inventory.Api.Categories.Specifications;
-using ECommerce.Inventory.Api.Merchants.Specifications;
-using ECommerce.Inventory.Api.Merchants.Application;
+using ECommerce.Inventory.Api.Services;
 
 namespace ECommerce.Inventory.Api.Products.Commands;
 
@@ -18,10 +16,10 @@ public class CreateProductCommandHandler : IEndpointHandler
     => async (
         CreateProductRequest request,
         IValidator<CreateProductRequest> validator,
+        IMerchantService merchantService,
         IProductRepository productRepository,
         IProductAttributeRepository productAttributeRepository,
         IShopCollectionRepository shopCollectionRepository,
-        IMerchantRepository merchantRepository,
         CancellationToken cancellationToken
     ) =>
     {
@@ -36,7 +34,7 @@ public class CreateProductCommandHandler : IEndpointHandler
             return Results.BadRequest("Slug is already taken");
         }
 
-        var merchant = await GetDefaultMerchantQuery.Execute(merchantRepository, cancellationToken);
+        var merchantId = await merchantService.GetMerchantIdAsync(cancellationToken);
 
         var newProduct = new Product(request.Name, request.Slug, request.Description);
 
@@ -83,7 +81,7 @@ public class CreateProductCommandHandler : IEndpointHandler
             }
         }
 
-        newProduct.SetMerchant(merchant.Id);
+        newProduct.SetMerchant(merchantId);
 
         await productRepository.AddAndSaveChangeAsync(newProduct, cancellationToken);
 

@@ -5,7 +5,7 @@ using ECommerce.Shared.Common.Infrastructure.Endpoint;
 
 using ECommerce.Inventory.Domain.AggregatesModel;
 using ECommerce.Inventory.Api.Merchants.Requests;
-using ECommerce.Inventory.Api.Merchants.Application;
+using ECommerce.Inventory.Api.Services;
 
 namespace ECommerce.Inventory.Api.Merchants.Commands;
 
@@ -14,9 +14,9 @@ public class CreateShopCollectionCommandHandler : IEndpointHandler
     public Delegate Handle
     => async (
         CreateShopCollectionRequest request,
+        IMerchantService merchantService,
         IValidator<CreateShopCollectionRequest> validator,
         IShopCollectionRepository shopCollectionRepository,
-        IMerchantRepository merchantRepository,
         CancellationToken cancellationToken
     ) =>
     {
@@ -26,11 +26,11 @@ public class CreateShopCollectionCommandHandler : IEndpointHandler
             return Results.ValidationProblem(validationResult.ToDictionary());
         }
 
-        var merchant = await GetDefaultMerchantQuery.Execute(merchantRepository, cancellationToken);
+        var merchantId = await merchantService.GetMerchantIdAsync(cancellationToken);
 
         var shopCollection = new ShopCollection(request.Name, request.Slug, request.ParentId);
 
-        shopCollection.SetMerchant(merchant.Id);
+        shopCollection.SetMerchant(merchantId);
 
         await shopCollectionRepository.AddAndSaveChangeAsync(shopCollection, cancellationToken);
 

@@ -5,6 +5,7 @@ using ECommerce.Inventory.Data.Repositories;
 using ECommerce.Inventory.Domain.AggregatesModel;
 using ECommerce.Shared.Common.Extensions;
 using ECommerce.Shared.Libs.Extensions;
+using ECommerce.Inventory.Api.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 var Configuration = builder.Configuration;
@@ -20,6 +21,10 @@ builder.Services.AddScoped<IProductVariantRepository, ProductVariantRepository>(
 builder.Services.AddScoped<IDiscountRepository, DiscountRepository>();
 builder.Services.AddScoped<IMerchantRepository, MerchantRepository>();
 builder.Services.AddScoped<IStoreRepository, StoreRepository>();
+builder.Services.AddScoped<IShopCollectionRepository, ShopCollectionRepository>();
+
+builder.Services.AddScoped<IMerchantService, MerchantService>();
+
 
 // Common dependencies
 builder.Services
