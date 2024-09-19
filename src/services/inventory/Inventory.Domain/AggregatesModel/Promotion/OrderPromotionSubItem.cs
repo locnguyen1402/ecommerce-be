@@ -14,7 +14,7 @@ public class OrderPromotionSubItem(Guid promotionId, Guid productId)
     public OrderPromotionSubItemType Type { get; private set; } = OrderPromotionSubItemType.UNSPECIFIED;
     public decimal DiscountPrice { get; private set; }
     public decimal DiscountPercentage { get; private set; }
-    public NoProductsPerOrderLimit NoProductsPerOrderLimit { get; private set; } = NoProductsPerOrderLimit.SPECIFIED;
+    public NoProductsPerOrderLimit NoProductsPerOrderLimit { get; private set; } = NoProductsPerOrderLimit.SPECIFIC;
     public int MaxItemsPerOrder { get; private set; } = 1;
     public void Activate()
     {

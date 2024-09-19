@@ -11,7 +11,7 @@ public enum NoProductsPerOrderLimit
 {
     UNSPECIFIED,
     UNLIMITED,
-    SPECIFIED
+    SPECIFIC
 }
 
 public enum ProductPromotionType
@@ -39,5 +39,5 @@ public enum BundlePromotionDiscountType
     UNSPECIFIED,
     PERCENTAGE,
     AMOUNT,
-    SPECIFIED
+    SPECIFIC
 }

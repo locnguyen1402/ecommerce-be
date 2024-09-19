@@ -20,9 +20,6 @@ public class Merchant(string name, string slug) : Entity
     public readonly List<ShopCollection> _shopCollections = [];
     public virtual IReadOnlyCollection<ShopCollection> ShopCollections => _shopCollections;
 
-    public readonly HashSet<Promotion> _promotions = [];
-    public IReadOnlyCollection<Promotion> Promotions => _promotions;
-
     public void Update(string name, string slug, string? description)
     {
         Name = name;
