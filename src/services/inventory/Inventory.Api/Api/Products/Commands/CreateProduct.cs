@@ -8,6 +8,7 @@ using ECommerce.Inventory.Api.Products.Specifications;
 using ECommerce.Inventory.Api.Products.Requests;
 using ECommerce.Inventory.Api.Categories.Specifications;
 using ECommerce.Inventory.Api.Merchants.Specifications;
+using ECommerce.Inventory.Api.Merchants.Application;
 
 namespace ECommerce.Inventory.Api.Products.Commands;
 
@@ -35,13 +36,7 @@ public class CreateProductCommandHandler : IEndpointHandler
             return Results.BadRequest("Slug is already taken");
         }
 
-        var merchantSpec = new GetMerchantByIdSpecification(request.MerchantId);
-        var merchant = await merchantRepository.FindAsync(merchantSpec, cancellationToken);
-
-        if (merchant == null)
-        {
-            return Results.BadRequest("Merchant is not found");
-        }
+        var merchant = await GetDefaultMerchantQuery.Execute(merchantRepository, cancellationToken);
 
         var newProduct = new Product(request.Name, request.Slug, request.Description);
 

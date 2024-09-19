@@ -8,7 +8,6 @@ public class CreateStoreRequest
     public string Slug { get; set; } = string.Empty;
     public string? Description { get; set; }
     public string? PhoneNumber { get; set; }
-    public Guid MerchantId { get; set; }
 }
 
 public class CreateStoreRequestValidator : AbstractValidator<CreateStoreRequest>
@@ -25,11 +24,5 @@ public class CreateStoreRequestValidator : AbstractValidator<CreateStoreRequest>
 
         RuleFor(x => x.Description)
             .MaximumLength(500);
-
-        RuleFor(x => x.MerchantId)
-            .NotNull()
-            .NotEmpty()
-            .Must(x => x != Guid.Empty && Guid.TryParse(x.ToString(), out _))
-            .WithMessage($"{PrefixErrorMessage} Invalid merchant id format");
     }
 }
