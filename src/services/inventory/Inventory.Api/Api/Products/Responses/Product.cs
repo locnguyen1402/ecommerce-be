@@ -10,7 +10,7 @@ public record AdminProductDetailResponse(
     string Name,
     string Slug,
     string Description
-//List<CategoryResponse> Categories
+// List<CategoryResponse> Categories
 )
 {
     private List<ProductAttributeResponse> ProductAttributes { get; } = [];
