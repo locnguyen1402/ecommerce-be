@@ -4,5 +4,6 @@ public enum DiscountUnit
 {
     UNSPECIFIED,
     PERCENTAGE,
-    AMOUNT,
+    PRICE,
+    SAME_PRICE,
 }

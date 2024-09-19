@@ -16,6 +16,8 @@ public class Product(string name, string slug, string? description) : EntityWith
     public IReadOnlyCollection<ProductAttribute> ProductAttributes => _productAttributes;
     private readonly List<ProductProductAttribute> _productProductAttributes = [];
     public IReadOnlyCollection<ProductProductAttribute> ProductProductAttributes => _productProductAttributes;
+    public decimal? ListPrice { get; private set; }
+    public int? Stock { get; private set; }
     public Guid MerchantId { get; private set; }
     public virtual Merchant Merchant { get; private set; } = null!;
 
