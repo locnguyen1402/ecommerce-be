@@ -20,6 +20,9 @@ public class Contact(
     public AddressInfo AddressInfo { get; private set; } = null!;
     public string? Notes { get; private set; }
     public bool IsDefault { get; private set; } = isDefault;
-    public string CustomerId { get; private set; } = null!;
+    public Guid CustomerId { get; private set; }
     public virtual Customer Customer { get; private set; } = null!;
+
+    public readonly List<Order> _orders = [];
+    public virtual IReadOnlyCollection<Order> Orders => _orders;
 }

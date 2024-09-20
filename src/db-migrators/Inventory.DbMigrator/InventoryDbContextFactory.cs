@@ -20,10 +20,10 @@ public class InventoryDbContextFactory : IDesignTimeDbContextFactory<InventoryDb
 
     /*
      * cd db-migrators/Inventory.DbMigrator
-     * dotnet ef migrations add RemoveCategoryProductRelationship -c ECommerce.Inventory.Data.InventoryDbContext -o PostgreSQL/Migrations
+     * dotnet ef migrations add Initialize -c ECommerce.Inventory.Data.InventoryDbContext -o PostgreSQL/Migrations
      *
      * dotnet ef migrations script -i -c ECommerce.Inventory.Data.InventoryDbContext -o PostgreSQL/Scripts/000_Snapshot.sql
      *
-     * dotnet ef migrations script -i -c ECommerce.Inventory.Data.InventoryDbContext ChangeShopCollectionProductRelationShip RemoveCategoryProductRelationship -o PostgreSQL/Scripts/003_RemoveCategoryProductRelationship.sql
+     * dotnet ef migrations script -i -c ECommerce.Inventory.Data.InventoryDbContext 0 Initialize -o PostgreSQL/Scripts/001_Initialize.sql
      */
 }

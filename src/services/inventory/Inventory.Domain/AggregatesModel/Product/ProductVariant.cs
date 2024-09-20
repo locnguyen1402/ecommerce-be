@@ -11,6 +11,11 @@ public class ProductVariant(int stock, decimal price) : Entity()
     public Product? Product { get; set; }
     private readonly HashSet<ProductVariantAttributeValue> _productVariantAttributeValues = [];
     public IReadOnlyCollection<ProductVariantAttributeValue> ProductVariantAttributeValues => _productVariantAttributeValues;
+    public readonly List<OrderItem> _orderItems = [];
+    public virtual IReadOnlyCollection<OrderItem> OrderItems => _orderItems;
+    public readonly List<ProductPromotionItem> _productPromotionItems = [];
+    public virtual IReadOnlyCollection<ProductPromotionItem> ProductPromotionItems => _productPromotionItems;
+
     public void UpdatePrice(decimal price)
     {
         if (price < 0)

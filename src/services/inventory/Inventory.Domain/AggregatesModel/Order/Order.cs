@@ -10,7 +10,7 @@ public class Order(Guid customerId) : Entity
     public string PhoneNumber { get; private set; } = string.Empty;
     public OrderStatus Status { get; private set; } = OrderStatus.TO_PAY;
     public PaymentStatus PaymentStatus { get; private set; } = PaymentStatus.UNPAID;
-    public PaymentMethod PaymentMethod { get; private set; } = PaymentMethod.COD;
+    public PaymentMethod PaymentMethod { get; private set; } = PaymentMethod.UNSPECIFIED;
 
     // = TotalItemPrice - TotalDiscountPrice + DeliveryFee
     public decimal TotalPrice { get; private set; }
@@ -20,12 +20,10 @@ public class Order(Guid customerId) : Entity
     public decimal? TotalVatPrice { get; private set; }
     public decimal? TotalExceptVatPrice { get; private set; }
     public DateTimeOffset DeliverySchedule { get; private set; }
-    public Guid ContactId { get; private set; }
+    public string DeliveryAddress { get; private set; } = string.Empty;
     public Guid StoreId { get; private set; }
     public virtual Customer Customer { get; private set; } = null!;
     public virtual Store Store { get; private set; } = null!;
-    public virtual Contact Contact { get; private set; } = null!;
-
     private readonly HashSet<OrderItem> _orderItems = [];
     public virtual IReadOnlyCollection<OrderItem> OrderItems => _orderItems;
 

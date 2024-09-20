@@ -7,4 +7,5 @@ public class OrderStatusTracking(Guid orderId, OrderStatus orderStatus) : Entity
 {
     public Guid OrderId { get; set; } = orderId;
     public OrderStatus OrderStatus { get; set; } = orderStatus;
+    public virtual Order Order { get; set; } = null!;
 }

@@ -38,4 +38,6 @@ public class OrderPromotion(
     public IReadOnlyCollection<OrderPromotionCondition> Conditions => _conditions;
     public readonly List<OrderPromotionItem> _items = [];
     public virtual IReadOnlyCollection<OrderPromotionItem> Items => _items;
+    public readonly List<OrderPromotionSubItem> _subItems = [];
+    public virtual IReadOnlyCollection<OrderPromotionSubItem> SubItems => _subItems;
 }

@@ -25,4 +25,6 @@ public class Customer(
     public CustomerLevelType LevelType { get; private set; } = CustomerLevelType.SILVER;
     private readonly List<Contact> _contacts = [];
     public virtual IReadOnlyCollection<Contact> Contacts => _contacts;
+    public readonly List<Order> _orders = [];
+    public virtual IReadOnlyCollection<Order> Orders => _orders;
 }

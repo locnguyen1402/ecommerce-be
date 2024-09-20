@@ -24,7 +24,7 @@ public class ProductEntityConfiguration : BaseEntityConfiguration<Product>
             .HasDefaultValue(0);
 
         builder.Property(p => p.ListPrice)
-            .HasDefaultValue(0);
+            .HasPrecision(19, 2);
 
         builder.HasMany(p => p.ProductAttributes)
             .WithMany(p => p.Products)

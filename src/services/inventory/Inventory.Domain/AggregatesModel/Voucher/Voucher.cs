@@ -13,31 +13,24 @@ public class Voucher(string name, string code) : Entity
     public string Code { get; private set; } = code;
     public DateTimeOffset StartDate { get; private set; }
     public DateTimeOffset EndDate { get; private set; }
-    public bool IsActive { get; private set; } = true;
     public VoucherAppliedOnType AppliedOnType { get; private set; } = VoucherAppliedOnType.ALL_PRODUCTS;
     public VoucherTargetCustomerType TargetCustomerType { get; private set; } = VoucherTargetCustomerType.ALL;
     public VoucherPopularType PopularType { get; private set; } = VoucherPopularType.PUBLIC;
     public decimal MinSpend { get; private set; } = 0;
-    public int MaxQuantity { get; private set; }
+    public int MaxQuantity { get; private set; } = 0;
     public int MaxQuantityPerUser { get; private set; } = 1;
     public VoucherType Type { get; private set; } = VoucherType.UNSPECIFIED;
     public VoucherDiscountType DiscountType { get; private set; } = VoucherDiscountType.UNSPECIFIED;
-    public decimal Value { get; private set; }
-    public decimal MaxValue { get; private set; }
+    public decimal Value { get; private set; } = 0;
+    public decimal? MaxValue { get; private set; } = 0;
     public readonly List<Product> _products = [];
     public virtual IReadOnlyCollection<Product> Products => _products;
+    public readonly List<VoucherProduct> _voucherProducts = [];
+    public virtual IReadOnlyCollection<VoucherProduct> VoucherProducts => _voucherProducts;
     public void SetPeriod(DateTimeOffset startDate, DateTimeOffset endDate)
     {
         StartDate = startDate;
         EndDate = endDate;
-    }
-    public void Activate()
-    {
-        IsActive = true;
-    }
-    public void Deactivate()
-    {
-        IsActive = false;
     }
     public void SetValidity(int maxQuantity, int maxQuantityPerUser, decimal minSpend = 0)
     {

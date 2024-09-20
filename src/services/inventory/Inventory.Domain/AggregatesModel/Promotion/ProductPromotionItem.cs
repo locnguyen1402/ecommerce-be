@@ -1,8 +1,9 @@
 using ECommerce.Shared.Common.Enums;
+using ECommerce.Shared.Common.Infrastructure.Data;
 
 namespace ECommerce.Inventory.Domain.AggregatesModel;
 
-public class ProductPromotionItem(Guid productPromotionId, Guid productId)
+public class ProductPromotionItem(Guid productPromotionId, Guid productId) : Entity
 {
     public Guid ProductPromotionId { get; private set; } = productPromotionId;
     public virtual ProductPromotion ProductPromotion { get; private set; } = null!;
@@ -11,9 +12,9 @@ public class ProductPromotionItem(Guid productPromotionId, Guid productId)
     public Guid? ProductVariantId { get; private set; }
     public virtual ProductVariant? ProductVariant { get; private set; }
     public bool IsActive { get; private set; } = false;
-    public decimal ListPrice { get; private set; }
-    public decimal DiscountPrice { get; private set; }
-    public decimal DiscountPercentage { get; private set; }
+    public decimal ListPrice { get; private set; } = 0;
+    public decimal DiscountPrice { get; private set; } = 0;
+    public decimal DiscountPercentage { get; private set; } = 0;
     public int Quantity { get; private set; }
     public NoProductsPerOrderLimit NoProductsPerOrderLimit { get; private set; } = NoProductsPerOrderLimit.UNLIMITED;
     public int MaxItemsPerOrder { get; private set; } = 0;

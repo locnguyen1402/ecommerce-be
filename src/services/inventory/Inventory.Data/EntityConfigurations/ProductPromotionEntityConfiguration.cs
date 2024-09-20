@@ -7,9 +7,9 @@ using ECommerce.Shared.Common.Enums;
 
 namespace ECommerce.Inventory.Data.EntityConfigurations;
 
-public class PromotionEntityConfiguration : BaseEntityConfiguration<Promotion>
+public class ProductPromotionEntityConfiguration : BaseEntityConfiguration<ProductPromotion>
 {
-    public override void Configure(EntityTypeBuilder<Promotion> builder)
+    public override void Configure(EntityTypeBuilder<ProductPromotion> builder)
     {
         base.Configure(builder);
 
@@ -17,29 +17,26 @@ public class PromotionEntityConfiguration : BaseEntityConfiguration<Promotion>
             .IsRequired()
             .HasMaxLength(200);
 
-        builder.HasIndex(i => i.Name);
-
         builder.Property(p => p.Slug)
             .IsRequired()
             .HasMaxLength(250);
 
-        builder.HasIndex(i => i.Slug)
-            .IsUnique();
-
         builder
-            .Property(t => t.PromotionType)
+            .Property(t => t.Status)
+            .IsRequired()
             .HasConversion<string>()
             .HasMaxLength(50)
-            .HasDefaultValueSql($"'{PromotionType.UNSPECIFIED}'");
+            .HasDefaultValueSql($"'{PromotionStatus.NEW}'");
 
         builder
-            .Property(t => t.PromotionStatus)
+            .Property(t => t.Type)
+            .IsRequired()
             .HasConversion<string>()
             .HasMaxLength(50)
-            .HasDefaultValueSql($"'{PromotionStatus.UNSPECIFIED}'");
+            .HasDefaultValueSql($"'{ProductPromotionType.UNSPECIFIED}'");
 
         builder.HasOne(p => p.Merchant)
-            .WithMany(c => c.Promotions)
+            .WithMany(c => c.ProductPromotions)
             .HasForeignKey(c => c.MerchantId)
             .OnDelete(DeleteBehavior.Cascade);
     }

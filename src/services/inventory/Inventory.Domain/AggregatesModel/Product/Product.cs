@@ -16,6 +16,19 @@ public class Product(string name, string slug, string? description) : EntityWith
     public IReadOnlyCollection<ProductAttribute> ProductAttributes => _productAttributes;
     private readonly List<ProductProductAttribute> _productProductAttributes = [];
     public IReadOnlyCollection<ProductProductAttribute> ProductProductAttributes => _productProductAttributes;
+    public readonly List<Voucher> _vouchers = [];
+    public virtual IReadOnlyCollection<Voucher> Vouchers => _vouchers;
+    public readonly List<VoucherProduct> _voucherProducts = [];
+    public virtual IReadOnlyCollection<VoucherProduct> VoucherProducts => _voucherProducts;
+    public readonly List<OrderItem> _orderItems = [];
+    public virtual IReadOnlyCollection<OrderItem> OrderItems => _orderItems;
+    public readonly List<OrderPromotionItem> _orderPromotionItems = [];
+    public virtual IReadOnlyCollection<OrderPromotionItem> OrderPromotionItems => _orderPromotionItems;
+    public readonly List<OrderPromotionSubItem> _orderPromotionSubItems = [];
+    public virtual IReadOnlyCollection<OrderPromotionSubItem> OrderPromotionSubItems => _orderPromotionSubItems;
+    public readonly List<ProductPromotionItem> _productPromotionItems = [];
+    public virtual IReadOnlyCollection<ProductPromotionItem> ProductPromotionItems => _productPromotionItems;
+
     public decimal? ListPrice { get; private set; }
     public int? Stock { get; private set; }
     public Guid MerchantId { get; private set; }
