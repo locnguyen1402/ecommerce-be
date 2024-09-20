@@ -22,7 +22,4 @@ public class Contact(
     public bool IsDefault { get; private set; } = isDefault;
     public Guid CustomerId { get; private set; }
     public virtual Customer Customer { get; private set; } = null!;
-
-    public readonly List<Order> _orders = [];
-    public virtual IReadOnlyCollection<Order> Orders => _orders;
 }
