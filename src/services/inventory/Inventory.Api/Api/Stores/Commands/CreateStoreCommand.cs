@@ -5,6 +5,7 @@ using ECommerce.Shared.Common.Infrastructure.Endpoint;
 
 using ECommerce.Inventory.Domain.AggregatesModel;
 using ECommerce.Inventory.Api.Stores.Requests;
+using ECommerce.Inventory.Api.Services;
 
 namespace ECommerce.Inventory.Api.Stores.Commands;
 
@@ -13,8 +14,8 @@ public class CreateStoreCommandHandler : IEndpointHandler
     public Delegate Handle
     => async (
         CreateStoreRequest request,
+        IMerchantService merchantService,
         IValidator<CreateStoreRequest> validator,
-        IMerchantRepository merchantRepository,
         IStoreRepository storeRepository,
         CancellationToken cancellationToken
     ) =>
@@ -25,17 +26,14 @@ public class CreateStoreCommandHandler : IEndpointHandler
             return Results.ValidationProblem(validationResult.ToDictionary());
         }
 
-        if (!await merchantRepository.AnyAsync(x => x.Id == request.MerchantId, cancellationToken))
-        {
-            return Results.BadRequest("Merchant not found");
-        }
-
         if (await storeRepository.AnyAsync(x => x.Slug == request.Slug, cancellationToken))
         {
             return Results.BadRequest("Slug is already taken");
         }
 
-        var newStore = new Store(request.Name, request.Slug, request.MerchantId);
+        var merchantId = await merchantService.GetMerchantIdAsync(cancellationToken);
+
+        var newStore = new Store(request.Name, request.Slug, merchantId);
 
         newStore.Update(
             request.Name

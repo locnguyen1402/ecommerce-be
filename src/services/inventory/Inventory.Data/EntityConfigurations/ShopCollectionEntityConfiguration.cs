@@ -20,6 +20,9 @@ public class ShopCollectionEntityConfiguration : BaseEntityConfiguration<ShopCol
             .IsRequired()
             .HasMaxLength(150);
 
+        builder.HasIndex(i => i.Slug)
+            .IsUnique();
+
         builder.HasMany(p => p.Products)
             .WithMany(c => c.ShopCollections)
             .UsingEntity<ShopCollectionProduct>(

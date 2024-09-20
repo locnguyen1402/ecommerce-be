@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using ECommerce.Inventory.Data;
 using ECommerce.Inventory.Domain.AggregatesModel;
+using ECommerce.Shared.Common.AggregatesModel.Common;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
@@ -150,6 +151,145 @@ namespace ECommerce.Inventory.DbMigrator.PostgreSQL.Migrations
                         .HasDatabaseName("ix_categories_parent_id");
 
                     b.ToTable("categories", (string)null);
+                });
+
+            modelBuilder.Entity("ECommerce.Inventory.Domain.AggregatesModel.Contact", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id")
+                        .HasDefaultValueSql("gen_random_uuid()");
+
+                    b.Property<AddressInfo>("AddressInfo")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("jsonb")
+                        .HasColumnName("address_info")
+                        .HasDefaultValueSql("'{}'");
+
+                    b.Property<string>("ContactName")
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("contact_name");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at")
+                        .HasDefaultValueSql("now()");
+
+                    b.Property<Guid>("CustomerId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("customer_id");
+
+                    b.Property<bool>("IsDefault")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(true)
+                        .HasColumnName("is_default");
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("name");
+
+                    b.Property<string>("Notes")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)")
+                        .HasColumnName("notes");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)")
+                        .HasColumnName("phone_number");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("integer")
+                        .HasColumnName("type");
+
+                    b.HasKey("Id")
+                        .HasName("pk_contacts");
+
+                    b.HasIndex("CustomerId")
+                        .HasDatabaseName("ix_contacts_customer_id");
+
+                    b.ToTable("contacts", (string)null);
+                });
+
+            modelBuilder.Entity("ECommerce.Inventory.Domain.AggregatesModel.Customer", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id")
+                        .HasDefaultValueSql("gen_random_uuid()");
+
+                    b.Property<DateOnly?>("BirthDate")
+                        .HasColumnType("date")
+                        .HasColumnName("birth_date");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at")
+                        .HasDefaultValueSql("now()");
+
+                    b.Property<string>("Email")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("email");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("first_name");
+
+                    b.Property<string>("FullName")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)")
+                        .HasColumnName("full_name");
+
+                    b.Property<string>("Gender")
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("gender")
+                        .HasDefaultValueSql("'UNSPECIFIED'");
+
+                    b.Property<string>("LastName")
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("last_name");
+
+                    b.Property<string>("LevelType")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("level_type")
+                        .HasDefaultValueSql("'SILVER'");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)")
+                        .HasColumnName("phone_number");
+
+                    b.Property<string>("RefUserId")
+                        .HasColumnType("text")
+                        .HasColumnName("ref_user_id");
+
+                    b.Property<string>("UserName")
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("user_name");
+
+                    b.HasKey("Id")
+                        .HasName("pk_customers");
+
+                    b.ToTable("customers", (string)null);
                 });
 
             modelBuilder.Entity("ECommerce.Inventory.Domain.AggregatesModel.Discount", b =>
@@ -346,6 +486,544 @@ namespace ECommerce.Inventory.DbMigrator.PostgreSQL.Migrations
                     b.ToTable("merchant_categories", (string)null);
                 });
 
+            modelBuilder.Entity("ECommerce.Inventory.Domain.AggregatesModel.Order", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id")
+                        .HasDefaultValueSql("gen_random_uuid()");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at")
+                        .HasDefaultValueSql("now()");
+
+                    b.Property<Guid>("CustomerId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("customer_id");
+
+                    b.Property<decimal>("DeliveryFee")
+                        .HasPrecision(19, 2)
+                        .HasColumnType("numeric(19,2)")
+                        .HasColumnName("delivery_fee");
+
+                    b.Property<DateTimeOffset>("DeliverySchedule")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("delivery_schedule");
+
+                    b.Property<string>("Notes")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)")
+                        .HasColumnName("notes");
+
+                    b.Property<string>("OrderNumber")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("order_number");
+
+                    b.Property<DateTimeOffset>("PaidAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("paid_at");
+
+                    b.Property<string>("PaymentMethod")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("payment_method")
+                        .HasDefaultValueSql("'UNSPECIFIED'");
+
+                    b.Property<string>("PaymentStatus")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("payment_status")
+                        .HasDefaultValueSql("'UNPAID'");
+
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)")
+                        .HasColumnName("phone_number");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("status")
+                        .HasDefaultValueSql("'TO_PAY'");
+
+                    b.Property<Guid>("StoreId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("store_id");
+
+                    b.Property<decimal>("TotalItemPrice")
+                        .HasPrecision(19, 2)
+                        .HasColumnType("numeric(19,2)")
+                        .HasColumnName("total_item_price");
+
+                    b.Property<decimal>("TotalPrice")
+                        .HasPrecision(19, 2)
+                        .HasColumnType("numeric(19,2)")
+                        .HasColumnName("total_price");
+
+                    b.Property<decimal>("VatPercent")
+                        .HasPrecision(6, 2)
+                        .HasColumnType("numeric(6,2)")
+                        .HasColumnName("vat_percent");
+
+                    b.Property<decimal>("VatPrice")
+                        .HasPrecision(19, 2)
+                        .HasColumnType("numeric(19,2)")
+                        .HasColumnName("vat_price");
+
+                    b.HasKey("Id")
+                        .HasName("pk_orders");
+
+                    b.HasIndex("CustomerId")
+                        .HasDatabaseName("ix_orders_customer_id");
+
+                    b.HasIndex("OrderNumber")
+                        .IsUnique()
+                        .HasDatabaseName("ix_orders_order_number");
+
+                    b.HasIndex("StoreId")
+                        .HasDatabaseName("ix_orders_store_id");
+
+                    b.ToTable("orders", (string)null);
+                });
+
+            modelBuilder.Entity("ECommerce.Inventory.Domain.AggregatesModel.OrderContact", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id")
+                        .HasDefaultValueSql("gen_random_uuid()");
+
+                    b.Property<AddressInfo>("AddressInfo")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("jsonb")
+                        .HasColumnName("address_info")
+                        .HasDefaultValueSql("'{}'");
+
+                    b.Property<string>("ContactName")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("contact_name");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at")
+                        .HasDefaultValueSql("now()");
+
+                    b.Property<string>("Notes")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)")
+                        .HasColumnName("notes");
+
+                    b.Property<Guid>("OrderId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("order_id");
+
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)")
+                        .HasColumnName("phone_number");
+
+                    b.HasKey("Id")
+                        .HasName("pk_order_contacts");
+
+                    b.HasIndex("OrderId")
+                        .IsUnique()
+                        .HasDatabaseName("ix_order_contacts_order_id");
+
+                    b.ToTable("order_contacts", (string)null);
+                });
+
+            modelBuilder.Entity("ECommerce.Inventory.Domain.AggregatesModel.OrderItem", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id")
+                        .HasDefaultValueSql("gen_random_uuid()");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at")
+                        .HasDefaultValueSql("now()");
+
+                    b.Property<decimal>("ListPrice")
+                        .HasPrecision(19, 2)
+                        .HasColumnType("numeric(19,2)")
+                        .HasColumnName("list_price");
+
+                    b.Property<Guid>("OrderId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("order_id");
+
+                    b.Property<string>("ProductDescription")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("product_description");
+
+                    b.Property<Guid?>("ProductId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("product_id");
+
+                    b.Property<string>("ProductName")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("product_name");
+
+                    b.Property<Guid?>("ProductVariantId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("product_variant_id");
+
+                    b.Property<int>("Quantity")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(0)
+                        .HasColumnName("quantity");
+
+                    b.Property<decimal>("TotalPrice")
+                        .HasPrecision(19, 2)
+                        .HasColumnType("numeric(19,2)")
+                        .HasColumnName("total_price");
+
+                    b.Property<decimal>("TotalVatPrice")
+                        .HasPrecision(19, 2)
+                        .HasColumnType("numeric(19,2)")
+                        .HasColumnName("total_vat_price");
+
+                    b.Property<decimal>("UnitPrice")
+                        .HasPrecision(19, 2)
+                        .HasColumnType("numeric(19,2)")
+                        .HasColumnName("unit_price");
+
+                    b.Property<decimal>("VatPercent")
+                        .HasPrecision(6, 2)
+                        .HasColumnType("numeric(6,2)")
+                        .HasColumnName("vat_percent");
+
+                    b.Property<decimal>("VatPrice")
+                        .HasPrecision(19, 2)
+                        .HasColumnType("numeric(19,2)")
+                        .HasColumnName("vat_price");
+
+                    b.HasKey("Id")
+                        .HasName("pk_order_items");
+
+                    b.HasIndex("OrderId")
+                        .HasDatabaseName("ix_order_items_order_id");
+
+                    b.HasIndex("ProductId")
+                        .HasDatabaseName("ix_order_items_product_id");
+
+                    b.HasIndex("ProductVariantId")
+                        .HasDatabaseName("ix_order_items_product_variant_id");
+
+                    b.ToTable("order_items", (string)null);
+                });
+
+            modelBuilder.Entity("ECommerce.Inventory.Domain.AggregatesModel.OrderPromotion", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id")
+                        .HasDefaultValueSql("gen_random_uuid()");
+
+                    b.Property<string>("BundlePromotionDiscountType")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("bundle_promotion_discount_type")
+                        .HasDefaultValueSql("'UNSPECIFIED'");
+
+                    b.Property<IReadOnlyCollection<OrderPromotionCondition>>("Conditions")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("jsonb")
+                        .HasColumnName("conditions")
+                        .HasDefaultValueSql("'[]'");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at")
+                        .HasDefaultValueSql("now()");
+
+                    b.Property<DateTimeOffset>("EndDate")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("end_date");
+
+                    b.Property<int>("MaxQuantity")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(0)
+                        .HasColumnName("max_quantity");
+
+                    b.Property<Guid>("MerchantId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("merchant_id");
+
+                    b.Property<decimal>("MinSpend")
+                        .ValueGeneratedOnAdd()
+                        .HasPrecision(19, 2)
+                        .HasColumnType("numeric(19,2)")
+                        .HasDefaultValue(0m)
+                        .HasColumnName("min_spend");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("name");
+
+                    b.Property<string>("Slug")
+                        .IsRequired()
+                        .HasMaxLength(250)
+                        .HasColumnType("character varying(250)")
+                        .HasColumnName("slug");
+
+                    b.Property<DateTimeOffset>("StartDate")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("start_date");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("status")
+                        .HasDefaultValueSql("'NEW'");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("type")
+                        .HasDefaultValueSql("'UNSPECIFIED'");
+
+                    b.HasKey("Id")
+                        .HasName("pk_order_promotions");
+
+                    b.HasIndex("MerchantId")
+                        .HasDatabaseName("ix_order_promotions_merchant_id");
+
+                    b.ToTable("order_promotions", (string)null);
+                });
+
+            modelBuilder.Entity("ECommerce.Inventory.Domain.AggregatesModel.OrderPromotionItem", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id")
+                        .HasDefaultValueSql("gen_random_uuid()");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at")
+                        .HasDefaultValueSql("now()");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_active");
+
+                    b.Property<Guid>("OrderPromotionId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("order_promotion_id");
+
+                    b.Property<Guid>("ProductId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("product_id");
+
+                    b.HasKey("Id")
+                        .HasName("pk_order_promotion_items");
+
+                    b.HasIndex("OrderPromotionId")
+                        .HasDatabaseName("ix_order_promotion_items_order_promotion_id");
+
+                    b.HasIndex("ProductId")
+                        .HasDatabaseName("ix_order_promotion_items_product_id");
+
+                    b.ToTable("order_promotion_items", (string)null);
+                });
+
+            modelBuilder.Entity("ECommerce.Inventory.Domain.AggregatesModel.OrderPromotionSubItem", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id")
+                        .HasDefaultValueSql("gen_random_uuid()");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at")
+                        .HasDefaultValueSql("now()");
+
+                    b.Property<decimal>("DiscountPercentage")
+                        .ValueGeneratedOnAdd()
+                        .HasPrecision(19, 2)
+                        .HasColumnType("numeric(19,2)")
+                        .HasDefaultValue(0m)
+                        .HasColumnName("discount_percentage");
+
+                    b.Property<decimal>("DiscountPrice")
+                        .ValueGeneratedOnAdd()
+                        .HasPrecision(19, 2)
+                        .HasColumnType("numeric(19,2)")
+                        .HasDefaultValue(0m)
+                        .HasColumnName("discount_price");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_active");
+
+                    b.Property<int>("MaxItemsPerOrder")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(1)
+                        .HasColumnName("max_items_per_order");
+
+                    b.Property<string>("NoProductsPerOrderLimit")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("no_products_per_order_limit")
+                        .HasDefaultValueSql("'SPECIFIC'");
+
+                    b.Property<Guid>("OrderPromotionId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("order_promotion_id");
+
+                    b.Property<Guid>("ProductId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("product_id");
+
+                    b.Property<Guid?>("ProductVariantId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("product_variant_id");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("type")
+                        .HasDefaultValueSql("'UNSPECIFIED'");
+
+                    b.HasKey("Id")
+                        .HasName("pk_order_promotion_sub_items");
+
+                    b.HasIndex("OrderPromotionId")
+                        .HasDatabaseName("ix_order_promotion_sub_items_order_promotion_id");
+
+                    b.HasIndex("ProductId")
+                        .HasDatabaseName("ix_order_promotion_sub_items_product_id");
+
+                    b.HasIndex("ProductVariantId")
+                        .HasDatabaseName("ix_order_promotion_sub_items_product_variant_id");
+
+                    b.ToTable("order_promotion_sub_items", (string)null);
+                });
+
+            modelBuilder.Entity("ECommerce.Inventory.Domain.AggregatesModel.OrderStatusTracking", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id")
+                        .HasDefaultValueSql("gen_random_uuid()");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at")
+                        .HasDefaultValueSql("now()");
+
+                    b.Property<Guid>("OrderId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("order_id");
+
+                    b.Property<string>("OrderStatus")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("order_status")
+                        .HasDefaultValueSql("'UNSPECIFIED'");
+
+                    b.HasKey("Id")
+                        .HasName("pk_order_status_trackings");
+
+                    b.HasIndex("OrderId")
+                        .HasDatabaseName("ix_order_status_trackings_order_id");
+
+                    b.ToTable("order_status_trackings", (string)null);
+                });
+
+            modelBuilder.Entity("ECommerce.Inventory.Domain.AggregatesModel.PaymentMethodTracking", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id")
+                        .HasDefaultValueSql("gen_random_uuid()");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at")
+                        .HasDefaultValueSql("now()");
+
+                    b.Property<Guid>("OrderId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("order_id");
+
+                    b.Property<string>("PaymentMethod")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("payment_method")
+                        .HasDefaultValueSql("'UNSPECIFIED'");
+
+                    b.Property<decimal>("Value")
+                        .HasPrecision(19, 2)
+                        .HasColumnType("numeric(19,2)")
+                        .HasColumnName("value");
+
+                    b.HasKey("Id")
+                        .HasName("pk_payment_method_trackings");
+
+                    b.HasIndex("OrderId")
+                        .HasDatabaseName("ix_payment_method_trackings_order_id");
+
+                    b.ToTable("payment_method_trackings", (string)null);
+                });
+
             modelBuilder.Entity("ECommerce.Inventory.Domain.AggregatesModel.Product", b =>
                 {
                     b.Property<Guid>("Id")
@@ -447,6 +1125,151 @@ namespace ECommerce.Inventory.DbMigrator.PostgreSQL.Migrations
                     b.ToTable("product_product_attributes", (string)null);
                 });
 
+            modelBuilder.Entity("ECommerce.Inventory.Domain.AggregatesModel.ProductPromotion", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id")
+                        .HasDefaultValueSql("gen_random_uuid()");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at")
+                        .HasDefaultValueSql("now()");
+
+                    b.Property<DateTimeOffset>("EndDate")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("end_date");
+
+                    b.Property<Guid>("MerchantId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("merchant_id");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("name");
+
+                    b.Property<string>("Slug")
+                        .IsRequired()
+                        .HasMaxLength(250)
+                        .HasColumnType("character varying(250)")
+                        .HasColumnName("slug");
+
+                    b.Property<DateTimeOffset>("StartDate")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("start_date");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("status")
+                        .HasDefaultValueSql("'NEW'");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("type")
+                        .HasDefaultValueSql("'UNSPECIFIED'");
+
+                    b.HasKey("Id")
+                        .HasName("pk_product_promotions");
+
+                    b.HasIndex("MerchantId")
+                        .HasDatabaseName("ix_product_promotions_merchant_id");
+
+                    b.ToTable("product_promotions", (string)null);
+                });
+
+            modelBuilder.Entity("ECommerce.Inventory.Domain.AggregatesModel.ProductPromotionItem", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id")
+                        .HasDefaultValueSql("gen_random_uuid()");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at")
+                        .HasDefaultValueSql("now()");
+
+                    b.Property<decimal>("DiscountPercentage")
+                        .ValueGeneratedOnAdd()
+                        .HasPrecision(19, 2)
+                        .HasColumnType("numeric(19,2)")
+                        .HasDefaultValue(0m)
+                        .HasColumnName("discount_percentage");
+
+                    b.Property<decimal>("DiscountPrice")
+                        .ValueGeneratedOnAdd()
+                        .HasPrecision(19, 2)
+                        .HasColumnType("numeric(19,2)")
+                        .HasDefaultValue(0m)
+                        .HasColumnName("discount_price");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_active");
+
+                    b.Property<decimal>("ListPrice")
+                        .ValueGeneratedOnAdd()
+                        .HasPrecision(19, 2)
+                        .HasColumnType("numeric(19,2)")
+                        .HasDefaultValue(0m)
+                        .HasColumnName("list_price");
+
+                    b.Property<int>("MaxItemsPerOrder")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(0)
+                        .HasColumnName("max_items_per_order");
+
+                    b.Property<int>("NoProductsPerOrderLimit")
+                        .HasColumnType("integer")
+                        .HasColumnName("no_products_per_order_limit");
+
+                    b.Property<Guid>("ProductId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("product_id");
+
+                    b.Property<Guid>("ProductPromotionId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("product_promotion_id");
+
+                    b.Property<Guid?>("ProductVariantId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("product_variant_id");
+
+                    b.Property<int>("Quantity")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(0)
+                        .HasColumnName("quantity");
+
+                    b.HasKey("Id")
+                        .HasName("pk_product_promotion_items");
+
+                    b.HasIndex("ProductId")
+                        .HasDatabaseName("ix_product_promotion_items_product_id");
+
+                    b.HasIndex("ProductPromotionId")
+                        .HasDatabaseName("ix_product_promotion_items_product_promotion_id");
+
+                    b.HasIndex("ProductVariantId")
+                        .HasDatabaseName("ix_product_promotion_items_product_variant_id");
+
+                    b.ToTable("product_promotion_items", (string)null);
+                });
+
             modelBuilder.Entity("ECommerce.Inventory.Domain.AggregatesModel.ProductVariant", b =>
                 {
                     b.Property<Guid>("Id")
@@ -463,7 +1286,8 @@ namespace ECommerce.Inventory.DbMigrator.PostgreSQL.Migrations
 
                     b.Property<decimal>("Price")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("numeric")
+                        .HasPrecision(19, 2)
+                        .HasColumnType("numeric(19,2)")
                         .HasDefaultValue(0m)
                         .HasColumnName("price");
 
@@ -576,6 +1400,10 @@ namespace ECommerce.Inventory.DbMigrator.PostgreSQL.Migrations
                     b.HasIndex("ParentId")
                         .HasDatabaseName("ix_shop_collections_parent_id");
 
+                    b.HasIndex("Slug")
+                        .IsUnique()
+                        .HasDatabaseName("ix_shop_collections_slug");
+
                     b.ToTable("shop_collections", (string)null);
                 });
 
@@ -670,6 +1498,144 @@ namespace ECommerce.Inventory.DbMigrator.PostgreSQL.Migrations
                     b.ToTable("stores", (string)null);
                 });
 
+            modelBuilder.Entity("ECommerce.Inventory.Domain.AggregatesModel.Voucher", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id")
+                        .HasDefaultValueSql("gen_random_uuid()");
+
+                    b.Property<string>("AppliedOnType")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("applied_on_type")
+                        .HasDefaultValueSql("'UNSPECIFIED'");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("character varying(150)")
+                        .HasColumnName("code");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at")
+                        .HasDefaultValueSql("now()");
+
+                    b.Property<string>("DiscountType")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("discount_type")
+                        .HasDefaultValueSql("'UNSPECIFIED'");
+
+                    b.Property<DateTimeOffset>("EndDate")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("end_date");
+
+                    b.Property<int>("MaxQuantity")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(0)
+                        .HasColumnName("max_quantity");
+
+                    b.Property<int>("MaxQuantityPerUser")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(1)
+                        .HasColumnName("max_quantity_per_user");
+
+                    b.Property<decimal?>("MaxValue")
+                        .HasPrecision(19, 2)
+                        .HasColumnType("numeric(19,2)")
+                        .HasColumnName("max_value");
+
+                    b.Property<decimal>("MinSpend")
+                        .ValueGeneratedOnAdd()
+                        .HasPrecision(19, 2)
+                        .HasColumnType("numeric(19,2)")
+                        .HasDefaultValue(0m)
+                        .HasColumnName("min_spend");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("name");
+
+                    b.Property<string>("PopularType")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("popular_type")
+                        .HasDefaultValueSql("'UNSPECIFIED'");
+
+                    b.Property<DateTimeOffset>("StartDate")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("start_date");
+
+                    b.Property<string>("TargetCustomerType")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("target_customer_type")
+                        .HasDefaultValueSql("'UNSPECIFIED'");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("type")
+                        .HasDefaultValueSql("'UNSPECIFIED'");
+
+                    b.Property<decimal>("Value")
+                        .ValueGeneratedOnAdd()
+                        .HasPrecision(19, 2)
+                        .HasColumnType("numeric(19,2)")
+                        .HasDefaultValue(0m)
+                        .HasColumnName("value");
+
+                    b.HasKey("Id")
+                        .HasName("pk_vouchers");
+
+                    b.ToTable("vouchers", (string)null);
+                });
+
+            modelBuilder.Entity("ECommerce.Inventory.Domain.AggregatesModel.VoucherProduct", b =>
+                {
+                    b.Property<Guid>("VoucherId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("voucher_id");
+
+                    b.Property<Guid>("ProductId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("product_id");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.HasKey("VoucherId", "ProductId")
+                        .HasName("pk_voucher_product");
+
+                    b.HasIndex("ProductId")
+                        .HasDatabaseName("ix_voucher_product_product_id");
+
+                    b.ToTable("voucher_product", (string)null);
+                });
+
             modelBuilder.Entity("Discount_AppliedToCategories", b =>
                 {
                     b.HasOne("ECommerce.Inventory.Domain.AggregatesModel.Category", null)
@@ -725,6 +1691,18 @@ namespace ECommerce.Inventory.DbMigrator.PostgreSQL.Migrations
                     b.Navigation("Parent");
                 });
 
+            modelBuilder.Entity("ECommerce.Inventory.Domain.AggregatesModel.Contact", b =>
+                {
+                    b.HasOne("ECommerce.Inventory.Domain.AggregatesModel.Customer", "Customer")
+                        .WithMany("Contacts")
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_contacts_customers_customer_id");
+
+                    b.Navigation("Customer");
+                });
+
             modelBuilder.Entity("ECommerce.Inventory.Domain.AggregatesModel.Discount", b =>
                 {
                     b.HasOne("ECommerce.Inventory.Domain.AggregatesModel.Discount", null)
@@ -752,6 +1730,152 @@ namespace ECommerce.Inventory.DbMigrator.PostgreSQL.Migrations
                     b.Navigation("Category");
 
                     b.Navigation("Merchant");
+                });
+
+            modelBuilder.Entity("ECommerce.Inventory.Domain.AggregatesModel.Order", b =>
+                {
+                    b.HasOne("ECommerce.Inventory.Domain.AggregatesModel.Customer", "Customer")
+                        .WithMany("Orders")
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_orders_customers_customer_id");
+
+                    b.HasOne("ECommerce.Inventory.Domain.AggregatesModel.Store", "Store")
+                        .WithMany("Orders")
+                        .HasForeignKey("StoreId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_orders_stores_store_id");
+
+                    b.Navigation("Customer");
+
+                    b.Navigation("Store");
+                });
+
+            modelBuilder.Entity("ECommerce.Inventory.Domain.AggregatesModel.OrderContact", b =>
+                {
+                    b.HasOne("ECommerce.Inventory.Domain.AggregatesModel.Order", "Order")
+                        .WithOne("OrderContact")
+                        .HasForeignKey("ECommerce.Inventory.Domain.AggregatesModel.OrderContact", "OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_order_contacts_orders_order_id");
+
+                    b.Navigation("Order");
+                });
+
+            modelBuilder.Entity("ECommerce.Inventory.Domain.AggregatesModel.OrderItem", b =>
+                {
+                    b.HasOne("ECommerce.Inventory.Domain.AggregatesModel.Order", "Order")
+                        .WithMany("OrderItems")
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_order_items_orders_order_id");
+
+                    b.HasOne("ECommerce.Inventory.Domain.AggregatesModel.Product", "Product")
+                        .WithMany("OrderItems")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .HasConstraintName("fk_order_items_products_product_id");
+
+                    b.HasOne("ECommerce.Inventory.Domain.AggregatesModel.ProductVariant", "ProductVariant")
+                        .WithMany("OrderItems")
+                        .HasForeignKey("ProductVariantId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .HasConstraintName("fk_order_items_product_variants_product_variant_id");
+
+                    b.Navigation("Order");
+
+                    b.Navigation("Product");
+
+                    b.Navigation("ProductVariant");
+                });
+
+            modelBuilder.Entity("ECommerce.Inventory.Domain.AggregatesModel.OrderPromotion", b =>
+                {
+                    b.HasOne("ECommerce.Inventory.Domain.AggregatesModel.Merchant", "Merchant")
+                        .WithMany("OrderPromotions")
+                        .HasForeignKey("MerchantId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_order_promotions_merchants_merchant_id");
+
+                    b.Navigation("Merchant");
+                });
+
+            modelBuilder.Entity("ECommerce.Inventory.Domain.AggregatesModel.OrderPromotionItem", b =>
+                {
+                    b.HasOne("ECommerce.Inventory.Domain.AggregatesModel.OrderPromotion", "OrderPromotion")
+                        .WithMany("Items")
+                        .HasForeignKey("OrderPromotionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_order_promotion_items_order_promotions_order_promotion_id");
+
+                    b.HasOne("ECommerce.Inventory.Domain.AggregatesModel.Product", "Product")
+                        .WithMany("OrderPromotionItems")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_order_promotion_items_products_product_id");
+
+                    b.Navigation("OrderPromotion");
+
+                    b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("ECommerce.Inventory.Domain.AggregatesModel.OrderPromotionSubItem", b =>
+                {
+                    b.HasOne("ECommerce.Inventory.Domain.AggregatesModel.OrderPromotion", "OrderPromotion")
+                        .WithMany("SubItems")
+                        .HasForeignKey("OrderPromotionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_order_promotion_sub_items_order_promotions_order_promotion_");
+
+                    b.HasOne("ECommerce.Inventory.Domain.AggregatesModel.Product", "Product")
+                        .WithMany("OrderPromotionSubItems")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_order_promotion_sub_items_products_product_id");
+
+                    b.HasOne("ECommerce.Inventory.Domain.AggregatesModel.ProductVariant", "ProductVariant")
+                        .WithMany()
+                        .HasForeignKey("ProductVariantId")
+                        .HasConstraintName("fk_order_promotion_sub_items_product_variants_product_variant_");
+
+                    b.Navigation("OrderPromotion");
+
+                    b.Navigation("Product");
+
+                    b.Navigation("ProductVariant");
+                });
+
+            modelBuilder.Entity("ECommerce.Inventory.Domain.AggregatesModel.OrderStatusTracking", b =>
+                {
+                    b.HasOne("ECommerce.Inventory.Domain.AggregatesModel.Order", "Order")
+                        .WithMany("OrderStatusTrackings")
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_order_status_trackings_orders_order_id");
+
+                    b.Navigation("Order");
+                });
+
+            modelBuilder.Entity("ECommerce.Inventory.Domain.AggregatesModel.PaymentMethodTracking", b =>
+                {
+                    b.HasOne("ECommerce.Inventory.Domain.AggregatesModel.Order", "Order")
+                        .WithMany("PaymentMethodTrackings")
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_payment_method_trackings_orders_order_id");
+
+                    b.Navigation("Order");
                 });
 
             modelBuilder.Entity("ECommerce.Inventory.Domain.AggregatesModel.Product", b =>
@@ -785,6 +1909,47 @@ namespace ECommerce.Inventory.DbMigrator.PostgreSQL.Migrations
                     b.Navigation("Product");
 
                     b.Navigation("ProductAttribute");
+                });
+
+            modelBuilder.Entity("ECommerce.Inventory.Domain.AggregatesModel.ProductPromotion", b =>
+                {
+                    b.HasOne("ECommerce.Inventory.Domain.AggregatesModel.Merchant", "Merchant")
+                        .WithMany("ProductPromotions")
+                        .HasForeignKey("MerchantId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_product_promotions_merchants_merchant_id");
+
+                    b.Navigation("Merchant");
+                });
+
+            modelBuilder.Entity("ECommerce.Inventory.Domain.AggregatesModel.ProductPromotionItem", b =>
+                {
+                    b.HasOne("ECommerce.Inventory.Domain.AggregatesModel.Product", "Product")
+                        .WithMany("ProductPromotionItems")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_product_promotion_items_products_product_id");
+
+                    b.HasOne("ECommerce.Inventory.Domain.AggregatesModel.ProductPromotion", "ProductPromotion")
+                        .WithMany("Items")
+                        .HasForeignKey("ProductPromotionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_product_promotion_items_product_promotions_product_promotio");
+
+                    b.HasOne("ECommerce.Inventory.Domain.AggregatesModel.ProductVariant", "ProductVariant")
+                        .WithMany("ProductPromotionItems")
+                        .HasForeignKey("ProductVariantId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .HasConstraintName("fk_product_promotion_items_product_variants_product_variant_id");
+
+                    b.Navigation("Product");
+
+                    b.Navigation("ProductPromotion");
+
+                    b.Navigation("ProductVariant");
                 });
 
             modelBuilder.Entity("ECommerce.Inventory.Domain.AggregatesModel.ProductVariant", b =>
@@ -880,6 +2045,27 @@ namespace ECommerce.Inventory.DbMigrator.PostgreSQL.Migrations
                     b.Navigation("Merchant");
                 });
 
+            modelBuilder.Entity("ECommerce.Inventory.Domain.AggregatesModel.VoucherProduct", b =>
+                {
+                    b.HasOne("ECommerce.Inventory.Domain.AggregatesModel.Product", "Product")
+                        .WithMany("VoucherProducts")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_voucher_product_products_product_id");
+
+                    b.HasOne("ECommerce.Inventory.Domain.AggregatesModel.Voucher", "Voucher")
+                        .WithMany("VoucherProducts")
+                        .HasForeignKey("VoucherId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_voucher_product_vouchers_voucher_id");
+
+                    b.Navigation("Product");
+
+                    b.Navigation("Voucher");
+                });
+
             modelBuilder.Entity("ECommerce.Inventory.Domain.AggregatesModel.AttributeValue", b =>
                 {
                     b.Navigation("ProductVariantAttributeValues");
@@ -892,6 +2078,13 @@ namespace ECommerce.Inventory.DbMigrator.PostgreSQL.Migrations
                     b.Navigation("MerchantCategories");
                 });
 
+            modelBuilder.Entity("ECommerce.Inventory.Domain.AggregatesModel.Customer", b =>
+                {
+                    b.Navigation("Contacts");
+
+                    b.Navigation("Orders");
+                });
+
             modelBuilder.Entity("ECommerce.Inventory.Domain.AggregatesModel.Discount", b =>
                 {
                     b.Navigation("AppliedDiscounts");
@@ -901,6 +2094,10 @@ namespace ECommerce.Inventory.DbMigrator.PostgreSQL.Migrations
                 {
                     b.Navigation("MerchantCategories");
 
+                    b.Navigation("OrderPromotions");
+
+                    b.Navigation("ProductPromotions");
+
                     b.Navigation("Products");
 
                     b.Navigation("ShopCollections");
@@ -908,13 +2105,42 @@ namespace ECommerce.Inventory.DbMigrator.PostgreSQL.Migrations
                     b.Navigation("Stores");
                 });
 
+            modelBuilder.Entity("ECommerce.Inventory.Domain.AggregatesModel.Order", b =>
+                {
+                    b.Navigation("OrderContact")
+                        .IsRequired();
+
+                    b.Navigation("OrderItems");
+
+                    b.Navigation("OrderStatusTrackings");
+
+                    b.Navigation("PaymentMethodTrackings");
+                });
+
+            modelBuilder.Entity("ECommerce.Inventory.Domain.AggregatesModel.OrderPromotion", b =>
+                {
+                    b.Navigation("Items");
+
+                    b.Navigation("SubItems");
+                });
+
             modelBuilder.Entity("ECommerce.Inventory.Domain.AggregatesModel.Product", b =>
                 {
+                    b.Navigation("OrderItems");
+
+                    b.Navigation("OrderPromotionItems");
+
+                    b.Navigation("OrderPromotionSubItems");
+
                     b.Navigation("ProductProductAttributes");
+
+                    b.Navigation("ProductPromotionItems");
 
                     b.Navigation("ProductVariants");
 
                     b.Navigation("ShopCollectionProducts");
+
+                    b.Navigation("VoucherProducts");
                 });
 
             modelBuilder.Entity("ECommerce.Inventory.Domain.AggregatesModel.ProductAttribute", b =>
@@ -926,14 +2152,33 @@ namespace ECommerce.Inventory.DbMigrator.PostgreSQL.Migrations
                     b.Navigation("ProductVariantAttributeValues");
                 });
 
+            modelBuilder.Entity("ECommerce.Inventory.Domain.AggregatesModel.ProductPromotion", b =>
+                {
+                    b.Navigation("Items");
+                });
+
             modelBuilder.Entity("ECommerce.Inventory.Domain.AggregatesModel.ProductVariant", b =>
                 {
+                    b.Navigation("OrderItems");
+
+                    b.Navigation("ProductPromotionItems");
+
                     b.Navigation("ProductVariantAttributeValues");
                 });
 
             modelBuilder.Entity("ECommerce.Inventory.Domain.AggregatesModel.ShopCollection", b =>
                 {
                     b.Navigation("ShopCollectionProducts");
+                });
+
+            modelBuilder.Entity("ECommerce.Inventory.Domain.AggregatesModel.Store", b =>
+                {
+                    b.Navigation("Orders");
+                });
+
+            modelBuilder.Entity("ECommerce.Inventory.Domain.AggregatesModel.Voucher", b =>
+                {
+                    b.Navigation("VoucherProducts");
                 });
 #pragma warning restore 612, 618
         }

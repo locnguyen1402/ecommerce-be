@@ -5,6 +5,7 @@ using ECommerce.Shared.Common.Infrastructure.Endpoint;
 using ECommerce.Inventory.Domain.AggregatesModel;
 using ECommerce.Inventory.Api.Stores.Requests;
 using Microsoft.EntityFrameworkCore;
+using ECommerce.Inventory.Api.Services;
 
 namespace ECommerce.Inventory.Api.Stores.Commands;
 
@@ -14,8 +15,8 @@ public class UpdateStoreCommandHandler : IEndpointHandler
     => async (
         Guid id,
         UpdateStoreRequest request,
+        IMerchantService merchantService,
         IValidator<UpdateStoreRequest> validator,
-        IMerchantRepository merchantRepository,
         IStoreRepository storeRepository,
         CancellationToken cancellationToken
     ) =>
@@ -31,15 +32,12 @@ public class UpdateStoreCommandHandler : IEndpointHandler
             return Results.ValidationProblem(validationResult.ToDictionary());
         }
 
-        if (!await merchantRepository.AnyAsync(x => x.Id == request.MerchantId, cancellationToken))
-        {
-            return Results.BadRequest("Merchant not found");
-        }
-
         if (await storeRepository.AnyAsync(x => x.Slug == request.Slug && x.Id != id, cancellationToken))
         {
             return Results.BadRequest("Slug is already existed");
         }
+
+        var merchantId = await merchantService.GetMerchantIdAsync(cancellationToken);
 
         var store = await storeRepository.Query
             .FirstOrDefaultAsync(p => p.Id == id, cancellationToken);
@@ -54,7 +52,7 @@ public class UpdateStoreCommandHandler : IEndpointHandler
             , request.Description
             , request.PhoneNumber);
 
-        store.SetMerchant(request.MerchantId);
+        store.SetMerchant(merchantId);
 
         await storeRepository.UpdateAndSaveChangeAsync(store, cancellationToken);
 

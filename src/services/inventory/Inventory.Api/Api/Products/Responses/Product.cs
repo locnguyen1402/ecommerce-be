@@ -9,8 +9,8 @@ public record AdminProductDetailResponse(
     Guid Id,
     string Name,
     string Slug,
-    string Description,
-    List<CategoryResponse> Categories
+    string Description
+// List<CategoryResponse> Categories
 )
 {
     private List<ProductAttributeResponse> ProductAttributes { get; } = [];
@@ -20,10 +20,10 @@ public record AdminProductDetailResponse(
         string name,
         string slug,
         string description,
-        List<CategoryResponse> categories,
+        // List<CategoryResponse> categories,
         List<ProductAttributeResponse> productAttributes,
         List<ProductVariantResponse> productVariants
-        ) : this(id, name, slug, description, categories)
+        ) : this(id, name, slug, description)
     {
         ProductAttributes = productAttributes;
         ProductVariants = productVariants;
@@ -45,7 +45,7 @@ public record AdminProductDetailResponse(
 
     public List<ProductVariantResponse> Variants
         => ProductVariants
-            .Select(variant => 
+            .Select(variant =>
             {
                 return new
                 {
@@ -72,10 +72,10 @@ public static class ProductProjection
             x.Name,
             x.Slug,
             x.Description,
-            x.Categories
-                .AsQueryable()
-                .Select(CategoryProjection.ToCategoryResponse())
-                .ToList(),
+            // x.Categories
+            //     .AsQueryable()
+            //     .Select(CategoryProjection.ToCategoryResponse())
+            //     .ToList(),
             x.ProductAttributes
                 .AsQueryable()
                 .Select(ProductAttributeProjection.ToProductAttributeResponse())
