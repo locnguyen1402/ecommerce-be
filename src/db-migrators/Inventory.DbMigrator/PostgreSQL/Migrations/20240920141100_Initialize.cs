@@ -255,6 +255,45 @@ namespace ECommerce.Inventory.DbMigrator.PostgreSQL.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "orders",
+                columns: table => new
+                {
+                    id = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
+                    order_number = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
+                    customer_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    phone_number = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
+                    status = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false, defaultValueSql: "'TO_PAY'"),
+                    payment_status = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false, defaultValueSql: "'UNPAID'"),
+                    paid_at = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    payment_method = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false, defaultValueSql: "'UNSPECIFIED'"),
+                    total_item_price = table.Column<decimal>(type: "numeric(19,2)", precision: 19, scale: 2, nullable: false),
+                    vat_percent = table.Column<decimal>(type: "numeric(6,2)", precision: 6, scale: 2, nullable: false),
+                    vat_price = table.Column<decimal>(type: "numeric(19,2)", precision: 19, scale: 2, nullable: false),
+                    delivery_fee = table.Column<decimal>(type: "numeric(19,2)", precision: 19, scale: 2, nullable: false),
+                    total_price = table.Column<decimal>(type: "numeric(19,2)", precision: 19, scale: 2, nullable: false),
+                    delivery_schedule = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    merchant_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    notes = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true),
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "now()")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_orders", x => x.id);
+                    table.ForeignKey(
+                        name: "fk_orders_customers_customer_id",
+                        column: x => x.customer_id,
+                        principalTable: "customers",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "fk_orders_merchants_merchant_id",
+                        column: x => x.merchant_id,
+                        principalTable: "merchants",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "product_promotions",
                 columns: table => new
                 {
@@ -371,6 +410,70 @@ namespace ECommerce.Inventory.DbMigrator.PostgreSQL.Migrations
                         name: "fk_attribute_values_product_attributes_product_attribute_id",
                         column: x => x.product_attribute_id,
                         principalTable: "product_attributes",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "order_contacts",
+                columns: table => new
+                {
+                    id = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
+                    contact_name = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
+                    phone_number = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
+                    address_info = table.Column<AddressInfo>(type: "jsonb", nullable: false, defaultValueSql: "'{}'"),
+                    notes = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true),
+                    order_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "now()")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_order_contacts", x => x.id);
+                    table.ForeignKey(
+                        name: "fk_order_contacts_orders_order_id",
+                        column: x => x.order_id,
+                        principalTable: "orders",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "order_status_trackings",
+                columns: table => new
+                {
+                    id = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
+                    order_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    order_status = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false, defaultValueSql: "'UNSPECIFIED'"),
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "now()")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_order_status_trackings", x => x.id);
+                    table.ForeignKey(
+                        name: "fk_order_status_trackings_orders_order_id",
+                        column: x => x.order_id,
+                        principalTable: "orders",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "payment_method_trackings",
+                columns: table => new
+                {
+                    id = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
+                    payment_method = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false, defaultValueSql: "'UNSPECIFIED'"),
+                    value = table.Column<decimal>(type: "numeric(19,2)", precision: 19, scale: 2, nullable: false),
+                    order_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "now()")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_payment_method_trackings", x => x.id);
+                    table.ForeignKey(
+                        name: "fk_payment_method_trackings_orders_order_id",
+                        column: x => x.order_id,
+                        principalTable: "orders",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -524,40 +627,43 @@ namespace ECommerce.Inventory.DbMigrator.PostgreSQL.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "orders",
+                name: "order_items",
                 columns: table => new
                 {
                     id = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
-                    order_number = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
-                    customer_id = table.Column<Guid>(type: "uuid", nullable: false),
-                    phone_number = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
-                    status = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false, defaultValueSql: "'TO_PAY'"),
-                    payment_status = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false, defaultValueSql: "'UNPAID'"),
-                    paid_at = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
-                    payment_method = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false, defaultValueSql: "'UNSPECIFIED'"),
-                    total_item_price = table.Column<decimal>(type: "numeric(19,2)", precision: 19, scale: 2, nullable: false),
+                    order_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    product_id = table.Column<Guid>(type: "uuid", nullable: true),
+                    product_variant_id = table.Column<Guid>(type: "uuid", nullable: true),
+                    quantity = table.Column<int>(type: "integer", nullable: false, defaultValue: 0),
+                    product_name = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
+                    product_description = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    list_price = table.Column<decimal>(type: "numeric(19,2)", precision: 19, scale: 2, nullable: false),
+                    unit_price = table.Column<decimal>(type: "numeric(19,2)", precision: 19, scale: 2, nullable: false),
+                    total_price = table.Column<decimal>(type: "numeric(19,2)", precision: 19, scale: 2, nullable: false),
                     vat_percent = table.Column<decimal>(type: "numeric(6,2)", precision: 6, scale: 2, nullable: false),
                     vat_price = table.Column<decimal>(type: "numeric(19,2)", precision: 19, scale: 2, nullable: false),
-                    delivery_fee = table.Column<decimal>(type: "numeric(19,2)", precision: 19, scale: 2, nullable: false),
-                    total_price = table.Column<decimal>(type: "numeric(19,2)", precision: 19, scale: 2, nullable: false),
-                    delivery_schedule = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
-                    store_id = table.Column<Guid>(type: "uuid", nullable: false),
-                    notes = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true),
+                    total_vat_price = table.Column<decimal>(type: "numeric(19,2)", precision: 19, scale: 2, nullable: false),
                     created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "now()")
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("pk_orders", x => x.id);
+                    table.PrimaryKey("pk_order_items", x => x.id);
                     table.ForeignKey(
-                        name: "fk_orders_customers_customer_id",
-                        column: x => x.customer_id,
-                        principalTable: "customers",
+                        name: "fk_order_items_orders_order_id",
+                        column: x => x.order_id,
+                        principalTable: "orders",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "fk_orders_stores_store_id",
-                        column: x => x.store_id,
-                        principalTable: "stores",
+                        name: "fk_order_items_product_variants_product_variant_id",
+                        column: x => x.product_variant_id,
+                        principalTable: "product_variants",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "fk_order_items_products_product_id",
+                        column: x => x.product_id,
+                        principalTable: "products",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -675,112 +781,6 @@ namespace ECommerce.Inventory.DbMigrator.PostgreSQL.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.CreateTable(
-                name: "order_contacts",
-                columns: table => new
-                {
-                    id = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
-                    contact_name = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
-                    phone_number = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
-                    address_info = table.Column<AddressInfo>(type: "jsonb", nullable: false, defaultValueSql: "'{}'"),
-                    notes = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true),
-                    order_id = table.Column<Guid>(type: "uuid", nullable: false),
-                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "now()")
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("pk_order_contacts", x => x.id);
-                    table.ForeignKey(
-                        name: "fk_order_contacts_orders_order_id",
-                        column: x => x.order_id,
-                        principalTable: "orders",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "order_items",
-                columns: table => new
-                {
-                    id = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
-                    order_id = table.Column<Guid>(type: "uuid", nullable: false),
-                    product_id = table.Column<Guid>(type: "uuid", nullable: true),
-                    product_variant_id = table.Column<Guid>(type: "uuid", nullable: true),
-                    quantity = table.Column<int>(type: "integer", nullable: false, defaultValue: 0),
-                    product_name = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
-                    product_description = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    list_price = table.Column<decimal>(type: "numeric(19,2)", precision: 19, scale: 2, nullable: false),
-                    unit_price = table.Column<decimal>(type: "numeric(19,2)", precision: 19, scale: 2, nullable: false),
-                    total_price = table.Column<decimal>(type: "numeric(19,2)", precision: 19, scale: 2, nullable: false),
-                    vat_percent = table.Column<decimal>(type: "numeric(6,2)", precision: 6, scale: 2, nullable: false),
-                    vat_price = table.Column<decimal>(type: "numeric(19,2)", precision: 19, scale: 2, nullable: false),
-                    total_vat_price = table.Column<decimal>(type: "numeric(19,2)", precision: 19, scale: 2, nullable: false),
-                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "now()")
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("pk_order_items", x => x.id);
-                    table.ForeignKey(
-                        name: "fk_order_items_orders_order_id",
-                        column: x => x.order_id,
-                        principalTable: "orders",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "fk_order_items_product_variants_product_variant_id",
-                        column: x => x.product_variant_id,
-                        principalTable: "product_variants",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "fk_order_items_products_product_id",
-                        column: x => x.product_id,
-                        principalTable: "products",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "order_status_trackings",
-                columns: table => new
-                {
-                    id = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
-                    order_id = table.Column<Guid>(type: "uuid", nullable: false),
-                    order_status = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false, defaultValueSql: "'UNSPECIFIED'"),
-                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "now()")
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("pk_order_status_trackings", x => x.id);
-                    table.ForeignKey(
-                        name: "fk_order_status_trackings_orders_order_id",
-                        column: x => x.order_id,
-                        principalTable: "orders",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "payment_method_trackings",
-                columns: table => new
-                {
-                    id = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
-                    payment_method = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false, defaultValueSql: "'UNSPECIFIED'"),
-                    value = table.Column<decimal>(type: "numeric(19,2)", precision: 19, scale: 2, nullable: false),
-                    order_id = table.Column<Guid>(type: "uuid", nullable: false),
-                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "now()")
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("pk_payment_method_trackings", x => x.id);
-                    table.ForeignKey(
-                        name: "fk_payment_method_trackings_orders_order_id",
-                        column: x => x.order_id,
-                        principalTable: "orders",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
             migrationBuilder.CreateIndex(
                 name: "ix_attribute_values_product_attribute_id",
                 table: "attribute_values",
@@ -894,15 +894,15 @@ namespace ECommerce.Inventory.DbMigrator.PostgreSQL.Migrations
                 column: "customer_id");
 
             migrationBuilder.CreateIndex(
+                name: "ix_orders_merchant_id",
+                table: "orders",
+                column: "merchant_id");
+
+            migrationBuilder.CreateIndex(
                 name: "ix_orders_order_number",
                 table: "orders",
                 column: "order_number",
                 unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "ix_orders_store_id",
-                table: "orders",
-                column: "store_id");
 
             migrationBuilder.CreateIndex(
                 name: "ix_payment_method_trackings_order_id",
@@ -1032,6 +1032,9 @@ namespace ECommerce.Inventory.DbMigrator.PostgreSQL.Migrations
                 name: "shop_collection_product");
 
             migrationBuilder.DropTable(
+                name: "stores");
+
+            migrationBuilder.DropTable(
                 name: "voucher_product");
 
             migrationBuilder.DropTable(
@@ -1063,9 +1066,6 @@ namespace ECommerce.Inventory.DbMigrator.PostgreSQL.Migrations
 
             migrationBuilder.DropTable(
                 name: "customers");
-
-            migrationBuilder.DropTable(
-                name: "stores");
 
             migrationBuilder.DropTable(
                 name: "product_attributes");

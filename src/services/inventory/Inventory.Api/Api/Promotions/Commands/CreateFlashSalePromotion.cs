@@ -8,6 +8,7 @@ using ECommerce.Shared.Common.Enums;
 using ECommerce.Inventory.Api.Promotions.Requests;
 using ECommerce.Inventory.Domain.AggregatesModel;
 using ECommerce.Inventory.Api.Services;
+using ECommerce.Shared.Libs.Extensions;
 
 namespace ECommerce.Inventory.Api.Promotions.Commands;
 
@@ -44,17 +45,20 @@ public class CreateFlashSalePromotionHandler : IEndpointHandler
         }
 
         var merchantId = await merchantService.GetMerchantIdAsync(cancellationToken);
-        var items = request.Items.SelectMany(x => CreateProductPromotionCommandHandler.MapToProductPromotionItems(x, products.First(p => p.Id == x.ProductId)));
+        var items = request.Items
+            .SelectMany(x => CreateProductPromotionCommandHandler.MapToProductPromotionItems(x, products.First(p => p.Id == x.ProductId)))
+            .ToList();
+
         var newPromotion = new ProductPromotion(
             request.Name,
-            "request.Slug",
+            request.Name.ToGenerateRandomSlug(),
             request.StartDate,
             request.EndDate,
             merchantId
         );
 
         newPromotion.SetFlashSalePromotion();
-        newPromotion.SetItems(items.ToList());
+        newPromotion.SetItems(items);
 
         await productPromotionRepository.AddAndSaveChangeAsync(newPromotion, cancellationToken);
 

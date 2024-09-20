@@ -8,6 +8,7 @@ using ECommerce.Shared.Common.Enums;
 using ECommerce.Inventory.Api.Promotions.Requests;
 using ECommerce.Inventory.Domain.AggregatesModel;
 using ECommerce.Inventory.Api.Services;
+using ECommerce.Shared.Libs.Extensions;
 
 namespace ECommerce.Inventory.Api.Promotions.Commands;
 
@@ -47,7 +48,7 @@ public class CreateProductPromotionCommandHandler : IEndpointHandler
         var items = request.Items.SelectMany(x => MapToProductPromotionItems(x, products.First(p => p.Id == x.ProductId)));
         var newPromotion = new ProductPromotion(
             request.Name,
-            "request.Slug",
+            request.Name.ToGenerateRandomSlug(),
             request.StartDate,
             request.EndDate,
             merchantId

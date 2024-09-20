@@ -513,6 +513,10 @@ namespace ECommerce.Inventory.DbMigrator.PostgreSQL.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("delivery_schedule");
 
+                    b.Property<Guid>("MerchantId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("merchant_id");
+
                     b.Property<string>("Notes")
                         .HasMaxLength(500)
                         .HasColumnType("character varying(500)")
@@ -558,10 +562,6 @@ namespace ECommerce.Inventory.DbMigrator.PostgreSQL.Migrations
                         .HasColumnName("status")
                         .HasDefaultValueSql("'TO_PAY'");
 
-                    b.Property<Guid>("StoreId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("store_id");
-
                     b.Property<decimal>("TotalItemPrice")
                         .HasPrecision(19, 2)
                         .HasColumnType("numeric(19,2)")
@@ -588,12 +588,12 @@ namespace ECommerce.Inventory.DbMigrator.PostgreSQL.Migrations
                     b.HasIndex("CustomerId")
                         .HasDatabaseName("ix_orders_customer_id");
 
+                    b.HasIndex("MerchantId")
+                        .HasDatabaseName("ix_orders_merchant_id");
+
                     b.HasIndex("OrderNumber")
                         .IsUnique()
                         .HasDatabaseName("ix_orders_order_number");
-
-                    b.HasIndex("StoreId")
-                        .HasDatabaseName("ix_orders_store_id");
 
                     b.ToTable("orders", (string)null);
                 });
@@ -1741,16 +1741,16 @@ namespace ECommerce.Inventory.DbMigrator.PostgreSQL.Migrations
                         .IsRequired()
                         .HasConstraintName("fk_orders_customers_customer_id");
 
-                    b.HasOne("ECommerce.Inventory.Domain.AggregatesModel.Store", "Store")
+                    b.HasOne("ECommerce.Inventory.Domain.AggregatesModel.Merchant", "Merchant")
                         .WithMany("Orders")
-                        .HasForeignKey("StoreId")
+                        .HasForeignKey("MerchantId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("fk_orders_stores_store_id");
+                        .HasConstraintName("fk_orders_merchants_merchant_id");
 
                     b.Navigation("Customer");
 
-                    b.Navigation("Store");
+                    b.Navigation("Merchant");
                 });
 
             modelBuilder.Entity("ECommerce.Inventory.Domain.AggregatesModel.OrderContact", b =>
@@ -2096,6 +2096,8 @@ namespace ECommerce.Inventory.DbMigrator.PostgreSQL.Migrations
 
                     b.Navigation("OrderPromotions");
 
+                    b.Navigation("Orders");
+
                     b.Navigation("ProductPromotions");
 
                     b.Navigation("Products");
@@ -2169,11 +2171,6 @@ namespace ECommerce.Inventory.DbMigrator.PostgreSQL.Migrations
             modelBuilder.Entity("ECommerce.Inventory.Domain.AggregatesModel.ShopCollection", b =>
                 {
                     b.Navigation("ShopCollectionProducts");
-                });
-
-            modelBuilder.Entity("ECommerce.Inventory.Domain.AggregatesModel.Store", b =>
-                {
-                    b.Navigation("Orders");
                 });
 
             modelBuilder.Entity("ECommerce.Inventory.Domain.AggregatesModel.Voucher", b =>
