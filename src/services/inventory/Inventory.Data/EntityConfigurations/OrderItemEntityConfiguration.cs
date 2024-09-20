@@ -12,6 +12,12 @@ public class OrderItemEntityConfiguration : BaseEntityConfiguration<OrderItem>
     {
         base.Configure(builder);
 
+        builder.Property(p => p.ProductName)
+            .HasMaxLength(200);
+
+        builder.Property(p => p.ProductDescription)
+            .HasMaxLength(100);
+
         builder.Property(p => p.Quantity)
             .IsRequired()
             .HasDefaultValue(0);
@@ -31,15 +37,15 @@ public class OrderItemEntityConfiguration : BaseEntityConfiguration<OrderItem>
             .HasPrecision(19, 2);
 
         builder
-            .Property(p => p.ExceptVatPrice)
+            .Property(p => p.VatPercent)
+            .HasPrecision(6, 2);
+
+        builder
+            .Property(p => p.ListPrice)
             .HasPrecision(19, 2);
 
         builder
             .Property(p => p.TotalVatPrice)
-            .HasPrecision(19, 2);
-
-        builder
-            .Property(p => p.TotalExceptVatPrice)
             .HasPrecision(19, 2);
 
         builder.HasOne(p => p.Order)

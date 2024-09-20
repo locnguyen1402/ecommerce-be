@@ -25,12 +25,11 @@ public class InventoryDbContext(DbContextOptions<InventoryDbContext> options) : 
     public DbSet<OrderItem> OrderItems => Set<OrderItem>();
     public DbSet<OrderStatusTracking> OrderStatusTrackings => Set<OrderStatusTracking>();
     public DbSet<PaymentMethodTracking> PaymentMethodTrackings => Set<PaymentMethodTracking>();
-    public DbSet<PaymentStatusTracking> PaymentStatusTrackings => Set<PaymentStatusTracking>();
-
     public DbSet<Voucher> Vouchers => Set<Voucher>();
 
     public DbSet<OrderPromotion> OrderPromotions => Set<OrderPromotion>();
     public DbSet<OrderPromotionItem> OrderPromotionItems => Set<OrderPromotionItem>();
+    public DbSet<OrderContact> OrderContacts => Set<OrderContact>();
     public DbSet<OrderPromotionSubItem> OrderPromotionSubItems => Set<OrderPromotionSubItem>();
     public DbSet<ProductPromotion> ProductPromotions => Set<ProductPromotion>();
     public DbSet<ProductPromotionItem> ProductPromotionItems => Set<ProductPromotionItem>();
@@ -60,9 +59,9 @@ public class InventoryDbContext(DbContextOptions<InventoryDbContext> options) : 
         // Order
         modelBuilder.ApplyConfiguration(new OrderEntityConfiguration());
         modelBuilder.ApplyConfiguration(new OrderItemEntityConfiguration());
+        modelBuilder.ApplyConfiguration(new OrderContactEntityConfiguration());
         modelBuilder.ApplyConfiguration(new OrderStatusTrackingEntityConfiguration());
         modelBuilder.ApplyConfiguration(new PaymentMethodTrackingEntityConfiguration());
-        modelBuilder.ApplyConfiguration(new PaymentStatusTrackingEntityConfiguration());
 
         // Voucher
         modelBuilder.ApplyConfiguration(new VoucherEntityConfiguration());

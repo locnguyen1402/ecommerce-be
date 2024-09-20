@@ -23,8 +23,8 @@ public class OrderItem(
     public string ProductDescription { get; private set; } = string.Empty;
     public decimal ListPrice { get; private set; } = 0;
     public decimal UnitPrice { get; private set; } = unitPrice;
-    public decimal TotalPrice => UnitPrice * (decimal)Quantity;
-    public float VatPercent { get; private set; } = 0;
-    public decimal VatPrice => UnitPrice * (decimal)VatPercent / 100;
-    public decimal TotalVatPrice => VatPrice * (decimal)Quantity;
+    public decimal TotalPrice { get => UnitPrice * Quantity; private set { } }
+    public decimal VatPercent { get; private set; } = 0;
+    public decimal VatPrice { get => UnitPrice * VatPercent / 100; private set { } }
+    public decimal TotalVatPrice { get => VatPrice * Quantity; private set { } }
 }

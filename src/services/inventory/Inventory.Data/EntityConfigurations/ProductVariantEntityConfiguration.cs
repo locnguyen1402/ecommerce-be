@@ -18,6 +18,7 @@ public class ProductVariantEntityConfiguration : BaseEntityConfiguration<Product
 
         builder.Property(p => p.Price)
             .IsRequired()
+            .HasPrecision(19, 2)
             .HasDefaultValue(0);
 
         builder.HasOne(p => p.Product)

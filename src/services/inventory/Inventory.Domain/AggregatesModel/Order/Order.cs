@@ -19,13 +19,13 @@ public class Order(Guid customerId) : Entity
     /// </summary>
     public decimal TotalItemPrice { get; private set; } = 0;
     public decimal VatPercent { get; private set; } = 0;
-    public decimal VatPrice => TotalItemPrice * VatPercent / 100;
+    public decimal VatPrice { get => TotalItemPrice * VatPercent / 100; private set { } }
     // TODO: Integrate promotion and voucher
     // public decimal TotalDiscountPrice => 0;
     public decimal DeliveryFee { get; private set; } = 0;
     public decimal TotalPrice { get; private set; } = 0;
     public DateTimeOffset DeliverySchedule { get; private set; }
-    public string DeliveryAddress { get; private set; } = string.Empty;
+    public OrderContact OrderContact { get; private set; } = null!;
     public Guid StoreId { get; private set; }
     public virtual Store Store { get; private set; } = null!;
     private readonly HashSet<OrderItem> _orderItems = [];

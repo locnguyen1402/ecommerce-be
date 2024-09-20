@@ -20,12 +20,6 @@ public class ProductEntityConfiguration : BaseEntityConfiguration<Product>
             .IsRequired()
             .HasMaxLength(150);
 
-        builder.Property(p => p.Stock)
-            .HasDefaultValue(0);
-
-        builder.Property(p => p.ListPrice)
-            .HasPrecision(19, 2);
-
         builder.HasMany(p => p.ProductAttributes)
             .WithMany(p => p.Products)
             .UsingEntity<ProductProductAttribute>(

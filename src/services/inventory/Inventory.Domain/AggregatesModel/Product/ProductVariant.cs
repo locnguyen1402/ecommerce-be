@@ -1,4 +1,3 @@
-using ECommerce.Shared.Common.Helper;
 using ECommerce.Shared.Common.Infrastructure.Data;
 
 namespace ECommerce.Inventory.Domain.AggregatesModel;

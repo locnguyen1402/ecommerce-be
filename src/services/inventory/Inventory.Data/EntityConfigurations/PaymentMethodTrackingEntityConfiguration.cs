@@ -28,10 +28,6 @@ public class PaymentMethodTrackingEntityConfiguration : BaseEntityConfiguration<
             .HasPrecision(19, 2);
 
         builder
-            .Property(p => p.BaseValue)
-            .HasPrecision(19, 2);
-
-        builder
             .HasOne(p => p.Order)
             .WithMany(p => p.PaymentMethodTrackings)
             .HasForeignKey(p => p.OrderId)

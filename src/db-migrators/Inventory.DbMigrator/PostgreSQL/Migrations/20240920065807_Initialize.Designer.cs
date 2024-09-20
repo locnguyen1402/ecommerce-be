@@ -15,7 +15,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ECommerce.Inventory.DbMigrator.PostgreSQL.Migrations
 {
     [DbContext(typeof(InventoryDbContext))]
-    [Migration("20240920042822_Initialize")]
+    [Migration("20240920065807_Initialize")]
     partial class Initialize
     {
         /// <inheritdoc />
@@ -497,10 +497,6 @@ namespace ECommerce.Inventory.DbMigrator.PostgreSQL.Migrations
                         .HasColumnName("id")
                         .HasDefaultValueSql("gen_random_uuid()");
 
-                    b.Property<Guid?>("ContactId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("contact_id");
-
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone")
@@ -511,12 +507,7 @@ namespace ECommerce.Inventory.DbMigrator.PostgreSQL.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("customer_id");
 
-                    b.Property<string>("DeliveryAddress")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("delivery_address");
-
-                    b.Property<decimal?>("DeliveryFee")
+                    b.Property<decimal>("DeliveryFee")
                         .HasPrecision(19, 2)
                         .HasColumnType("numeric(19,2)")
                         .HasColumnName("delivery_fee");
@@ -535,6 +526,10 @@ namespace ECommerce.Inventory.DbMigrator.PostgreSQL.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("character varying(200)")
                         .HasColumnName("order_number");
+
+                    b.Property<DateTimeOffset>("PaidAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("paid_at");
 
                     b.Property<string>("PaymentMethod")
                         .IsRequired()
@@ -570,17 +565,7 @@ namespace ECommerce.Inventory.DbMigrator.PostgreSQL.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("store_id");
 
-                    b.Property<decimal?>("TotalDiscountPrice")
-                        .HasPrecision(19, 2)
-                        .HasColumnType("numeric(19,2)")
-                        .HasColumnName("total_discount_price");
-
-                    b.Property<decimal?>("TotalExceptVatPrice")
-                        .HasPrecision(19, 2)
-                        .HasColumnType("numeric(19,2)")
-                        .HasColumnName("total_except_vat_price");
-
-                    b.Property<decimal?>("TotalItemPrice")
+                    b.Property<decimal>("TotalItemPrice")
                         .HasPrecision(19, 2)
                         .HasColumnType("numeric(19,2)")
                         .HasColumnName("total_item_price");
@@ -590,16 +575,18 @@ namespace ECommerce.Inventory.DbMigrator.PostgreSQL.Migrations
                         .HasColumnType("numeric(19,2)")
                         .HasColumnName("total_price");
 
-                    b.Property<decimal?>("TotalVatPrice")
+                    b.Property<decimal>("VatPercent")
+                        .HasPrecision(6, 2)
+                        .HasColumnType("numeric(6,2)")
+                        .HasColumnName("vat_percent");
+
+                    b.Property<decimal>("VatPrice")
                         .HasPrecision(19, 2)
                         .HasColumnType("numeric(19,2)")
-                        .HasColumnName("total_vat_price");
+                        .HasColumnName("vat_price");
 
                     b.HasKey("Id")
                         .HasName("pk_orders");
-
-                    b.HasIndex("ContactId")
-                        .HasDatabaseName("ix_orders_contact_id");
 
                     b.HasIndex("CustomerId")
                         .HasDatabaseName("ix_orders_customer_id");
@@ -612,6 +599,58 @@ namespace ECommerce.Inventory.DbMigrator.PostgreSQL.Migrations
                         .HasDatabaseName("ix_orders_store_id");
 
                     b.ToTable("orders", (string)null);
+                });
+
+            modelBuilder.Entity("ECommerce.Inventory.Domain.AggregatesModel.OrderContact", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id")
+                        .HasDefaultValueSql("gen_random_uuid()");
+
+                    b.Property<AddressInfo>("AddressInfo")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("jsonb")
+                        .HasColumnName("address_info")
+                        .HasDefaultValueSql("'{}'");
+
+                    b.Property<string>("ContactName")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("contact_name");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at")
+                        .HasDefaultValueSql("now()");
+
+                    b.Property<string>("Notes")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)")
+                        .HasColumnName("notes");
+
+                    b.Property<Guid>("OrderId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("order_id");
+
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)")
+                        .HasColumnName("phone_number");
+
+                    b.HasKey("Id")
+                        .HasName("pk_order_contacts");
+
+                    b.HasIndex("OrderId")
+                        .IsUnique()
+                        .HasDatabaseName("ix_order_contacts_order_id");
+
+                    b.ToTable("order_contacts", (string)null);
                 });
 
             modelBuilder.Entity("ECommerce.Inventory.Domain.AggregatesModel.OrderItem", b =>
@@ -628,18 +667,30 @@ namespace ECommerce.Inventory.DbMigrator.PostgreSQL.Migrations
                         .HasColumnName("created_at")
                         .HasDefaultValueSql("now()");
 
-                    b.Property<decimal?>("ExceptVatPrice")
+                    b.Property<decimal>("ListPrice")
                         .HasPrecision(19, 2)
                         .HasColumnType("numeric(19,2)")
-                        .HasColumnName("except_vat_price");
+                        .HasColumnName("list_price");
 
                     b.Property<Guid>("OrderId")
                         .HasColumnType("uuid")
                         .HasColumnName("order_id");
 
+                    b.Property<string>("ProductDescription")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("product_description");
+
                     b.Property<Guid?>("ProductId")
                         .HasColumnType("uuid")
                         .HasColumnName("product_id");
+
+                    b.Property<string>("ProductName")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("product_name");
 
                     b.Property<Guid?>("ProductVariantId")
                         .HasColumnType("uuid")
@@ -651,17 +702,12 @@ namespace ECommerce.Inventory.DbMigrator.PostgreSQL.Migrations
                         .HasDefaultValue(0)
                         .HasColumnName("quantity");
 
-                    b.Property<decimal?>("TotalExceptVatPrice")
-                        .HasPrecision(19, 2)
-                        .HasColumnType("numeric(19,2)")
-                        .HasColumnName("total_except_vat_price");
-
                     b.Property<decimal>("TotalPrice")
                         .HasPrecision(19, 2)
                         .HasColumnType("numeric(19,2)")
                         .HasColumnName("total_price");
 
-                    b.Property<decimal?>("TotalVatPrice")
+                    b.Property<decimal>("TotalVatPrice")
                         .HasPrecision(19, 2)
                         .HasColumnType("numeric(19,2)")
                         .HasColumnName("total_vat_price");
@@ -671,11 +717,12 @@ namespace ECommerce.Inventory.DbMigrator.PostgreSQL.Migrations
                         .HasColumnType("numeric(19,2)")
                         .HasColumnName("unit_price");
 
-                    b.Property<float?>("VatPercent")
-                        .HasColumnType("real")
+                    b.Property<decimal>("VatPercent")
+                        .HasPrecision(6, 2)
+                        .HasColumnType("numeric(6,2)")
                         .HasColumnName("vat_percent");
 
-                    b.Property<decimal?>("VatPrice")
+                    b.Property<decimal>("VatPrice")
                         .HasPrecision(19, 2)
                         .HasColumnType("numeric(19,2)")
                         .HasColumnName("vat_price");
@@ -948,11 +995,6 @@ namespace ECommerce.Inventory.DbMigrator.PostgreSQL.Migrations
                         .HasColumnName("id")
                         .HasDefaultValueSql("gen_random_uuid()");
 
-                    b.Property<decimal?>("BaseValue")
-                        .HasPrecision(19, 2)
-                        .HasColumnType("numeric(19,2)")
-                        .HasColumnName("base_value");
-
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone")
@@ -971,19 +1013,7 @@ namespace ECommerce.Inventory.DbMigrator.PostgreSQL.Migrations
                         .HasColumnName("payment_method")
                         .HasDefaultValueSql("'UNSPECIFIED'");
 
-                    b.Property<string>("RefCode")
-                        .HasColumnType("text")
-                        .HasColumnName("ref_code");
-
-                    b.Property<string>("RefId")
-                        .HasColumnType("text")
-                        .HasColumnName("ref_id");
-
-                    b.Property<string>("RefName")
-                        .HasColumnType("text")
-                        .HasColumnName("ref_name");
-
-                    b.Property<decimal?>("Value")
+                    b.Property<decimal>("Value")
                         .HasPrecision(19, 2)
                         .HasColumnType("numeric(19,2)")
                         .HasColumnName("value");
@@ -995,41 +1025,6 @@ namespace ECommerce.Inventory.DbMigrator.PostgreSQL.Migrations
                         .HasDatabaseName("ix_payment_method_trackings_order_id");
 
                     b.ToTable("payment_method_trackings", (string)null);
-                });
-
-            modelBuilder.Entity("ECommerce.Inventory.Domain.AggregatesModel.PaymentStatusTracking", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid")
-                        .HasColumnName("id")
-                        .HasDefaultValueSql("gen_random_uuid()");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("created_at")
-                        .HasDefaultValueSql("now()");
-
-                    b.Property<Guid>("OrderId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("order_id");
-
-                    b.Property<string>("PaymentStatus")
-                        .IsRequired()
-                        .ValueGeneratedOnAdd()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)")
-                        .HasColumnName("payment_status")
-                        .HasDefaultValueSql("'UNSPECIFIED'");
-
-                    b.HasKey("Id")
-                        .HasName("pk_payment_status_trackings");
-
-                    b.HasIndex("OrderId")
-                        .HasDatabaseName("ix_payment_status_trackings_order_id");
-
-                    b.ToTable("payment_status_trackings", (string)null);
                 });
 
             modelBuilder.Entity("ECommerce.Inventory.Domain.AggregatesModel.Product", b =>
@@ -1055,11 +1050,6 @@ namespace ECommerce.Inventory.DbMigrator.PostgreSQL.Migrations
                         .HasColumnType("boolean")
                         .HasColumnName("has_discounts_applied");
 
-                    b.Property<decimal?>("ListPrice")
-                        .HasPrecision(19, 2)
-                        .HasColumnType("numeric(19,2)")
-                        .HasColumnName("list_price");
-
                     b.Property<Guid>("MerchantId")
                         .HasColumnType("uuid")
                         .HasColumnName("merchant_id");
@@ -1075,12 +1065,6 @@ namespace ECommerce.Inventory.DbMigrator.PostgreSQL.Migrations
                         .HasMaxLength(150)
                         .HasColumnType("character varying(150)")
                         .HasColumnName("slug");
-
-                    b.Property<int?>("Stock")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasDefaultValue(0)
-                        .HasColumnName("stock");
 
                     b.HasKey("Id")
                         .HasName("pk_products");
@@ -1305,7 +1289,8 @@ namespace ECommerce.Inventory.DbMigrator.PostgreSQL.Migrations
 
                     b.Property<decimal>("Price")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("numeric")
+                        .HasPrecision(19, 2)
+                        .HasColumnType("numeric(19,2)")
                         .HasDefaultValue(0m)
                         .HasColumnName("price");
 
@@ -1752,11 +1737,6 @@ namespace ECommerce.Inventory.DbMigrator.PostgreSQL.Migrations
 
             modelBuilder.Entity("ECommerce.Inventory.Domain.AggregatesModel.Order", b =>
                 {
-                    b.HasOne("ECommerce.Inventory.Domain.AggregatesModel.Contact", null)
-                        .WithMany("Orders")
-                        .HasForeignKey("ContactId")
-                        .HasConstraintName("fk_orders_contacts_contact_id");
-
                     b.HasOne("ECommerce.Inventory.Domain.AggregatesModel.Customer", "Customer")
                         .WithMany("Orders")
                         .HasForeignKey("CustomerId")
@@ -1774,6 +1754,18 @@ namespace ECommerce.Inventory.DbMigrator.PostgreSQL.Migrations
                     b.Navigation("Customer");
 
                     b.Navigation("Store");
+                });
+
+            modelBuilder.Entity("ECommerce.Inventory.Domain.AggregatesModel.OrderContact", b =>
+                {
+                    b.HasOne("ECommerce.Inventory.Domain.AggregatesModel.Order", "Order")
+                        .WithOne("OrderContact")
+                        .HasForeignKey("ECommerce.Inventory.Domain.AggregatesModel.OrderContact", "OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_order_contacts_orders_order_id");
+
+                    b.Navigation("Order");
                 });
 
             modelBuilder.Entity("ECommerce.Inventory.Domain.AggregatesModel.OrderItem", b =>
@@ -1885,18 +1877,6 @@ namespace ECommerce.Inventory.DbMigrator.PostgreSQL.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_payment_method_trackings_orders_order_id");
-
-                    b.Navigation("Order");
-                });
-
-            modelBuilder.Entity("ECommerce.Inventory.Domain.AggregatesModel.PaymentStatusTracking", b =>
-                {
-                    b.HasOne("ECommerce.Inventory.Domain.AggregatesModel.Order", "Order")
-                        .WithMany("PaymentStatusTrackings")
-                        .HasForeignKey("OrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_payment_status_trackings_orders_order_id");
 
                     b.Navigation("Order");
                 });
@@ -2101,11 +2081,6 @@ namespace ECommerce.Inventory.DbMigrator.PostgreSQL.Migrations
                     b.Navigation("MerchantCategories");
                 });
 
-            modelBuilder.Entity("ECommerce.Inventory.Domain.AggregatesModel.Contact", b =>
-                {
-                    b.Navigation("Orders");
-                });
-
             modelBuilder.Entity("ECommerce.Inventory.Domain.AggregatesModel.Customer", b =>
                 {
                     b.Navigation("Contacts");
@@ -2135,13 +2110,14 @@ namespace ECommerce.Inventory.DbMigrator.PostgreSQL.Migrations
 
             modelBuilder.Entity("ECommerce.Inventory.Domain.AggregatesModel.Order", b =>
                 {
+                    b.Navigation("OrderContact")
+                        .IsRequired();
+
                     b.Navigation("OrderItems");
 
                     b.Navigation("OrderStatusTrackings");
 
                     b.Navigation("PaymentMethodTrackings");
-
-                    b.Navigation("PaymentStatusTrackings");
                 });
 
             modelBuilder.Entity("ECommerce.Inventory.Domain.AggregatesModel.OrderPromotion", b =>

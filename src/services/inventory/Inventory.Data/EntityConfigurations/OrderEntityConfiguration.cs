@@ -61,8 +61,12 @@ public class OrderEntityConfiguration : BaseEntityConfiguration<Order>
             .HasPrecision(19, 2);
 
         builder
-            .Property(p => p.TotalDiscountPrice)
+            .Property(p => p.VatPrice)
             .HasPrecision(19, 2);
+
+        builder
+            .Property(p => p.VatPercent)
+            .HasPrecision(6, 2);
 
         builder
             .Property(p => p.TotalItemPrice)
@@ -70,14 +74,6 @@ public class OrderEntityConfiguration : BaseEntityConfiguration<Order>
 
         builder
             .Property(p => p.DeliveryFee)
-            .HasPrecision(19, 2);
-
-        builder
-            .Property(p => p.TotalVatPrice)
-            .HasPrecision(19, 2);
-
-        builder
-            .Property(p => p.TotalExceptVatPrice)
             .HasPrecision(19, 2);
 
         builder.Property(p => p.Notes)
