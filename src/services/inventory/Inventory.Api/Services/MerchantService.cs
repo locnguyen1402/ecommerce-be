@@ -22,4 +22,21 @@ public class MerchantService(IMerchantRepository merchantRepository) : IMerchant
 
         return merchant.Id;
     }
+
+    public async Task<Store> GetStoreInfoAsync(CancellationToken cancellationToken = default)
+    {
+        var store = await _merchantRepository.Query
+           .Include(x => x.Stores)
+           .OrderByDescending(x => x.CreatedAt)
+           .ThenBy(x => x.Name)
+       .SelectMany(x => x.Stores)
+       .FirstOrDefaultAsync(cancellationToken);
+
+        if (store == null)
+        {
+            throw new Exception($"Can not found store");
+        }
+
+        return store;
+    }
 }

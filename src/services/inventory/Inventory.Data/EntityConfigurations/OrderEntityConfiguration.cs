@@ -18,10 +18,10 @@ public class OrderEntityConfiguration : BaseEntityConfiguration<Order>
 
         builder.HasIndex(i => i.CustomerId);
 
-        builder.Property(p => p.StoreId)
+        builder.Property(p => p.MerchantId)
             .IsRequired();
 
-        builder.HasIndex(i => i.StoreId);
+        builder.HasIndex(i => i.MerchantId);
 
         builder.Property(p => p.OrderNumber)
             .IsRequired()
@@ -84,9 +84,9 @@ public class OrderEntityConfiguration : BaseEntityConfiguration<Order>
             .HasForeignKey(c => c.CustomerId)
             .OnDelete(DeleteBehavior.Cascade);
 
-        builder.HasOne(p => p.Store)
+        builder.HasOne(p => p.Merchant)
             .WithMany(c => c.Orders)
-            .HasForeignKey(c => c.StoreId)
+            .HasForeignKey(c => c.MerchantId)
             .OnDelete(DeleteBehavior.Cascade);
     }
 }

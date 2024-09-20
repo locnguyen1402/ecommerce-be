@@ -27,4 +27,17 @@ public class OrderItem(
     public decimal VatPercent { get; private set; } = 0;
     public decimal VatPrice { get => UnitPrice * VatPercent / 100; private set { } }
     public decimal TotalVatPrice { get => VatPrice * Quantity; private set { } }
+
+    public void SetProductInfo(string productName, decimal listPrice)
+    {
+        ProductName = productName;
+        ListPrice = listPrice;
+    }
+
+    // TODO: Implement to set product description
+
+    public void SetVatPercent(decimal vatPercent)
+    {
+        VatPercent = vatPercent;
+    }
 }

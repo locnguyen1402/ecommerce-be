@@ -31,6 +31,12 @@ public class ProductVariant(int stock, decimal price) : Entity()
         }
         Stock = stock;
     }
+
+    public void DecreaseStock(int quantity)
+    {
+        Stock -= quantity;
+    }
+
     public void AddOrUpdateAttributeValue(Guid attributeId, string attributeValue, Guid? attributeValueId)
     {
         if (attributeValue.Trim().Length == 0)

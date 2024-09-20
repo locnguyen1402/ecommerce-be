@@ -7,7 +7,7 @@ public class OrderContact(
     string contactName,
     string phoneNumber,
     AddressInfo addressInfo,
-    string notes,
+    string? notes,
     Guid orderId
     ) : Entity
 {

@@ -8,7 +8,7 @@ public class AddressInfo : ValueObject
     /// <summary>
     /// Gets or sets the provinceId.
     /// </summary>
-    public string ProvinceId { get; set; }
+    public Guid ProvinceId { get; set; }
 
     /// <summary>
     /// Gets or sets the province name.
@@ -23,7 +23,7 @@ public class AddressInfo : ValueObject
     /// <summary>
     /// Gets or sets the districtId.
     /// </summary>
-    public string DistrictId { get; set; }
+    public Guid DistrictId { get; set; }
 
     /// <summary>
     /// Gets or sets the district.
@@ -38,7 +38,7 @@ public class AddressInfo : ValueObject
     /// <summary>
     /// Gets or sets the wardId.
     /// </summary>
-    public string WardId { get; set; }
+    public Guid WardId { get; set; }
 
     /// <summary>
     /// Gets or sets the wardName.
@@ -74,13 +74,13 @@ public class AddressInfo : ValueObject
     // because has a complex type as a parameter in the default constructor.
     public AddressInfo()
     {
-        ProvinceId = Guid.Empty.ToString();
+        ProvinceId = Guid.Empty;
         ProvinceName = string.Empty;
         ProvinceCode = string.Empty;
-        DistrictId = Guid.Empty.ToString();
+        DistrictId = Guid.Empty;
         DistrictName = string.Empty;
         DistrictCode = string.Empty;
-        WardId = Guid.Empty.ToString();
+        WardId = Guid.Empty;
         WardName = string.Empty;
         WardCode = string.Empty;
 
@@ -91,9 +91,9 @@ public class AddressInfo : ValueObject
     }
 
     public AddressInfo(
-        string provinceId, string provinceName, string? provinceCode,
-        string districtId, string districtName, string? districtCode,
-        string wardId, string wardName, string? wardCode,
+        Guid provinceId, string provinceName, string? provinceCode,
+        Guid districtId, string districtName, string? districtCode,
+        Guid wardId, string wardName, string? wardCode,
         string addressLine1, string? addressLine2, string? addressLine3)
     {
         ProvinceId = provinceId;

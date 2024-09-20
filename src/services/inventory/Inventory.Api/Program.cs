@@ -6,9 +6,12 @@ using ECommerce.Inventory.Domain.AggregatesModel;
 using ECommerce.Shared.Common.Extensions;
 using ECommerce.Shared.Libs.Extensions;
 using ECommerce.Inventory.Api.Services;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 var Configuration = builder.Configuration;
+
+Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 
 // Db context
 var connectionString = Configuration.GetConnectionString("DefaultConnection")!;
@@ -24,10 +27,12 @@ builder.Services.AddScoped<IStoreRepository, StoreRepository>();
 builder.Services.AddScoped<IShopCollectionRepository, ShopCollectionRepository>();
 builder.Services.AddScoped<IProductPromotionRepository, ProductPromotionRepository>();
 builder.Services.AddScoped<IOrderPromotionRepository, OrderPromotionRepository>();
+builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
 
 builder.Services.AddScoped<IMerchantService, MerchantService>();
-
-
+builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<ICustomerService, CustomerService>();
 // Common dependencies
 builder.Services
     .ConfigureJson()

@@ -3,12 +3,12 @@ using ECommerce.Shared.Common.Infrastructure.Data;
 
 namespace ECommerce.Inventory.Domain.AggregatesModel;
 
-public class Order(Guid customerId) : Entity
+public class Order(Guid customerId, string phoneNumber) : Entity
 {
     public string OrderNumber { get; private set; } = string.Empty;
     public Guid CustomerId { get; private set; } = customerId;
     public virtual Customer Customer { get; private set; } = null!;
-    public string PhoneNumber { get; private set; } = string.Empty;
+    public string PhoneNumber { get; private set; } = phoneNumber;
     public OrderStatus Status { get; private set; } = OrderStatus.TO_PAY;
     public PaymentStatus PaymentStatus { get; private set; } = PaymentStatus.UNPAID;
     public DateTimeOffset PaidAt { get; private set; }
@@ -26,8 +26,8 @@ public class Order(Guid customerId) : Entity
     public decimal TotalPrice { get; private set; } = 0;
     public DateTimeOffset DeliverySchedule { get; private set; }
     public OrderContact OrderContact { get; private set; } = null!;
-    public Guid StoreId { get; private set; }
-    public virtual Store Store { get; private set; } = null!;
+    public Guid MerchantId { get; private set; }
+    public virtual Merchant Merchant { get; private set; } = null!;
     private readonly HashSet<OrderItem> _orderItems = [];
     public virtual IReadOnlyCollection<OrderItem> OrderItems => _orderItems;
     private readonly HashSet<OrderStatusTracking> _orderStatusTrackings = [];
@@ -45,5 +45,53 @@ public class Order(Guid customerId) : Entity
 
         PaymentStatus = PaymentStatus.PAID;
         PaidAt = DateTimeOffset.UtcNow;
+    }
+
+    public void SetOrderContact(OrderContact orderContact)
+    {
+        OrderContact = orderContact;
+    }
+
+    public void SetDeliveryFee(decimal deliveryFee)
+    {
+        DeliveryFee = deliveryFee;
+    }
+
+    public void SetMerchant(Guid merchantId)
+    {
+        MerchantId = merchantId;
+    }
+
+    public void SetOrderNumber(string orderNumber)
+    {
+        OrderNumber = orderNumber;
+    }
+
+    public void AddOrderStatus(OrderStatus orderStatus)
+    {
+        Status = orderStatus;
+        var orderStatusTracking = new OrderStatusTracking(Id, orderStatus);
+
+        _orderStatusTrackings.Add(orderStatusTracking);
+    }
+
+    public void AddOrderItems(List<OrderItem> orderItems)
+    {
+        orderItems.ForEach(item => _orderItems.Add(item));
+
+        RecalculateTotalPrice();
+    }
+
+    public void RecalculateTotalPrice()
+    {
+        TotalItemPrice = _orderItems
+            .Aggregate((decimal)0, (total, item) => total + item.TotalPrice);
+
+        TotalPrice = TotalItemPrice + DeliveryFee;
+    }
+
+    public void SetPaymentMethod(PaymentMethod paymentMethod)
+    {
+        PaymentMethod = paymentMethod;
     }
 }

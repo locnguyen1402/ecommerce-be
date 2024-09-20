@@ -16,9 +16,6 @@ public class Store(string name, string slug, Guid merchantId) : Entity
     public Guid MerchantId { get; private set; } = merchantId;
     public virtual Merchant Merchant { get; private set; } = null!;
 
-    public readonly List<Order> _orders = [];
-    public virtual IReadOnlyCollection<Order> Orders => _orders;
-
     public void Update(string name, string? description, string? phoneNumber)
     {
         Name = name;
