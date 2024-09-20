@@ -22,6 +22,8 @@ builder.Services.AddScoped<IDiscountRepository, DiscountRepository>();
 builder.Services.AddScoped<IMerchantRepository, MerchantRepository>();
 builder.Services.AddScoped<IStoreRepository, StoreRepository>();
 builder.Services.AddScoped<IShopCollectionRepository, ShopCollectionRepository>();
+builder.Services.AddScoped<IProductPromotionRepository, ProductPromotionRepository>();
+builder.Services.AddScoped<IOrderPromotionRepository, OrderPromotionRepository>();
 
 builder.Services.AddScoped<IMerchantService, MerchantService>();
 

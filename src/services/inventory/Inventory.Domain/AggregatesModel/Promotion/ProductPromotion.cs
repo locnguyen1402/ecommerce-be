@@ -21,4 +21,17 @@ public class ProductPromotion(
     public ProductPromotionType Type { get; private set; } = ProductPromotionType.UNSPECIFIED;
     public readonly List<ProductPromotionItem> _items = [];
     public virtual IReadOnlyCollection<ProductPromotionItem> Items => _items;
+    public void SetNormalPromotion()
+    {
+        Type = ProductPromotionType.NORMAL;
+    }
+    public void SetFlashSalePromotion()
+    {
+        Type = ProductPromotionType.FLASH_SALE;
+    }
+    public void SetItems(List<ProductPromotionItem> items)
+    {
+        _items.Clear();
+        _items.AddRange(items);
+    }
 }

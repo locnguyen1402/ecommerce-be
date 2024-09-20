@@ -3,9 +3,9 @@ using ECommerce.Shared.Common.Infrastructure.Data;
 
 namespace ECommerce.Inventory.Domain.AggregatesModel;
 
-public class ProductPromotionItem(Guid productPromotionId, Guid productId) : Entity
+public class ProductPromotionItem(Guid productId) : Entity
 {
-    public Guid ProductPromotionId { get; private set; } = productPromotionId;
+    public Guid ProductPromotionId { get; private set; }
     public virtual ProductPromotion ProductPromotion { get; private set; } = null!;
     public Guid ProductId { get; private set; } = productId;
     public virtual Product Product { get; private set; } = null!;
@@ -18,7 +18,7 @@ public class ProductPromotionItem(Guid productPromotionId, Guid productId) : Ent
     public int Quantity { get; private set; }
     public NoProductsPerOrderLimit NoProductsPerOrderLimit { get; private set; } = NoProductsPerOrderLimit.UNLIMITED;
     public int MaxItemsPerOrder { get; private set; } = 0;
-    public ProductPromotionItem(Guid productPromotionId, Guid productId, Guid? productVariantId) : this(productPromotionId, productId)
+    public ProductPromotionItem(Guid productId, Guid? productVariantId) : this(productId)
     {
         ProductVariantId = productVariantId;
     }
