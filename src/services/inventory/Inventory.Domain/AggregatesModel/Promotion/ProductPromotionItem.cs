@@ -11,6 +11,7 @@ public class ProductPromotionItem(Guid productPromotionId, Guid productId)
     public Guid? ProductVariantId { get; private set; }
     public virtual ProductVariant? ProductVariant { get; private set; }
     public bool IsActive { get; private set; } = false;
+    public decimal ListPrice { get; private set; }
     public decimal DiscountPrice { get; private set; }
     public decimal DiscountPercentage { get; private set; }
     public int Quantity { get; private set; }
@@ -28,8 +29,14 @@ public class ProductPromotionItem(Guid productPromotionId, Guid productId)
     {
         IsActive = false;
     }
-    public void SetDiscount(decimal discountPrice, decimal discountPercentage)
+    public void SetDiscount(
+        decimal listPrice,
+        decimal discountPrice,
+        decimal discountPercentage
+    )
     {
+        // TODO: Validate discount price and percentage
+        ListPrice = listPrice;
         DiscountPrice = discountPrice;
         DiscountPercentage = discountPercentage;
     }
