@@ -828,3 +828,43 @@ BEGIN
 END $EF$;
 COMMIT;
 
+START TRANSACTION;
+
+
+DO $EF$
+BEGIN
+    IF NOT EXISTS(SELECT 1 FROM "__EFMigrationsHistory" WHERE "migration_id" = '20240920155521_UpdateVoucher') THEN
+    ALTER TABLE vouchers ADD merchant_id uuid NOT NULL DEFAULT '00000000-0000-0000-0000-000000000000';
+    END IF;
+END $EF$;
+
+DO $EF$
+BEGIN
+    IF NOT EXISTS(SELECT 1 FROM "__EFMigrationsHistory" WHERE "migration_id" = '20240920155521_UpdateVoucher') THEN
+    ALTER TABLE vouchers ADD status character varying(50) NOT NULL DEFAULT ('UNSPECIFIED');
+    END IF;
+END $EF$;
+
+DO $EF$
+BEGIN
+    IF NOT EXISTS(SELECT 1 FROM "__EFMigrationsHistory" WHERE "migration_id" = '20240920155521_UpdateVoucher') THEN
+    CREATE INDEX ix_vouchers_merchant_id ON vouchers (merchant_id);
+    END IF;
+END $EF$;
+
+DO $EF$
+BEGIN
+    IF NOT EXISTS(SELECT 1 FROM "__EFMigrationsHistory" WHERE "migration_id" = '20240920155521_UpdateVoucher') THEN
+    ALTER TABLE vouchers ADD CONSTRAINT fk_vouchers_merchants_merchant_id FOREIGN KEY (merchant_id) REFERENCES merchants (id) ON DELETE CASCADE;
+    END IF;
+END $EF$;
+
+DO $EF$
+BEGIN
+    IF NOT EXISTS(SELECT 1 FROM "__EFMigrationsHistory" WHERE "migration_id" = '20240920155521_UpdateVoucher') THEN
+    INSERT INTO "__EFMigrationsHistory" (migration_id, product_version)
+    VALUES ('20240920155521_UpdateVoucher', '8.0.1');
+    END IF;
+END $EF$;
+COMMIT;
+

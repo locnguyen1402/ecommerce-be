@@ -11,6 +11,7 @@ public class Voucher(string name, string code) : Entity
     /// There is only one voucher with same code IN_PROGRESS at a time
     /// </summary>
     public string Code { get; private set; } = code;
+    public VoucherStatus Status { get; private set; } = VoucherStatus.NEW;
     public DateTimeOffset StartDate { get; private set; }
     public DateTimeOffset EndDate { get; private set; }
     public VoucherAppliedOnType AppliedOnType { get; private set; } = VoucherAppliedOnType.ALL_PRODUCTS;
@@ -23,6 +24,8 @@ public class Voucher(string name, string code) : Entity
     public VoucherDiscountType DiscountType { get; private set; } = VoucherDiscountType.UNSPECIFIED;
     public decimal Value { get; private set; } = 0;
     public decimal? MaxValue { get; private set; } = 0;
+    public Guid MerchantId { get; private set; }
+    public virtual Merchant Merchant { get; private set; } = null!;
     public readonly List<Product> _products = [];
     public virtual IReadOnlyCollection<Product> Products => _products;
     public readonly List<VoucherProduct> _voucherProducts = [];
@@ -42,7 +45,7 @@ public class Voucher(string name, string code) : Entity
     {
         MaxQuantity += quantity;
     }
-    public void SetDiscountInfo(VoucherType type, VoucherDiscountType discountType, decimal value, decimal maxValue)
+    public void SetDiscountInfo(VoucherType type, VoucherDiscountType discountType, decimal value, decimal? maxValue)
     {
         Type = type;
         DiscountType = discountType;
@@ -67,5 +70,10 @@ public class Voucher(string name, string code) : Entity
     public void SetPopularType(VoucherPopularType popularType)
     {
         PopularType = popularType;
+    }
+
+    public void SetMerchant(Guid merchantId)
+    {
+        MerchantId = merchantId;
     }
 }

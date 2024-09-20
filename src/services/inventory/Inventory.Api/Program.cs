@@ -29,6 +29,7 @@ builder.Services.AddScoped<IProductPromotionRepository, ProductPromotionReposito
 builder.Services.AddScoped<IOrderPromotionRepository, OrderPromotionRepository>();
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
+builder.Services.AddScoped<IVoucherRepository, VoucherRepository>();
 
 builder.Services.AddScoped<IMerchantService, MerchantService>();
 builder.Services.AddScoped<IProductService, ProductService>();

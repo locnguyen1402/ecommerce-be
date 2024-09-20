@@ -10,7 +10,7 @@ public class CreateProductPromotionRequest
     public string Name { get; set; } = string.Empty;
     public string? Slug { get; set; } = string.Empty;
     public DateTimeOffset StartDate { get; set; }
-    public DateTimeOffset EndDate { get; private set; }
+    public DateTimeOffset EndDate { get; set; }
     public List<CreateProductPromotionItemRequest> Items { get; set; } = [];
     public HashSet<Guid> ProductIds => Items.Select(x => x.ProductId).ToHashSet();
 }

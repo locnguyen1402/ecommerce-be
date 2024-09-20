@@ -11,7 +11,7 @@ public class ProductPromotionItem(Guid productId) : Entity
     public virtual Product Product { get; private set; } = null!;
     public Guid? ProductVariantId { get; private set; }
     public virtual ProductVariant? ProductVariant { get; private set; }
-    public bool IsActive { get; private set; } = false;
+    public bool IsActive { get; private set; } = true;
     public decimal ListPrice { get; private set; } = 0;
     public decimal DiscountPrice { get; private set; } = 0;
     public decimal DiscountPercentage { get; private set; } = 0;

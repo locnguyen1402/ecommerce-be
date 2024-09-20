@@ -31,7 +31,9 @@ public class CreateProductPromotionCommandHandler : IEndpointHandler
         }
 
         var products = await productRepository.Query
-                        .Where(x => request.ProductIds.Contains(x.Id)).ToListAsync(cancellationToken);
+            .Include(x => x.ProductVariants)
+            .Where(x => request.ProductIds.Contains(x.Id))
+            .ToListAsync(cancellationToken);
 
         if (products.Count != request.ProductIds.Count)
         {
@@ -45,7 +47,10 @@ public class CreateProductPromotionCommandHandler : IEndpointHandler
         }
 
         var merchantId = await merchantService.GetMerchantIdAsync(cancellationToken);
-        var items = request.Items.SelectMany(x => MapToProductPromotionItems(x, products.First(p => p.Id == x.ProductId)));
+        var items = request.Items
+            .SelectMany(x => MapToProductPromotionItems(x, products.First(p => p.Id == x.ProductId)))
+            .ToList();
+
         var newPromotion = new ProductPromotion(
             request.Name,
             request.Name.ToGenerateRandomSlug(),
@@ -55,7 +60,7 @@ public class CreateProductPromotionCommandHandler : IEndpointHandler
         );
 
         newPromotion.SetNormalPromotion();
-        newPromotion.SetItems(items.ToList());
+        newPromotion.SetItems(items);
 
         await productPromotionRepository.AddAndSaveChangeAsync(newPromotion, cancellationToken);
 

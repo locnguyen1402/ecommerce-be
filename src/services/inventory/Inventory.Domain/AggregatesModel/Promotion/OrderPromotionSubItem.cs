@@ -11,7 +11,7 @@ public class OrderPromotionSubItem(Guid orderPromotionId, Guid productId) : Enti
     public virtual Product Product { get; private set; } = null!;
     public Guid? ProductVariantId { get; private set; }
     public virtual ProductVariant? ProductVariant { get; private set; }
-    public bool IsActive { get; private set; } = false;
+    public bool IsActive { get; private set; } = true;
     public OrderPromotionSubItemType Type { get; private set; } = OrderPromotionSubItemType.UNSPECIFIED;
     public decimal DiscountPrice { get; private set; } = 0;
     public decimal DiscountPercentage { get; private set; } = 0;

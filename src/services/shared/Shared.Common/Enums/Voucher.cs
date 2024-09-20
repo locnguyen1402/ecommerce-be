@@ -33,3 +33,10 @@ public enum VoucherPopularType
     PRIVATE = 2,
 }
 
+public enum VoucherStatus
+{
+    UNSPECIFIED,
+    NEW,
+    IN_PROCESS,
+    FINISHED,
+}

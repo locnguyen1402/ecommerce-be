@@ -25,6 +25,8 @@ public class Merchant(string name, string slug) : Entity
     public virtual IReadOnlyCollection<ProductPromotion> ProductPromotions => _productPromotions;
     public readonly List<Order> _orders = [];
     public virtual IReadOnlyCollection<Order> Orders => _orders;
+    public readonly List<Voucher> _vouchers = [];
+    public virtual IReadOnlyCollection<Voucher> Vouchers => _vouchers;
 
     public void Update(string name, string slug, string? description)
     {
