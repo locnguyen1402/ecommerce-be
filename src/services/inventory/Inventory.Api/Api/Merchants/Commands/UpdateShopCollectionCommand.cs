@@ -44,10 +44,12 @@ public class UpdateShopCollectionCommandHandler : IEndpointHandler
             return Results.NotFound("ShopCollection not found");
         }
 
-        shopCollection.Update(
+        shopCollection.UpdateGeneralInfo(
             request.Name
-            , request.Slug
-            , request.ParentId);
+            , request.Slug ?? shopCollection.Slug
+            , request.Description);
+
+        shopCollection.ChangeParent(request.ParentId);
 
         await shopCollectionRepository.UpdateAndSaveChangeAsync(shopCollection, cancellationToken);
 

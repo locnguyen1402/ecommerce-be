@@ -6,6 +6,7 @@ using ECommerce.Shared.Common.Infrastructure.Endpoint;
 using ECommerce.Inventory.Domain.AggregatesModel;
 using ECommerce.Inventory.Api.Merchants.Requests;
 using ECommerce.Inventory.Api.Categories.Specifications;
+using ECommerce.Shared.Libs.Extensions;
 
 namespace ECommerce.Inventory.Api.Merchants.Commands;
 
@@ -31,11 +32,12 @@ public class CreateMerchantCommandHandler : IEndpointHandler
             return Results.BadRequest("Slug is already taken");
         }
 
-        var newMerchant = new Merchant(request.Name, request.Slug);
+        var merchantSlug = request.Slug ?? request.Name.ToGenerateRandomSlug();
+        var newMerchant = new Merchant(request.Name, merchantSlug);
 
         newMerchant.Update(
             request.Name
-            , request.Slug
+            , merchantSlug
             , request.Description);
 
         if (request.CategoryIds.Count > 0)

@@ -6,6 +6,7 @@ using ECommerce.Shared.Common.Infrastructure.Endpoint;
 using ECommerce.Inventory.Domain.AggregatesModel;
 using ECommerce.Inventory.Api.Merchants.Requests;
 using ECommerce.Inventory.Api.Services;
+using ECommerce.Shared.Libs.Extensions;
 
 namespace ECommerce.Inventory.Api.Merchants.Commands;
 
@@ -28,7 +29,8 @@ public class CreateShopCollectionCommandHandler : IEndpointHandler
 
         var merchantId = await merchantService.GetMerchantIdAsync(cancellationToken);
 
-        var shopCollection = new ShopCollection(request.Name, request.Slug, request.ParentId);
+        var slug = request.Slug ?? request.Name.ToGenerateRandomSlug();
+        var shopCollection = new ShopCollection(request.Name, slug, request.Description, request.ParentId);
 
         shopCollection.SetMerchant(merchantId);
 

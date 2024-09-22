@@ -36,4 +36,16 @@ public class Category(string name, string slug, string? description, Guid? paren
             AddChild(category);
         }
     }
+    public void AddOrUpdateChildren(List<Category> categories)
+    {
+        _categories.RemoveAll(x => !categories.Any(a => a.Id == x.Id));
+
+        foreach (var category in categories)
+        {
+            if (!_categories.Any(x => x.Id == category.Id))
+            {
+                _categories.Add(category);
+            }
+        }
+    }
 }

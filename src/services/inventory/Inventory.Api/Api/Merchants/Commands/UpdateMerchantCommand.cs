@@ -1,10 +1,10 @@
 using FluentValidation;
+using Microsoft.EntityFrameworkCore;
 
 using ECommerce.Shared.Common.Infrastructure.Endpoint;
 
 using ECommerce.Inventory.Domain.AggregatesModel;
 using ECommerce.Inventory.Api.Merchants.Requests;
-using Microsoft.EntityFrameworkCore;
 using ECommerce.Inventory.Api.Categories.Specifications;
 
 namespace ECommerce.Inventory.Api.Merchants.Commands;
@@ -60,7 +60,7 @@ public class UpdateMerchantCommandHandler : IEndpointHandler
 
         merchant.Update(
             request.Name
-            , request.Slug
+            , request.Slug ?? merchant.Slug
             , request.Description);
 
         await merchantRepository.UpdateAndSaveChangeAsync(merchant, cancellationToken);

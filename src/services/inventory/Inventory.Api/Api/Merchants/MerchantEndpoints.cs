@@ -19,5 +19,8 @@ public class MerchantEndpoints(WebApplication app) : MinimalEndpoint(app, "/inve
         Builder.MapGet<GetMerchantByIdQueryHandler>("/{id:Guid}");
         Builder.MapPut<UpdateMerchantCommandHandler>("/{id:Guid}");
 
+        Builder.MapGet<GetShopCollectionsQueryHandler>("/shop-collections");
+        Builder.MapPost<CreateShopCollectionCommandHandler>("/shop-collections");
+        Builder.MapPut<UpdateShopCollectionCommandHandler>("/shop-collections/{id:Guid}");
     }
 }

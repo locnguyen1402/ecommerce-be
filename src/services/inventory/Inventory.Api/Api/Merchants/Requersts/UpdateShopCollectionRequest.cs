@@ -6,7 +6,8 @@ public class UpdateShopCollectionRequest
 {
     public Guid Id { get; set; }
     public string Name { get; set; } = string.Empty;
-    public string Slug { get; set; } = string.Empty;
+    public string? Slug { get; set; } = string.Empty;
+    public string? Description { get; set; }
     public Guid? ParentId { get; set; }
 }
 
@@ -24,7 +25,10 @@ public class UpdateShopCollectionRequestValidator : AbstractValidator<UpdateShop
             .MaximumLength(200);
 
         RuleFor(x => x.Slug)
-            .NotEmpty();
+            .MaximumLength(200);
+
+        RuleFor(x => x.Description)
+            .MaximumLength(500);
 
         RuleFor(x => x.ParentId)
             .Must(x => x != Guid.Empty && Guid.TryParse(x.ToString(), out _))
