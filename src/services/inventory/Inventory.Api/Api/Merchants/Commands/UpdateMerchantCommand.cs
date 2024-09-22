@@ -60,7 +60,7 @@ public class UpdateMerchantCommandHandler : IEndpointHandler
 
         merchant.Update(
             request.Name
-            , request.Slug ?? merchant.Slug
+            , string.IsNullOrEmpty(request.Slug) ? merchant.Slug : request.Slug
             , request.Description);
 
         await merchantRepository.UpdateAndSaveChangeAsync(merchant, cancellationToken);

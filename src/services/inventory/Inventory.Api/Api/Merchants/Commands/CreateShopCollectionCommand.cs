@@ -29,7 +29,7 @@ public class CreateShopCollectionCommandHandler : IEndpointHandler
 
         var merchantId = await merchantService.GetMerchantIdAsync(cancellationToken);
 
-        var slug = request.Slug ?? request.Name.ToGenerateRandomSlug();
+        var slug = string.IsNullOrEmpty(request.Slug) ?  request.Name.ToGenerateRandomSlug() : request.Slug;
         var shopCollection = new ShopCollection(request.Name, slug, request.Description, request.ParentId);
 
         shopCollection.SetMerchant(merchantId);

@@ -46,7 +46,7 @@ public class UpdateShopCollectionCommandHandler : IEndpointHandler
 
         shopCollection.UpdateGeneralInfo(
             request.Name
-            , request.Slug ?? shopCollection.Slug
+            , string.IsNullOrEmpty(request.Slug) ? shopCollection.Slug : request.Slug
             , request.Description);
 
         shopCollection.ChangeParent(request.ParentId);

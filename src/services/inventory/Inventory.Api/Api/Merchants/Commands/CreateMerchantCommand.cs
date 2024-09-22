@@ -32,12 +32,12 @@ public class CreateMerchantCommandHandler : IEndpointHandler
             return Results.BadRequest("Slug is already taken");
         }
 
-        var merchantSlug = request.Slug ?? request.Name.ToGenerateRandomSlug();
-        var newMerchant = new Merchant(request.Name, merchantSlug);
+        var slug = string.IsNullOrEmpty(request.Slug) ?  request.Name.ToGenerateRandomSlug() : request.Slug;
+        var newMerchant = new Merchant(request.Name, slug);
 
         newMerchant.Update(
             request.Name
-            , merchantSlug
+            , slug
             , request.Description);
 
         if (request.CategoryIds.Count > 0)
