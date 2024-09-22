@@ -22,6 +22,15 @@ public class ShopCollectionEntityConfiguration : BaseEntityConfiguration<ShopCol
 
         builder.HasIndex(i => i.Slug)
             .IsUnique();
+            
+        builder.Property(p => p.Description)
+            .HasMaxLength(500)
+            .HasDefaultValueSql("''");
+
+        builder.HasMany(p => p.ShopCollections)
+            .WithOne(c => c.Parent)
+            .HasForeignKey(c => c.ParentId)
+            .OnDelete(DeleteBehavior.Restrict);
 
         builder.HasMany(p => p.Products)
             .WithMany(c => c.ShopCollections)
