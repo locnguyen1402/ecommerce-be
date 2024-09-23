@@ -14,6 +14,7 @@ public class ProductEndpoints(WebApplication app) : MinimalEndpoint(app, "/inven
     public override void MapEndpoints()
     {
         Builder.MapGet<GetProductsQueryHandler>("/");
+        Builder.MapGet<FilterProductsQueryHandler>("/filter");
         Builder.MapPost<CreateProductCommandHandler>("/");
 
         Builder.MapGet<GetProductByIdQueryHandler>("/{id:Guid}");

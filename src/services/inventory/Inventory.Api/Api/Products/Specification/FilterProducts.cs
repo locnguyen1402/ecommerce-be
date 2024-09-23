@@ -1,0 +1,56 @@
+using System.Linq.Expressions;
+using Microsoft.EntityFrameworkCore;
+
+using ECommerce.Shared.Common.Queries;
+using ECommerce.Shared.Common.Helper;
+using ECommerce.Shared.Common.Infrastructure.Specification;
+
+using ECommerce.Inventory.Domain.AggregatesModel;
+
+namespace ECommerce.Inventory.Api.Products.Specifications;
+
+public class FilterProductsSpecification : Specification<Product>
+{
+    public FilterProductsSpecification
+    (
+        string? keyword,
+        PagingQuery? pagingQuery = null
+    )
+    {
+        Builder.Where(BuildCriteria(keyword));
+
+        if (pagingQuery != null)
+        {
+            Builder.Paginate(pagingQuery);
+        }
+    }
+
+    public static Expression<Func<Product, bool>> BuildCriteria(string? keyword)
+    {
+        Expression<Func<Product, bool>> criteria = p => true;
+
+        if (!string.IsNullOrEmpty(keyword))
+            criteria = criteria.And(p => EF.Functions.ILike(EF.Functions.Unaccent(p.Name), EF.Functions.Unaccent($"%{keyword}%")));
+
+        return criteria;
+    }
+
+}
+
+public class FilterProductsSpecification<TResult> : Specification<Product, TResult>
+{
+    public FilterProductsSpecification
+    (
+        Expression<Func<Product, TResult>> selector,
+        string? keyword,
+        PagingQuery? pagingQuery = null
+    ) : base(selector)
+    {
+        Builder.Where(FilterProductsSpecification.BuildCriteria(keyword));
+
+        if (pagingQuery != null)
+        {
+            Builder.Paginate(pagingQuery);
+        }
+    }
+}

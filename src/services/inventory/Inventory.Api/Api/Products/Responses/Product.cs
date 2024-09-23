@@ -5,6 +5,19 @@ using ECommerce.Inventory.Domain.AggregatesModel;
 
 namespace ECommerce.Inventory.Api.Products.Responses;
 
+public record FilteredProductResponse(
+    Guid Id,
+    string Name
+) {
+    private List<ProductVariant> ProductVariants { get; } = [];
+    public int Stock => ProductVariants.Sum(x => x.Stock);
+    public decimal Price => ProductVariants.Count > 0 ? ProductVariants.Min(x => x.Price) : 0;
+    public FilteredProductResponse(Guid id, string name, List<ProductVariant> productVariants)
+        : this(id, name) {
+        ProductVariants = productVariants;
+    }
+}
+
 public record AdminProductDetailResponse(
     Guid Id,
     string Name,
@@ -64,6 +77,16 @@ public static class ProductProjection
     {
         return ToAdminProductDetailResponse().Compile().Invoke(product);
     }
+
+    public static Expression<Func<Product, FilteredProductResponse>> ToFilteredProductResponse()
+        => x =>
+        new FilteredProductResponse(
+            x.Id,
+            x.Name,
+            x.ProductVariants
+                .AsQueryable()
+                .ToList()
+        );
 
     public static Expression<Func<Product, AdminProductDetailResponse>> ToAdminProductDetailResponse()
         => x =>
