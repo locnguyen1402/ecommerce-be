@@ -489,62 +489,6 @@ namespace ECommerce.Inventory.DbMigrator.Seeds.Identity
                 });
             }
 
-            if (await manager.FindByClientIdAsync("blog") is null)
-            {
-                await manager.CreateAsync(new OpenIddictApplicationDescriptor()
-                {
-                    ClientId = "blog",
-                    ClientSecret = "be4b8496-12a0-4626-af9b-6976b2fd248d",
-                    ClientType = ClientTypes.Confidential,
-                    DisplayName = "Blog Api",
-                    Permissions = {
-                        Permissions.Endpoints.Introspection
-                    },
-                });
-            }
-
-            if (await manager.FindByClientIdAsync("catalog") is null)
-            {
-                await manager.CreateAsync(new OpenIddictApplicationDescriptor()
-                {
-                    ClientId = "catalog",
-                    ClientSecret = "45dec704-8d39-4b5b-b89d-43b3baec2185",
-                    ClientType = ClientTypes.Confidential,
-                    DisplayName = "Catalog Api",
-                    Permissions = {
-                        Permissions.Endpoints.Introspection
-                    },
-                });
-            }
-
-            if (await manager.FindByClientIdAsync("cms") is null)
-            {
-                await manager.CreateAsync(new OpenIddictApplicationDescriptor()
-                {
-                    ClientId = "cms",
-                    ClientSecret = "3f1a02cd-caac-4893-a520-b7376a4156ea",
-                    ClientType = ClientTypes.Confidential,
-                    DisplayName = "CMS Api",
-                    Permissions = {
-                        Permissions.Endpoints.Introspection
-                    },
-                });
-            }
-
-            if (await manager.FindByClientIdAsync("customer") is null)
-            {
-                await manager.CreateAsync(new OpenIddictApplicationDescriptor()
-                {
-                    ClientId = "customer",
-                    ClientSecret = "29d086ab-8c52-49fb-8a08-f896616f8108",
-                    ClientType = ClientTypes.Confidential,
-                    DisplayName = "Customer Api",
-                    Permissions = {
-                        Permissions.Endpoints.Introspection
-                    },
-                });
-            }
-
             if (await manager.FindByClientIdAsync("identity") is null)
             {
                 await manager.CreateAsync(new OpenIddictApplicationDescriptor()
@@ -553,90 +497,6 @@ namespace ECommerce.Inventory.DbMigrator.Seeds.Identity
                     ClientSecret = "4973c8e7-a771-42ce-9b25-4fe86c67a989",
                     ClientType = ClientTypes.Confidential,
                     DisplayName = "Identity Api",
-                    Permissions = {
-                        Permissions.Endpoints.Introspection
-                    },
-                });
-            }
-
-            if (await manager.FindByClientIdAsync("notification") is null)
-            {
-                await manager.CreateAsync(new OpenIddictApplicationDescriptor()
-                {
-                    ClientId = "notification",
-                    ClientSecret = "d11b86ba-1052-4c15-88e9-a63fdb569379",
-                    ClientType = ClientTypes.Confidential,
-                    DisplayName = "Notification Api",
-                    Permissions = {
-                        Permissions.Endpoints.Introspection
-                    },
-                });
-            }
-
-            if (await manager.FindByClientIdAsync("object-storage") is null)
-            {
-                await manager.CreateAsync(new OpenIddictApplicationDescriptor()
-                {
-                    ClientId = "object-storage",
-                    ClientSecret = "e4826a7b-b17e-42e4-9325-7b481a6d0ac9",
-                    ClientType = ClientTypes.Confidential,
-                    DisplayName = "Object Storage Api",
-                    Permissions = {
-                        Permissions.Endpoints.Introspection
-                    },
-                });
-            }
-
-            if (await manager.FindByClientIdAsync("ordering") is null)
-            {
-                await manager.CreateAsync(new OpenIddictApplicationDescriptor()
-                {
-                    ClientId = "ordering",
-                    ClientSecret = "2fcca345-6d3f-4156-b465-9fa70abb64e9",
-                    ClientType = ClientTypes.Confidential,
-                    DisplayName = "Ordering Api",
-                    Permissions = {
-                        Permissions.Endpoints.Introspection
-                    },
-                });
-            }
-
-            if (await manager.FindByClientIdAsync("store") is null)
-            {
-                await manager.CreateAsync(new OpenIddictApplicationDescriptor()
-                {
-                    ClientId = "store",
-                    ClientSecret = "c6b564b6-fc0c-4556-b1e3-23457ef8c446",
-                    ClientType = ClientTypes.Confidential,
-                    DisplayName = "Store Api",
-                    Permissions = {
-                        Permissions.Endpoints.Introspection
-                    },
-                });
-            }
-
-            if (await manager.FindByClientIdAsync("scheduling") is null)
-            {
-                await manager.CreateAsync(new OpenIddictApplicationDescriptor()
-                {
-                    ClientId = "scheduling",
-                    ClientSecret = "9e32f536-268f-4fa0-b326-c67c61ae0755",
-                    ClientType = ClientTypes.Confidential,
-                    DisplayName = "Scheduling Api",
-                    Permissions = {
-                        Permissions.Endpoints.Introspection
-                    },
-                });
-            }
-
-            if (await manager.FindByClientIdAsync("reporting") is null)
-            {
-                await manager.CreateAsync(new OpenIddictApplicationDescriptor()
-                {
-                    ClientId = "reporting",
-                    ClientSecret = "9e32f536-268f-4fa0-b326-c67c61ae07ee",
-                    ClientType = ClientTypes.Confidential,
-                    DisplayName = "Reporting Api",
                     Permissions = {
                         Permissions.Endpoints.Introspection
                     },
@@ -660,54 +520,6 @@ namespace ECommerce.Inventory.DbMigrator.Seeds.Identity
                 });
             }
 
-            if (await manager.FindByNameAsync("blog.all") is null)
-            {
-                await manager.CreateAsync(new OpenIddictScopeDescriptor()
-                {
-                    Name = "blog.all",
-                    DisplayName = "Fully permission on Blog Api",
-                    Resources = {
-                        "blog"
-                    },
-                });
-            }
-
-            if (await manager.FindByNameAsync("catalog.all") is null)
-            {
-                await manager.CreateAsync(new OpenIddictScopeDescriptor()
-                {
-                    Name = "catalog.all",
-                    DisplayName = "Fully permission on Catalog Api",
-                    Resources = {
-                        "catalog"
-                    },
-                });
-            }
-
-            if (await manager.FindByNameAsync("cms.all") is null)
-            {
-                await manager.CreateAsync(new OpenIddictScopeDescriptor()
-                {
-                    Name = "cms.all",
-                    DisplayName = "Fully permission on CMS Api",
-                    Resources = {
-                        "cms"
-                    },
-                });
-            }
-
-            if (await manager.FindByNameAsync("customer.all") is null)
-            {
-                await manager.CreateAsync(new OpenIddictScopeDescriptor()
-                {
-                    Name = "customer.all",
-                    DisplayName = "Fully permission on Customer Api",
-                    Resources = {
-                        "customer"
-                    },
-                });
-            }
-
             if (await manager.FindByNameAsync("identity.all") is null)
             {
                 await manager.CreateAsync(new OpenIddictScopeDescriptor()
@@ -716,66 +528,6 @@ namespace ECommerce.Inventory.DbMigrator.Seeds.Identity
                     DisplayName = "Fully permission on Identity Api",
                     Resources = {
                         "identity"
-                    },
-                });
-            }
-
-            if (await manager.FindByNameAsync("notification.all") is null)
-            {
-                await manager.CreateAsync(new OpenIddictScopeDescriptor()
-                {
-                    Name = "notification.all",
-                    DisplayName = "Fully permission on Notification Api",
-                    Resources = {
-                        "notification"
-                    },
-                });
-            }
-
-            if (await manager.FindByNameAsync("object-storage.all") is null)
-            {
-                await manager.CreateAsync(new OpenIddictScopeDescriptor()
-                {
-                    Name = "object-storage.all",
-                    DisplayName = "Fully permission on Object Storage Api",
-                    Resources = {
-                        "object-storage"
-                    },
-                });
-            }
-
-            if (await manager.FindByNameAsync("ordering.all") is null)
-            {
-                await manager.CreateAsync(new OpenIddictScopeDescriptor()
-                {
-                    Name = "ordering.all",
-                    DisplayName = "Fully permission on Ordering Api",
-                    Resources = {
-                        "ordering"
-                    },
-                });
-            }
-
-            if (await manager.FindByNameAsync("store.all") is null)
-            {
-                await manager.CreateAsync(new OpenIddictScopeDescriptor()
-                {
-                    Name = "store.all",
-                    DisplayName = "Fully permission on Store Api",
-                    Resources = {
-                        "store"
-                    },
-                });
-            }
-
-            if (await manager.FindByNameAsync("reporting.all") is null)
-            {
-                await manager.CreateAsync(new OpenIddictScopeDescriptor()
-                {
-                    Name = "reporting.all",
-                    DisplayName = "Fully permission on Reporting Api",
-                    Resources = {
-                        "reporting"
                     },
                 });
             }

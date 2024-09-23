@@ -2,9 +2,8 @@
 
 using ECommerce.Inventory.Domain.AggregatesModel;
 using ECommerce.Inventory.Data.EntityConfigurations;
-using ECommerce.Inventory.Domain.AggregatesModel.Identity;
-using Microsoft.AspNetCore.DataProtection.EntityFrameworkCore;
 using ECommerce.Shared.Common.Infrastructure.Data;
+using ECommerce.Shared.Data.Extensions;
 
 namespace ECommerce.Inventory.Data;
 
@@ -41,42 +40,10 @@ public class InventoryDbContext(DbContextOptions<InventoryDbContext> options) : 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        // Product & Category
-        modelBuilder.ApplyConfiguration(new CategoryEntityConfiguration());
-        modelBuilder.ApplyConfiguration(new ProductEntityConfiguration());
-        modelBuilder.ApplyConfiguration(new ProductAttributeEntityConfiguration());
-        modelBuilder.ApplyConfiguration(new ProductVariantEntityConfiguration());
-        modelBuilder.ApplyConfiguration(new ProductVariantAttributeValueEntityConfiguration());
-        modelBuilder.ApplyConfiguration(new AttributeValueEntityConfiguration());
+        modelBuilder.ConfigureExtensions();
+        modelBuilder.UseCustomDbFunctions();
+        modelBuilder.UseCustomPostgreSQLDbFunctions();
 
-        // Discount
-        modelBuilder.ApplyConfiguration(new DiscountEntityConfiguration());
-
-        // Merchant & Store
-        modelBuilder.ApplyConfiguration(new MerchantEntityConfiguration());
-        modelBuilder.ApplyConfiguration(new MerchantCategoryEntityConfiguration());
-        modelBuilder.ApplyConfiguration(new StoreEntityConfiguration());
-        modelBuilder.ApplyConfiguration(new ShopCollectionEntityConfiguration());
-
-        // Order
-        modelBuilder.ApplyConfiguration(new OrderEntityConfiguration());
-        modelBuilder.ApplyConfiguration(new OrderItemEntityConfiguration());
-        modelBuilder.ApplyConfiguration(new OrderContactEntityConfiguration());
-        modelBuilder.ApplyConfiguration(new OrderStatusTrackingEntityConfiguration());
-        modelBuilder.ApplyConfiguration(new PaymentMethodTrackingEntityConfiguration());
-
-        // Voucher
-        modelBuilder.ApplyConfiguration(new VoucherEntityConfiguration());
-
-        // Promotion
-        modelBuilder.ApplyConfiguration(new OrderPromotionEntityConfiguration());
-        modelBuilder.ApplyConfiguration(new OrderPromotionItemEntityConfiguration());
-        modelBuilder.ApplyConfiguration(new OrderPromotionSubItemEntityConfiguration());
-        modelBuilder.ApplyConfiguration(new ProductPromotionEntityConfiguration());
-        modelBuilder.ApplyConfiguration(new ProductPromotionItemEntityConfiguration());
-
-        // Customer
-        modelBuilder.ApplyConfiguration(new CustomerEntityConfiguration());
-        modelBuilder.ApplyConfiguration(new ContactEntityConfiguration());
+        ModelBuilderExtensions.ConfigureInventoryEntitiesExtensions(modelBuilder);
     }
 }

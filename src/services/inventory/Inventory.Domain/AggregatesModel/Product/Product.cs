@@ -3,6 +3,8 @@ namespace ECommerce.Inventory.Domain.AggregatesModel;
 public class Product(string name, string slug, string? description) : EntityWithDiscounts
 {
     public string Slug { get; private set; } = slug;
+    // TODO: config unique following by business rule of warehouse
+    public string Sku { get; private set; } = string.Empty;
     public string Name { get; private set; } = name;
     public string Description { get; private set; } = description ?? string.Empty;
     // public decimal Price => ProductVariants.Min(x => x.Price);

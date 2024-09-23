@@ -5,13 +5,17 @@
     <RootNamespace>ECommerce.Inventory.Domain</RootNamespace>
   </PropertyGroup>
 
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>  
+
   <!-- Dependencies -->
   <ItemGroup>
     <ProjectReference Include="../../shared/Shared.Common/Shared.Common.csproj" />
     <ProjectReference Include="../../shared/Shared.Libs/Shared.Libs.csproj" />
   </ItemGroup>
 
-  <!-- Identity dependencies -->
+  <!-- BEGIN: Identity dependencies -->
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" />
     <PackageReference Include="OpenIddict.AspNetCore" />
@@ -19,6 +23,6 @@
     <PackageReference Include="OpenIddict.EntityFrameworkCore.Models" />
     <PackageReference Include="OpenIddict.Abstractions" />
   </ItemGroup>
-
+  <!-- END: Identity dependencies -->
 
 </Project>

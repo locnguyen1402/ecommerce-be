@@ -23,6 +23,7 @@ namespace ECommerce.Inventory.DbMigrator.PostgreSQL.Migrations
                 .HasAnnotation("ProductVersion", "8.0.1")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
+            NpgsqlModelBuilderExtensions.HasPostgresExtension(modelBuilder, "unaccent");
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
             modelBuilder.Entity("Discount_AppliedToCategories", b =>
@@ -812,10 +813,6 @@ namespace ECommerce.Inventory.DbMigrator.PostgreSQL.Migrations
                     b.Property<bool>("Predefined")
                         .HasColumnType("boolean")
                         .HasColumnName("predefined");
-
-                    b.Property<byte>("Status")
-                        .HasColumnType("smallint")
-                        .HasColumnName("status");
 
                     b.Property<DateTimeOffset?>("UpdatedAt")
                         .HasColumnType("timestamp with time zone")

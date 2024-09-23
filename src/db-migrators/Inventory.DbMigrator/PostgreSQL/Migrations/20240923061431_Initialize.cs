@@ -15,6 +15,9 @@ namespace ECommerce.Inventory.DbMigrator.PostgreSQL.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.AlterDatabase()
+                .Annotation("Npgsql:PostgresExtension:unaccent", ",,");
+
             migrationBuilder.CreateTable(
                 name: "applications",
                 columns: table => new
@@ -216,7 +219,6 @@ namespace ECommerce.Inventory.DbMigrator.PostgreSQL.Migrations
                 {
                     id = table.Column<Guid>(type: "uuid", nullable: false),
                     predefined = table.Column<bool>(type: "boolean", nullable: false),
-                    status = table.Column<byte>(type: "smallint", nullable: false),
                     description = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: true, defaultValueSql: "''"),
                     permissions = table.Column<List<string>>(type: "text[]", nullable: false),
                     enabled = table.Column<bool>(type: "boolean", nullable: false),
