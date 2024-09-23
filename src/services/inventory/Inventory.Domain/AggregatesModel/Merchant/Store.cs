@@ -1,8 +1,8 @@
-using ECommerce.Shared.Common.Infrastructure.Data;
+using ECommerce.Shared.Common.AggregatesModel.Auditing;
 
 namespace ECommerce.Inventory.Domain.AggregatesModel;
 
-public class Store(string name, string slug, Guid merchantId) : Entity
+public class Store(string name, string slug, Guid merchantId) : AuditedAggregateRoot
 {
     public string Name { get; private set; } = name;
     public string Slug { get; private set; } = slug;

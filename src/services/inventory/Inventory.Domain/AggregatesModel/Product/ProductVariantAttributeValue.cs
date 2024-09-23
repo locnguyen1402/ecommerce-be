@@ -1,8 +1,8 @@
-using ECommerce.Shared.Common.Infrastructure.Data;
+using ECommerce.Shared.Common.AggregatesModel.Auditing;
 
 namespace ECommerce.Inventory.Domain.AggregatesModel;
 
-public class ProductVariantAttributeValue : Entity
+public class ProductVariantAttributeValue : AuditedAggregateRoot
 {
     public Guid ProductVariantId { get; set; }
     public ProductVariant? ProductVariant { get; set; }

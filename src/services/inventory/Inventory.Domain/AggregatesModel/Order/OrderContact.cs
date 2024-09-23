@@ -1,5 +1,5 @@
+using ECommerce.Shared.Common.AggregatesModel.Auditing;
 using ECommerce.Shared.Common.AggregatesModel.Common;
-using ECommerce.Shared.Common.Infrastructure.Data;
 
 namespace ECommerce.Inventory.Domain.AggregatesModel;
 
@@ -9,7 +9,7 @@ public class OrderContact(
     AddressInfo addressInfo,
     string? notes,
     Guid orderId
-    ) : Entity
+    ) : AuditedAggregateRoot
 {
     public string ContactName { get; private set; } = contactName;
     public string PhoneNumber { get; private set; } = phoneNumber;

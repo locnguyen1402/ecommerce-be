@@ -1,5 +1,3 @@
-using ECommerce.Shared.Common.Infrastructure.Data;
-
 namespace ECommerce.Inventory.Domain.AggregatesModel;
 
 public class Category(string name, string slug, string? description, Guid? parentId) : EntityWithDiscounts

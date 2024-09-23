@@ -3,6 +3,6 @@ using ECommerce.Shared.Common.Infrastructure.Repositories;
 
 namespace ECommerce.Inventory.Data.Repositories;
 
-public class OrderPromotionRepository(InventoryDbContext dbContext) : Repository<OrderPromotion>(dbContext), IOrderPromotionRepository
+public class OrderPromotionRepository(InventoryDbContext dbContext) : Repository<InventoryDbContext, OrderPromotion>(dbContext), IOrderPromotionRepository
 {
 }

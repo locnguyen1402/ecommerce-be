@@ -1,8 +1,8 @@
-using ECommerce.Shared.Common.Infrastructure.Data;
+using ECommerce.Shared.Common.AggregatesModel.Auditing;
 
 namespace ECommerce.Inventory.Domain.AggregatesModel;
 
-public class ShopCollectionProduct : Entity
+public class ShopCollectionProduct : AuditedAggregateRoot
 {
     public Guid ShopCollectionId { get; private set; }
     public Guid ProductId { get; private set; }

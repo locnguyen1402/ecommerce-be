@@ -13,7 +13,7 @@
   <!-- Dependencies -->
   <ItemGroup>
     <ProjectReference Include="../../shared/Shared.Common/Shared.Common.csproj" />
-
+    <ProjectReference Include="../../shared/Shared.Data/Shared.Data.csproj" />
     <ProjectReference Include="../Inventory.Domain/Inventory.Domain.csproj" />
   </ItemGroup>
 

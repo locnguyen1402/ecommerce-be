@@ -31,7 +31,9 @@ public class CreateFlashSalePromotionHandler : IEndpointHandler
         }
 
         var products = await productRepository.Query
-                        .Where(x => request.ProductIds.Contains(x.Id)).ToListAsync(cancellationToken);
+            .Include(x => x.ProductVariants)
+            .Where(x => request.ProductIds.Contains(x.Id))
+            .ToListAsync(cancellationToken);
 
         if (products.Count != request.ProductIds.Count)
         {

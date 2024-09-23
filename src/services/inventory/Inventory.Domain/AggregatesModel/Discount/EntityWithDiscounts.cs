@@ -1,8 +1,8 @@
-using ECommerce.Shared.Common.Infrastructure.Data;
+using ECommerce.Shared.Common.AggregatesModel.Auditing;
 
 namespace ECommerce.Inventory.Domain.AggregatesModel;
 
-public abstract class EntityWithDiscounts : Entity, IDiscountable
+public abstract class EntityWithDiscounts : AuditedAggregateRoot, IDiscountable
 {
     public readonly List<Discount> _appliedDiscounts = [];
 

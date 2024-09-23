@@ -1,4 +1,4 @@
-using ECommerce.Shared.Common.Infrastructure.Data;
+using ECommerce.Shared.Common.AggregatesModel.Auditing;
 
 namespace ECommerce.Inventory.Domain.AggregatesModel;
 
@@ -7,7 +7,7 @@ public class OrderItem(
     Guid? productVariantId,
     decimal unitPrice,
     int quantity
-) : Entity
+) : AuditedAggregateRoot
 {
     public Guid OrderId { get; private set; }
     public virtual Order Order { get; private set; } = null!;

@@ -1,9 +1,9 @@
+using ECommerce.Shared.Common.AggregatesModel.Auditing;
 using ECommerce.Shared.Common.Enums;
-using ECommerce.Shared.Common.Infrastructure.Data;
 
 namespace ECommerce.Inventory.Domain.AggregatesModel;
 
-public class OrderStatusTracking(Guid orderId, OrderStatus orderStatus) : Entity
+public class OrderStatusTracking(Guid orderId, OrderStatus orderStatus) : AuditedAggregateRoot
 {
     public Guid OrderId { get; set; } = orderId;
     public OrderStatus OrderStatus { get; set; } = orderStatus;

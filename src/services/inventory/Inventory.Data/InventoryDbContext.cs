@@ -2,6 +2,8 @@
 
 using ECommerce.Inventory.Domain.AggregatesModel;
 using ECommerce.Inventory.Data.EntityConfigurations;
+using ECommerce.Inventory.Domain.AggregatesModel.Identity;
+using Microsoft.AspNetCore.DataProtection.EntityFrameworkCore;
 using ECommerce.Shared.Common.Infrastructure.Data;
 
 namespace ECommerce.Inventory.Data;

@@ -11,4 +11,14 @@
     <ProjectReference Include="../../shared/Shared.Libs/Shared.Libs.csproj" />
   </ItemGroup>
 
+  <!-- Identity dependencies -->
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" />
+    <PackageReference Include="OpenIddict.AspNetCore" />
+    <PackageReference Include="OpenIddict.EntityFrameworkCore" />
+    <PackageReference Include="OpenIddict.EntityFrameworkCore.Models" />
+    <PackageReference Include="OpenIddict.Abstractions" />
+  </ItemGroup>
+
+
 </Project>

@@ -1,8 +1,8 @@
-using ECommerce.Shared.Common.Infrastructure.Data;
+using ECommerce.Shared.Common.AggregatesModel.Auditing;
 
 namespace ECommerce.Inventory.Domain.AggregatesModel;
 
-public class AttributeValue(string value) : Entity()
+public class AttributeValue(string value) : AuditedAggregateRoot
 {
     public string Value { get; private set; } = value;
     public Guid? ProductAttributeId { get; private set; }

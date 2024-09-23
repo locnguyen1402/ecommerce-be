@@ -1,13 +1,13 @@
+using ECommerce.Shared.Common.AggregatesModel.Auditing;
 using ECommerce.Shared.Common.AggregatesModel.Common;
 using ECommerce.Shared.Common.Enums;
-using ECommerce.Shared.Common.Infrastructure.Data;
 
 namespace ECommerce.Inventory.Domain.AggregatesModel;
 
 public class Contact(
     AddressType type
     , bool isDefault
-) : Entity
+) : AuditedAggregateRoot
 {
     public AddressType Type { get; private set; } = type;
 

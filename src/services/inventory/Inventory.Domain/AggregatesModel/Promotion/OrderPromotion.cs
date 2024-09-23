@@ -1,5 +1,5 @@
+using ECommerce.Shared.Common.AggregatesModel.Auditing;
 using ECommerce.Shared.Common.Enums;
-using ECommerce.Shared.Common.Infrastructure.Data;
 
 namespace ECommerce.Inventory.Domain.AggregatesModel;
 
@@ -9,7 +9,7 @@ public class OrderPromotion(
     , DateTimeOffset startDate
     , DateTimeOffset endDate
     , Guid merchantId
-) : Entity
+) : AuditedAggregateRoot
 {
     public string Name { get; private set; } = name;
     public string Slug { get; private set; } = slug;

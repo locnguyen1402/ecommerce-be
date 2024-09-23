@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Inventory.Data", "src\servi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Inventory.Domain", "src\services\inventory\Inventory.Domain\Inventory.Domain.csproj", "{DB92BA77-03C8-41D6-A290-0FB24D2E445A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Inventory.Infrastructure", "src\services\inventory\Inventory.Infrastructure\Inventory.Infrastructure.csproj", "{41153785-9FB0-499A-B6B2-DF5D5137D492}"
+EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "shared", "shared", "{68DBB61C-71FB-49EC-908A-BDEED69E1733}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared.Common", "src\services\shared\Shared.Common\Shared.Common.csproj", "{D4E1CEED-6535-44D2-B563-D238100B2DA8}"
@@ -22,6 +24,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared.Data", "src\services\shared\Shared.Data\Shared.Data.csproj", "{9C4304EA-83F2-41FD-A9AF-89F2D126696D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared.Libs", "src\services\shared\Shared.Libs\Shared.Libs.csproj", "{87D683C4-438A-4013-8EB1-1211E3C6242B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared.Infrastructure", "src\services\shared\Shared.Infrastructure\Shared.Infrastructure.csproj", "{F02A96E3-06C1-40E9-A0FD-F2C77E8F101E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -56,6 +60,14 @@ Global
 		{87D683C4-438A-4013-8EB1-1211E3C6242B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{87D683C4-438A-4013-8EB1-1211E3C6242B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{87D683C4-438A-4013-8EB1-1211E3C6242B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{41153785-9FB0-499A-B6B2-DF5D5137D492}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{41153785-9FB0-499A-B6B2-DF5D5137D492}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{41153785-9FB0-499A-B6B2-DF5D5137D492}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{41153785-9FB0-499A-B6B2-DF5D5137D492}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F02A96E3-06C1-40E9-A0FD-F2C77E8F101E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F02A96E3-06C1-40E9-A0FD-F2C77E8F101E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F02A96E3-06C1-40E9-A0FD-F2C77E8F101E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F02A96E3-06C1-40E9-A0FD-F2C77E8F101E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{538E3224-205D-492F-8CF3-AF25BF938101} = {C1F40907-9148-4205-8544-9BA1D56372FB}
@@ -67,5 +79,7 @@ Global
 		{D4E1CEED-6535-44D2-B563-D238100B2DA8} = {68DBB61C-71FB-49EC-908A-BDEED69E1733}
 		{9C4304EA-83F2-41FD-A9AF-89F2D126696D} = {68DBB61C-71FB-49EC-908A-BDEED69E1733}
 		{87D683C4-438A-4013-8EB1-1211E3C6242B} = {68DBB61C-71FB-49EC-908A-BDEED69E1733}
+		{41153785-9FB0-499A-B6B2-DF5D5137D492} = {889D966A-CDCE-4801-ACEC-B1018F9EFA7A}
+		{F02A96E3-06C1-40E9-A0FD-F2C77E8F101E} = {68DBB61C-71FB-49EC-908A-BDEED69E1733}
 	EndGlobalSection
 EndGlobal

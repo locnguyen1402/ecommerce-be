@@ -1,10 +1,13 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
 using ECommerce.Shared.Data.Extensions;
 using ECommerce.Shared.Common.Constants;
+
+using ECommerce.Inventory.Domain.AggregatesModel.Identity;
 
 using ECommerce.Inventory.Data;
 using ECommerce.Inventory.DbMigrator.Seeds;
@@ -24,10 +27,31 @@ class Program
                 {
                     options.UseMigrationDatabase<InventoryDbContext>(connectionString);
                 });
+
+                services.AddDbContext<IdentityDbContext>((serviceProvider, options) =>
+                {
+                    options.UseMigrationDatabase<IdentityDbContext>(connectionString);
+                });
+
+                services.AddOpenIddict()
+                    .AddCore(options =>
+                    {
+                        options.UseEntityFrameworkCore()
+                            .UseDbContext<IdentityDbContext>()
+                            .ReplaceDefaultEntities<Application, Authorization, Scope, Token, Guid>();
+                    });
+
+                services.AddIdentity<User, Role>()
+                    .AddEntityFrameworkStores<IdentityDbContext>()
+                    .AddDefaultTokenProviders();
+
+                services.AddDistributedMemoryCache();
+                services.AddMemoryCache();
             })
             .Build();
 
-        await host.MigrateDbContext<InventoryDbContext>(Seed_Release_001.SeedAsync);
+        await host.MigrateDbContext<InventoryDbContext>(Seeds.Inventory.Seed_Release_001.SeedAsync);
+        await host.MigrateDbContext<IdentityDbContext>(Seeds.Identity.Seed_Release_001.SeedAsync);
 
         Environment.Exit(-1);
     }

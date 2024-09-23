@@ -33,12 +33,11 @@ public class CreateProductPromotionItemRequestValidator : AbstractValidator<Crea
 public class CreateProductVariantPromotionItemRequest
 {
     public Guid ProductVariantId { get; set; }
-    public bool IsActive { get; set; }
-    public decimal DiscountPrice { get; private set; }
-    public decimal DiscountPercentage { get; private set; }
-    public int Quantity { get; private set; }
-    public NoProductsPerOrderLimit NoProductsPerOrderLimit { get; private set; } = NoProductsPerOrderLimit.UNLIMITED;
-    public int MaxItemsPerOrder { get; private set; } = 0;
+    public decimal DiscountPrice { get; set; }
+    public decimal DiscountPercentage { get; set; }
+    public int Quantity { get; set; }
+    public NoProductsPerOrderLimit NoProductsPerOrderLimit { get; set; } = NoProductsPerOrderLimit.UNLIMITED;
+    public int MaxItemsPerOrder { get; set; } = 0;
 }
 
 public class CreateProductVariantPromotionItemRequestValidator : AbstractValidator<CreateProductVariantPromotionItemRequest>

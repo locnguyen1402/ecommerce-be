@@ -20,10 +20,10 @@ public class InventoryDbContextFactory : IDesignTimeDbContextFactory<InventoryDb
 
     /*
      * cd db-migrators/Inventory.DbMigrator
-     * dotnet ef migrations add UpdateShopCollection -c ECommerce.Inventory.Data.InventoryDbContext -o PostgreSQL/Migrations
+     * dotnet ef migrations add Initialize -c ECommerce.Inventory.Data.InventoryDbContext -o PostgreSQL/Migrations/Inventory
      *
-     * dotnet ef migrations script -i -c ECommerce.Inventory.Data.InventoryDbContext -o PostgreSQL/Scripts/000_Snapshot.sql
+     * dotnet ef migrations script -i -c ECommerce.Inventory.Data.InventoryDbContext -o PostgreSQL/Scripts/Inventory/000_Snapshot.sql
      *
-     * dotnet ef migrations script -i -c ECommerce.Inventory.Data.InventoryDbContext Initialize UpdateShopCollection -o PostgreSQL/Scripts/002_UpdateShopCollection.sql
+     * dotnet ef migrations script -i -c ECommerce.Inventory.Data.InventoryDbContext 0 Initialize -o PostgreSQL/Scripts/Inventory/001_Initialize.sql
      */
 }

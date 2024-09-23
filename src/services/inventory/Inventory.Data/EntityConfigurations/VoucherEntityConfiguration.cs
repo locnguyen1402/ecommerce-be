@@ -22,6 +22,13 @@ public class VoucherEntityConfiguration : BaseEntityConfiguration<Voucher>
             .HasMaxLength(150);
 
         builder
+            .Property(t => t.Status)
+            .IsRequired()
+            .HasConversion<string>()
+            .HasMaxLength(50)
+            .HasDefaultValueSql($"'{VoucherStatus.UNSPECIFIED}'");
+
+        builder
             .Property(t => t.AppliedOnType)
             .IsRequired()
             .HasConversion<string>()
@@ -95,5 +102,10 @@ public class VoucherEntityConfiguration : BaseEntityConfiguration<Voucher>
                         .OnDelete(DeleteBehavior.Cascade);
                 }
             );
+
+        builder.HasOne(p => p.Merchant)
+            .WithMany(c => c.Vouchers)
+            .HasForeignKey(c => c.MerchantId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

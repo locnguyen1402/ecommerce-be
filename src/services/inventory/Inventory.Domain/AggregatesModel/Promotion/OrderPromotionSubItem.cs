@@ -1,9 +1,9 @@
+using ECommerce.Shared.Common.AggregatesModel.Auditing;
 using ECommerce.Shared.Common.Enums;
-using ECommerce.Shared.Common.Infrastructure.Data;
 
 namespace ECommerce.Inventory.Domain.AggregatesModel;
 
-public class OrderPromotionSubItem(Guid orderPromotionId, Guid productId) : Entity
+public class OrderPromotionSubItem(Guid orderPromotionId, Guid productId) : AuditedAggregateRoot
 {
     public Guid OrderPromotionId { get; private set; } = orderPromotionId;
     public virtual OrderPromotion OrderPromotion { get; private set; } = null!;
@@ -11,7 +11,7 @@ public class OrderPromotionSubItem(Guid orderPromotionId, Guid productId) : Enti
     public virtual Product Product { get; private set; } = null!;
     public Guid? ProductVariantId { get; private set; }
     public virtual ProductVariant? ProductVariant { get; private set; }
-    public bool IsActive { get; private set; } = false;
+    public bool IsActive { get; private set; } = true;
     public OrderPromotionSubItemType Type { get; private set; } = OrderPromotionSubItemType.UNSPECIFIED;
     public decimal DiscountPrice { get; private set; } = 0;
     public decimal DiscountPercentage { get; private set; } = 0;

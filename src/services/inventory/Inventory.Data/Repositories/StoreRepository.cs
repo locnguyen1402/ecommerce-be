@@ -3,6 +3,6 @@ using ECommerce.Shared.Common.Infrastructure.Repositories;
 
 namespace ECommerce.Inventory.Data.Repositories;
 
-public class StoreRepository(InventoryDbContext dbContext) : Repository<Store>(dbContext), IStoreRepository
+public class StoreRepository(InventoryDbContext dbContext) : Repository<InventoryDbContext, Store>(dbContext), IStoreRepository
 {
 }
