@@ -9,6 +9,7 @@ public class UpdateShopCollectionRequest
     public string? Slug { get; set; } = string.Empty;
     public string? Description { get; set; }
     public Guid? ParentId { get; set; }
+    public List<Guid> Children { get; set; } = [];
 }
 
 public class UpdateShopCollectionRequestValidator : AbstractValidator<UpdateShopCollectionRequest>
@@ -30,8 +31,12 @@ public class UpdateShopCollectionRequestValidator : AbstractValidator<UpdateShop
         RuleFor(x => x.Description)
             .MaximumLength(500);
 
+        RuleFor(x => x.Children)
+            .Must((request, x) => !x.Contains(request.Id))
+            .WithMessage($"{PrefixErrorMessage} Invalid children id format");
+
         RuleFor(x => x.ParentId)
-            .Must(x => x != Guid.Empty && Guid.TryParse(x.ToString(), out _))
+            .Must((request, x) => x != Guid.Empty && Guid.TryParse(x.ToString(), out _) && request.Id != x)
             .When(x => x.ParentId != null)
             .WithMessage($"{PrefixErrorMessage} Invalid parent id format");
     }

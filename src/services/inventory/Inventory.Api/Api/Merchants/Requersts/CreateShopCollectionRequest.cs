@@ -8,6 +8,7 @@ public class CreateShopCollectionRequest
     public string? Slug { get; set; } = string.Empty;
     public string? Description { get; set; }
     public Guid? ParentId { get; set; }
+    public List<Guid> Children { get; set; } = [];
 }
 
 public class CreateShopCollectionRequestValidator : AbstractValidator<CreateShopCollectionRequest>

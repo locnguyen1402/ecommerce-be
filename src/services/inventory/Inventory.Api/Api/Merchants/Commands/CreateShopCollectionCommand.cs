@@ -7,6 +7,7 @@ using ECommerce.Inventory.Domain.AggregatesModel;
 using ECommerce.Inventory.Api.Merchants.Requests;
 using ECommerce.Inventory.Api.Services;
 using ECommerce.Shared.Libs.Extensions;
+using Microsoft.EntityFrameworkCore;
 
 namespace ECommerce.Inventory.Api.Merchants.Commands;
 
@@ -29,10 +30,19 @@ public class CreateShopCollectionCommandHandler : IEndpointHandler
 
         var merchantId = await merchantService.GetMerchantIdAsync(cancellationToken);
 
-        var slug = string.IsNullOrEmpty(request.Slug) ?  request.Name.ToGenerateRandomSlug() : request.Slug;
+        var slug = string.IsNullOrEmpty(request.Slug) ? request.Name.ToGenerateRandomSlug() : request.Slug;
         var shopCollection = new ShopCollection(request.Name, slug, request.Description, request.ParentId);
 
         shopCollection.SetMerchant(merchantId);
+
+        if (request.Children.Count > 0)
+        {
+            var children = await shopCollectionRepository.Query
+                            .Where(x => request.Children.Contains(x.Id))
+                            .ToListAsync(cancellationToken);
+
+            shopCollection.AddOrUpdateChildren(children);
+        }
 
         await shopCollectionRepository.AddAndSaveChangeAsync(shopCollection, cancellationToken);
 

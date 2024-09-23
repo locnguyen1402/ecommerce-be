@@ -1,12 +1,10 @@
 using FluentValidation;
+using Microsoft.EntityFrameworkCore;
 
 using ECommerce.Shared.Common.Infrastructure.Endpoint;
 
 using ECommerce.Inventory.Domain.AggregatesModel;
 using ECommerce.Inventory.Api.Merchants.Requests;
-using Microsoft.EntityFrameworkCore;
-using ECommerce.Inventory.Api.Categories.Specifications;
-
 namespace ECommerce.Inventory.Api.Merchants.Commands;
 
 public class UpdateShopCollectionCommandHandler : IEndpointHandler
@@ -50,6 +48,16 @@ public class UpdateShopCollectionCommandHandler : IEndpointHandler
             , request.Description);
 
         shopCollection.ChangeParent(request.ParentId);
+
+        List<ShopCollection> children = [];
+        if (request.Children.Count > 0)
+        {
+            children = await shopCollectionRepository.Query
+                            .Where(x => request.Children.Contains(x.Id))
+                            .ToListAsync(cancellationToken);
+        }
+
+        shopCollection.AddOrUpdateChildren(children);
 
         await shopCollectionRepository.UpdateAndSaveChangeAsync(shopCollection, cancellationToken);
 
