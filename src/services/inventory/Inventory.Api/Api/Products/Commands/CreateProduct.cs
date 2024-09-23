@@ -1,5 +1,6 @@
 using FluentValidation;
 
+using ECommerce.Shared.Libs.Extensions;
 using ECommerce.Shared.Common.AggregatesModel.Response;
 using ECommerce.Shared.Common.Infrastructure.Endpoint;
 
@@ -36,7 +37,8 @@ public class CreateProductCommandHandler : IEndpointHandler
 
         var merchantId = await merchantService.GetMerchantIdAsync(cancellationToken);
 
-        var newProduct = new Product(request.Name, request.Slug, request.Description);
+        var slug = string.IsNullOrEmpty(request.Slug) ? request.Name.ToGenerateRandomSlug() : request.Slug;
+        var newProduct = new Product(request.Name, slug, request.Description);
 
         List<ProductAttribute> selectedAttributes = [];
         if (request.Attributes.Count > 0)

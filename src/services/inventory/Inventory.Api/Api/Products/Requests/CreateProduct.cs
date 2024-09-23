@@ -5,7 +5,7 @@ namespace ECommerce.Inventory.Api.Products.Requests;
 public class CreateProductRequest
 {
     public string Name { get; set; } = string.Empty;
-    public string Slug { get; set; } = string.Empty;
+    public string? Slug { get; set; } = string.Empty;
     public string? Description { get; set; }
     public HashSet<Guid> Categories { get; set; } = [];
     public HashSet<Guid> Attributes { get; set; } = [];
@@ -23,7 +23,7 @@ public class CreateProductRequestValidator : AbstractValidator<CreateProductRequ
             .MaximumLength(200);
 
         RuleFor(x => x.Slug)
-            .NotEmpty();
+            .MaximumLength(200);
 
         RuleFor(x => x.Description)
             .MaximumLength(500);

@@ -77,7 +77,10 @@ public class UpdateProductCommandHandler : IEndpointHandler
             return Results.NotFound();
         }
 
-        product.UpdateGeneralInfo(request.Name, request.Slug, request.Description);
+        product.UpdateGeneralInfo(
+            request.Name
+            , string.IsNullOrEmpty(request.Slug) ? product.Slug : request.Slug
+            , request.Description);
         // product.AddOrUpdateCollections(selectedCategories);
         product.AddOrUpdateAttributes(selectedAttributes);
 

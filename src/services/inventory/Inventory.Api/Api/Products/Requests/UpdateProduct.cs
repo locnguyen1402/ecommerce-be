@@ -6,7 +6,7 @@ public class UpdateProductRequest
 {
     public Guid Id { get; set; }
     public string Name { get; set; } = string.Empty;
-    public string Slug { get; set; } = string.Empty;
+    public string? Slug { get; set; } = string.Empty;
     public string? Description { get; set; }
     public HashSet<Guid> Categories { get; set; } = [];
     public HashSet<Guid> Attributes { get; set; } = [];
@@ -28,7 +28,7 @@ public class UpdateProductRequestValidator : AbstractValidator<UpdateProductRequ
             .MaximumLength(200);
 
         RuleFor(x => x.Slug)
-            .NotEmpty();
+            .MaximumLength(200);
 
         RuleFor(x => x.Attributes)
             .Must(x => x.Count == x.Distinct().Count())
