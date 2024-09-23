@@ -23,10 +23,16 @@ class Program
             {
                 string connectionString = context.Configuration.GetConnectionString(SchemaConstants.DATABASE_CONNECTION)!;
 
+                services.AddDbContext<MigrationDbContext>((serviceProvider, options) =>
+                {
+                    options.UseMigrationDatabase<MigrationDbContext>(connectionString);
+                });
+
                 services.AddDbContext<InventoryDbContext>((serviceProvider, options) =>
                 {
                     options.UseMigrationDatabase<InventoryDbContext>(connectionString);
                 });
+                
 
                 services.AddDbContext<IdentityDbContext>((serviceProvider, options) =>
                 {
@@ -49,6 +55,8 @@ class Program
                 services.AddMemoryCache();
             })
             .Build();
+
+        await host.MigrateDbContext<MigrationDbContext>();
 
         await host.MigrateDbContext<InventoryDbContext>(Seeds.Inventory.Seed_Release_001.SeedAsync);
         await host.MigrateDbContext<IdentityDbContext>(Seeds.Identity.Seed_Release_001.SeedAsync);
