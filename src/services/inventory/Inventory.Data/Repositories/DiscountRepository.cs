@@ -3,6 +3,6 @@ using ECommerce.Shared.Common.Infrastructure.Repositories;
 
 namespace ECommerce.Inventory.Data.Repositories;
 
-public class DiscountRepository(InventoryDbContext dbContext) : Repository<Discount>(dbContext), IDiscountRepository
+public class DiscountRepository(InventoryDbContext dbContext) : Repository<InventoryDbContext, Discount>(dbContext), IDiscountRepository
 {
 }

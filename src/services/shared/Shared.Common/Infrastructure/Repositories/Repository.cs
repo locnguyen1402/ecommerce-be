@@ -1,12 +1,84 @@
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 using ECommerce.Shared.Common.Infrastructure.Data;
+using ECommerce.Shared.Common.Infrastructure.Specification;
+using ECommerce.Shared.Common.Extensions;
+using ECommerce.Shared.Common.Pagination;
 
 namespace ECommerce.Shared.Common.Infrastructure.Repositories;
-public class Repository<TEntity>(BaseDbContext dbContext) : BaseRepository<TEntity>(dbContext), IRepository<TEntity> where TEntity : Entity
+public class Repository<TDbContext, TEntity> : IRepository<TEntity>
+    where TEntity : class, IAggregateRoot
+    where TDbContext : DbContext
 {
-    public async ValueTask<bool> IsExisted(Guid id)
+    private readonly TDbContext _dbContext;
+    protected readonly DbSet<TEntity> _dbSet;
+    public IQueryable<TEntity> Query => _dbSet;
+
+    protected Repository(TDbContext dbContext)
     {
-        return await _dbSet.AnyAsync(x => x.Id == id);
+        _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
+        _dbSet = dbContext.Set<TEntity>();
     }
+
+    public async ValueTask<TEntity?> FindAsync(object keyValues, CancellationToken cancellationToken = default)
+        => await _dbSet.FindAsync([keyValues], cancellationToken);
+    public async ValueTask<TEntity?> FindAsync(object[] keyValues, CancellationToken cancellationToken = default)
+        => await _dbSet.FindAsync(keyValues, cancellationToken);
+    public async ValueTask<TEntity?> FindAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
+        => await _dbSet.Where(predicate).FirstOrDefaultAsync(cancellationToken);
+    public async ValueTask<TEntity?> FindAsync(Specification<TEntity> specification, CancellationToken cancellationToken = default)
+        => await _dbSet.Specify(specification).FirstOrDefaultAsync(cancellationToken);
+    public async ValueTask<TResult?> FindAsync<TResult>(Specification<TEntity, TResult> specification, CancellationToken cancellationToken = default)
+        => await _dbSet.Specify(specification).FirstOrDefaultAsync(cancellationToken);
+    public async ValueTask<bool> AnyAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
+        => await _dbSet.AnyAsync(predicate, cancellationToken);
+    public async ValueTask<int> CountAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
+        => await _dbSet.CountAsync(predicate, cancellationToken);
+    public TEntity Add(TEntity entity)
+        => _dbSet.Add(entity).Entity;
+    public async ValueTask<TEntity> AddAndSaveChangeAsync(TEntity entity, CancellationToken cancellationToken = default)
+    {
+        var addedEntity = Add(entity);
+
+        await SaveChangesAsync(cancellationToken);
+
+        return addedEntity;
+    }
+    public void AddRange(IEnumerable<TEntity> entities)
+        => _dbSet.AddRange(entities);
+    public void AddRange(params TEntity[] entities)
+        => _dbSet.AddRange(entities);
+    public async Task AddRangeAsync(IEnumerable<TEntity> entities, CancellationToken cancellationToken = default)
+        => await _dbSet.AddRangeAsync(entities, cancellationToken);
+    public async Task AddRangeAsync(params TEntity[] entities)
+        => await _dbSet.AddRangeAsync(entities, default);
+    public TEntity Update(TEntity entity)
+        => _dbSet.Update(entity).Entity;
+    public async ValueTask<TEntity> UpdateAndSaveChangeAsync(TEntity entity, CancellationToken cancellationToken = default)
+    {
+        var updatedEntity = Update(entity);
+
+        await SaveChangesAsync(cancellationToken);
+
+        return updatedEntity;
+    }
+    public void Delete(TEntity entity)
+        => _dbSet.Remove(entity);
+    public async Task DeleteAndSaveChangeAsync(TEntity entity, CancellationToken cancellationToken = default)
+    {
+        Delete(entity);
+
+        await SaveChangesAsync(cancellationToken);
+    }
+    public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        => await _dbContext.SaveChangesAsync(cancellationToken);
+    public async ValueTask<IEnumerable<TEntity>> GetAsync(Specification<TEntity> specification, CancellationToken cancellationToken = default)
+        => await _dbSet.Specify(specification).ToListAsync(cancellationToken);
+    public async ValueTask<IEnumerable<TResult>> GetAsync<TResult>(Specification<TEntity, TResult> specification, CancellationToken cancellationToken = default)
+        => await _dbSet.Specify(specification).ToListAsync(cancellationToken);
+    public async ValueTask<IPaginatedList<TEntity>> PaginateAsync(Specification<TEntity> specification, CancellationToken cancellationToken = default)
+        => await _dbSet.Specify(specification).ToPaginatedListAsync(specification.PagingParams!, cancellationToken);
+    public async ValueTask<IPaginatedList<TResult>> PaginateAsync<TResult>(Specification<TEntity, TResult> specification, CancellationToken cancellationToken = default)
+        => await _dbSet.Specify(specification).ToPaginatedListAsync(specification.PagingParams!, cancellationToken);
 }

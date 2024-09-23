@@ -1,9 +1,9 @@
+using ECommerce.Shared.Common.AggregatesModel.Auditing;
 using ECommerce.Shared.Common.Enums;
-using ECommerce.Shared.Common.Infrastructure.Data;
 
 namespace ECommerce.Inventory.Domain.AggregatesModel;
 
-public class ProductPromotionItem(Guid productId) : Entity
+public class ProductPromotionItem(Guid productId) : AuditedAggregateRoot
 {
     public Guid ProductPromotionId { get; private set; }
     public virtual ProductPromotion ProductPromotion { get; private set; } = null!;

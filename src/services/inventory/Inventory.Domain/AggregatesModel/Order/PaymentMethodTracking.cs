@@ -1,9 +1,9 @@
+using ECommerce.Shared.Common.AggregatesModel.Auditing;
 using ECommerce.Shared.Common.Enums;
-using ECommerce.Shared.Common.Infrastructure.Data;
 
 namespace ECommerce.Inventory.Domain.AggregatesModel;
 
-public class PaymentMethodTracking(Guid orderId, PaymentMethod paymentMethod, decimal value) : Entity
+public class PaymentMethodTracking(Guid orderId, PaymentMethod paymentMethod, decimal value) : AuditedAggregateRoot
 {
     // TODO: Save additional payment method information depending on specific payment method in value object 
     public PaymentMethod PaymentMethod { get; private set; } = paymentMethod;

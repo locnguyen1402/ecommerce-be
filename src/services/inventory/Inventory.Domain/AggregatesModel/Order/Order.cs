@@ -1,9 +1,9 @@
+using ECommerce.Shared.Common.AggregatesModel.Auditing;
 using ECommerce.Shared.Common.Enums;
-using ECommerce.Shared.Common.Infrastructure.Data;
 
 namespace ECommerce.Inventory.Domain.AggregatesModel;
 
-public class Order(Guid customerId, string phoneNumber) : Entity
+public class Order(Guid customerId, string phoneNumber) : AuditedAggregateRoot
 {
     public string OrderNumber { get; private set; } = string.Empty;
     public Guid CustomerId { get; private set; } = customerId;

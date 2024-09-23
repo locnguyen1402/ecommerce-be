@@ -1,8 +1,8 @@
-using ECommerce.Shared.Common.Infrastructure.Data;
+using ECommerce.Shared.Common.AggregatesModel.Auditing;
 
 namespace ECommerce.Inventory.Domain.AggregatesModel;
 
-public class MerchantCategory : Entity
+public class MerchantCategory : AuditedAggregateRoot
 {
     public Guid MerchantId { get; private set; }
     public Guid CategoryId { get; private set; }

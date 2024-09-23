@@ -2,6 +2,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace ECommerce.Shared.Common.Constants;
+
 public class JsonConstant
 {
     private static JsonSerializerOptions? _jsonSerializerOptions;

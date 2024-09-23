@@ -1,8 +1,8 @@
-using ECommerce.Shared.Common.Infrastructure.Data;
+using ECommerce.Shared.Common.AggregatesModel.Auditing;
 
 namespace ECommerce.Inventory.Domain.AggregatesModel;
 
-public class ProductAttribute(string name) : Entity()
+public class ProductAttribute(string name) : AuditedAggregateRoot
 {
     public string Name { get; private set; } = name.ToLower();
     public bool Predefined { get; private set; } = false;

@@ -1,9 +1,9 @@
+using ECommerce.Shared.Common.AggregatesModel.Auditing;
 using ECommerce.Shared.Common.Enums;
-using ECommerce.Shared.Common.Infrastructure.Data;
 
 namespace ECommerce.Inventory.Domain.AggregatesModel;
 
-public class Voucher(string name, string code) : Entity
+public class Voucher(string name, string code) : AuditedAggregateRoot
 {
     public string Name { get; private set; } = name;
     /// <summary>

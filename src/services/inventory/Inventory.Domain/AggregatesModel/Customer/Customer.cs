@@ -1,5 +1,5 @@
+using ECommerce.Shared.Common.AggregatesModel.Auditing;
 using ECommerce.Shared.Common.Enums;
-using ECommerce.Shared.Common.Infrastructure.Data;
 
 namespace ECommerce.Inventory.Domain.AggregatesModel;
 
@@ -11,7 +11,7 @@ public class Customer(
     , Gender? gender
     , string? email
     , string? phoneNumber
-) : Entity
+) : AuditedAggregateRoot
 {
     public string? UserName { get; private set; } = userName;
     public string FirstName { get; private set; } = firstName;

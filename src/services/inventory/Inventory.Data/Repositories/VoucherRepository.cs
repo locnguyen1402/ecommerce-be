@@ -3,6 +3,6 @@ using ECommerce.Shared.Common.Infrastructure.Repositories;
 
 namespace ECommerce.Inventory.Data.Repositories;
 
-public class VoucherRepository(InventoryDbContext dbContext) : Repository<Voucher>(dbContext), IVoucherRepository
+public class VoucherRepository(InventoryDbContext dbContext) : Repository<InventoryDbContext, Voucher>(dbContext), IVoucherRepository
 {
 }

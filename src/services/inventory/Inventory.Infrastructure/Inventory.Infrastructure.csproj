@@ -1,0 +1,12 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <AssemblyName>ECommerce.Inventory.Infrastructure</AssemblyName>
+    <RootNamespace>ECommerce.Inventory.Infrastructure</RootNamespace>
+  </PropertyGroup>
+
+    <ItemGroup>
+    <ProjectReference Include="../../shared/Shared.Infrastructure/Shared.Infrastructure.csproj" />
+  </ItemGroup>
+
+</Project>

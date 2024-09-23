@@ -1,8 +1,8 @@
-using ECommerce.Shared.Common.Infrastructure.Data;
+using ECommerce.Shared.Common.AggregatesModel.Auditing;
 
 namespace ECommerce.Inventory.Domain.AggregatesModel;
 
-public class ProductVariant(int stock, decimal price) : Entity()
+public class ProductVariant(int stock, decimal price) : AuditedAggregateRoot
 {
     public int Stock { get; private set; } = stock;
     public decimal Price { get; private set; } = price;
