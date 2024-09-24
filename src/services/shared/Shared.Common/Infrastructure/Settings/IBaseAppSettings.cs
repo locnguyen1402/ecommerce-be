@@ -1,4 +1,4 @@
-namespace ECommerce.Shared.Infrastructure.Settings;
+namespace ECommerce.Shared.Common.Infrastructure.Settings;
 
 public interface IBaseAppSettings
 {

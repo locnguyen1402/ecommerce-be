@@ -159,6 +159,28 @@ namespace ECommerce.Inventory.DbMigrator.PostgreSQL.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "import_history",
+                columns: table => new
+                {
+                    id = table.Column<Guid>(type: "uuid", nullable: false),
+                    document_type = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false, defaultValueSql: "'UNSPECIFIED'"),
+                    status = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false, defaultValueSql: "'UNSPECIFIED'"),
+                    document = table.Column<Document>(type: "jsonb", nullable: false, defaultValueSql: "'{}'"),
+                    remarks = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true, defaultValueSql: "''"),
+                    notes = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true, defaultValueSql: "''"),
+                    logs = table.Column<List<LogDetail>>(type: "jsonb", nullable: false, defaultValueSql: "'[]'"),
+                    events = table.Column<List<ImportEvent>>(type: "jsonb", nullable: false, defaultValueSql: "'[]'"),
+                    created_by = table.Column<Guid>(type: "uuid", nullable: true),
+                    created_at = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    updated_by = table.Column<Guid>(type: "uuid", nullable: true),
+                    updated_at = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_import_history", x => x.id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "merchants",
                 columns: table => new
                 {
@@ -176,6 +198,33 @@ namespace ECommerce.Inventory.DbMigrator.PostgreSQL.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("pk_merchants", x => x.id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "object_storage",
+                columns: table => new
+                {
+                    id = table.Column<Guid>(type: "uuid", nullable: false),
+                    original_name = table.Column<string>(type: "text", nullable: false),
+                    bucket = table.Column<string>(type: "text", nullable: false),
+                    path = table.Column<string>(type: "text", nullable: false),
+                    name = table.Column<string>(type: "text", nullable: false),
+                    size = table.Column<long>(type: "bigint", nullable: false),
+                    extension = table.Column<string>(type: "text", nullable: true),
+                    content_type = table.Column<string>(type: "text", nullable: true),
+                    title = table.Column<string>(type: "text", nullable: true),
+                    description = table.Column<string>(type: "text", nullable: true),
+                    key = table.Column<string>(type: "text", nullable: false),
+                    is_uploaded = table.Column<bool>(type: "boolean", nullable: false),
+                    remarks = table.Column<string>(type: "text", nullable: true),
+                    created_by = table.Column<Guid>(type: "uuid", nullable: true),
+                    created_at = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    updated_by = table.Column<Guid>(type: "uuid", nullable: true),
+                    updated_at = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_object_storage", x => x.id);
                 });
 
             migrationBuilder.CreateTable(
@@ -1571,7 +1620,13 @@ namespace ECommerce.Inventory.DbMigrator.PostgreSQL.Migrations
                 name: "discount_applied_to_products");
 
             migrationBuilder.DropTable(
+                name: "import_history");
+
+            migrationBuilder.DropTable(
                 name: "merchant_categories");
+
+            migrationBuilder.DropTable(
+                name: "object_storage");
 
             migrationBuilder.DropTable(
                 name: "order_contacts");

@@ -1,6 +1,6 @@
 using ECommerce.Shared.Common.Enums;
 
-namespace ECommerce.Shared.Infrastructure.Services;
+namespace ECommerce.Shared.Common.Infrastructure.Services;
 
 public interface IIdentityService
 {

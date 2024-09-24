@@ -23,6 +23,12 @@
     <PackageReference Include="FluentValidation.AspNetCore" />
   </ItemGroup>
 
+  <!-- BEGIN: AWS dependencies -->
+  <ItemGroup>
+    <PackageReference Include="AWSSDK.S3" />
+  </ItemGroup>
+  <!-- END: AWS dependencies -->
+
   <ItemGroup>
     <ProjectReference Include="..\Shared.Libs\Shared.Libs.csproj" />
   </ItemGroup>

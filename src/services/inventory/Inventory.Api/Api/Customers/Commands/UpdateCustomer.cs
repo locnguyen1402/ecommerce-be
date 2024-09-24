@@ -30,11 +30,6 @@ public class UpdateCustomerCommandHandler : IEndpointHandler
             return Results.ValidationProblem(validationResult.ToDictionary());
         }
 
-        if (await customerRepository.AnyAsync(x => x.Id == request.Id, cancellationToken))
-        {
-            return Results.BadRequest("Customer is already existed");
-        }
-
         var customer = await customerRepository.Query
             .FirstOrDefaultAsync(p => p.Id == id, cancellationToken);
 

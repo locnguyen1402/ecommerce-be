@@ -52,6 +52,14 @@ public static class ModelBuilderExtensions
         modelBuilder.ApplyConfiguration(new CustomerEntityConfiguration());
         modelBuilder.ApplyConfiguration(new ContactEntityConfiguration());
         #endregion
+
+        #region ObjectStorage
+        modelBuilder.ApplyConfiguration(new ObjectStorageEntityConfiguration());
+        #endregion
+
+        #region ImportHistory
+        modelBuilder.ApplyConfiguration(new ImportHistoryEntityConfiguration());
+        #endregion
     }
 
     public static void ConfigureIdentityEntitiesExtensions(this ModelBuilder modelBuilder)

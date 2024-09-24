@@ -4,11 +4,12 @@ using Microsoft.EntityFrameworkCore;
 using OpenIddict.Core;
 using OpenIddict.Server.AspNetCore;
 
+using ECommerce.Inventory.Api.Identities.Connect.Requests;
 using ECommerce.Inventory.Domain.AggregatesModel.Identity;
+
 using ECommerce.Shared.Common.Extensions;
 using ECommerce.Shared.Common.Infrastructure.Endpoint;
-using ECommerce.Shared.Infrastructure.Services;
-using ECommerce.Inventory.Api.Identities.Connect.Requests;
+using ECommerce.Shared.Common.Infrastructure.Services;
 
 namespace ECommerce.Inventory.Api.Identities.Connect.Commands;
 

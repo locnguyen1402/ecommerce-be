@@ -9,6 +9,9 @@ public static class AuditingExtensions
 {
     public static void MapCreationAuditing<TEntity>(this EntityTypeBuilder<TEntity> builder, string defaultCreatedAt) where TEntity : class, IEntity
     {
+        builder.Property(p => ((ICreationAuditing)p).CreatedBy)
+            .HasConversion<Guid?>();
+
         builder.Property(nameof(ICreationAuditing.CreatedAt))
             .IsRequired()
             .HasDefaultValueSql(defaultCreatedAt);
@@ -16,6 +19,8 @@ public static class AuditingExtensions
 
     public static void MapUpdateAuditing<TEntity>(this EntityTypeBuilder<TEntity> builder) where TEntity : class, IEntity
     {
+        builder.Property(p => ((IUpdateAuditing)p).UpdatedBy)
+            .HasConversion<Guid?>();
     }
 
     public static void MapDeletionAuditing(this EntityTypeBuilder<IDeletionAuditing> builder)

@@ -1,7 +1,13 @@
+using ECommerce.Shared.Common.Domain;
+using ECommerce.Shared.Common.Mediator;
+
 namespace ECommerce.Shared.Common.Infrastructure.Data;
 
-public abstract class Entity : IEntity<Guid>
+public abstract class Entity : IEntity<Guid>, IDomainEventEntity
 {
+    private readonly HashSet<IEvent> _domainEvents;
+    public IReadOnlyCollection<IEvent> DomainEvents => _domainEvents;
+
     int? _requestedHashCode;
 
     Guid _id;
@@ -20,6 +26,7 @@ public abstract class Entity : IEntity<Guid>
 
     protected Entity() : base()
     {
+        _domainEvents = [];
     }
 
     protected Entity(Guid id) : this()
@@ -65,6 +72,15 @@ public abstract class Entity : IEntity<Guid>
 #pragma warning restore S3249 // Classes directly extending "object" should not call "base" in "GetHashCode" or "Equals"
 
     }
+
+    public void AddDomainEvent(IEvent @event)
+        => _domainEvents.Add(@event);
+
+    public void RemoveDomainEvent(IEvent @event)
+        => _domainEvents.Remove(@event);
+
+    public void ClearDomainEvents()
+        => _domainEvents.Clear();
 
 #pragma warning disable S3875 // "operator==" should not be overloaded on reference types
     public static bool operator ==(Entity? left, Entity? right)

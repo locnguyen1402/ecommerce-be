@@ -9,6 +9,11 @@ using FluentValidation;
 using FluentValidation.AspNetCore;
 using ECommerce.Shared.Common.Constants;
 using Microsoft.AspNetCore.Http.Json;
+using Microsoft.Extensions.Options;
+using Amazon.S3;
+using Amazon;
+using ECommerce.Shared.Common.Infrastructure.Settings;
+using ECommerce.Shared.Common.Data.Interceptors;
 
 namespace ECommerce.Shared.Libs.Extensions;
 public static class ServiceCollectionExtensions
@@ -69,6 +74,8 @@ public static class ServiceCollectionExtensions
                 {
                     sqlOptions.MigrationsAssembly(assembly);
                 }).UseSnakeCaseNamingConvention();
+
+            options.AddInterceptors(new SaveChangesInterceptor());
         });
 
         // Old version
@@ -93,6 +100,23 @@ public static class ServiceCollectionExtensions
                 options.DescribeAllParametersInCamelCase();
                 options.UseOneOfForPolymorphism();
             });
+
+        return services;
+    }
+
+    public static IServiceCollection AddObjectStorageService(this IServiceCollection services, AwsSettings settings)
+    {
+        services.AddSingleton(Options.Create(settings));
+
+        services.AddSingleton<IAmazonS3>(_ =>
+        {
+            return new AmazonS3Client(settings.AccessKey, settings.SecretKey, new AmazonS3Config()
+            {
+                RegionEndpoint = RegionEndpoint.GetBySystemName(settings.Region),
+                ServiceURL = settings.ServiceUrl,
+            });
+
+        });
 
         return services;
     }

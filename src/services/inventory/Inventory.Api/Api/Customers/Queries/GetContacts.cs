@@ -2,10 +2,11 @@ using ECommerce.Shared.Common.Queries;
 using ECommerce.Shared.Common.Extensions;
 using ECommerce.Shared.Common.Infrastructure.Endpoint;
 
-using ECommerce.Inventory.Domain.AggregatesModel;
-using ECommerce.Shared.Infrastructure.Services;
 using ECommerce.Inventory.Api.Customers.Specifications;
 using ECommerce.Inventory.Api.Customers.Responses;
+using ECommerce.Inventory.Domain.AggregatesModel;
+
+using ECommerce.Shared.Common.Infrastructure.Services;
 
 namespace ECommerce.Inventory.Api.Customers.Queries;
 

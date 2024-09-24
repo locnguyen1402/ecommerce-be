@@ -2,24 +2,28 @@ using System.Text;
 
 using Microsoft.EntityFrameworkCore;
 
+using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.Identity;
+
+using OpenIddict.Validation.AspNetCore;
 using static OpenIddict.Abstractions.OpenIddictConstants;
 
+using ECommerce.Inventory.Api.Services;
 using ECommerce.Inventory.Data;
 using ECommerce.Inventory.Data.Repositories;
-using ECommerce.Inventory.Domain.AggregatesModel;
-using ECommerce.Shared.Common.Extensions;
-using ECommerce.Shared.Libs.Extensions;
-using ECommerce.Inventory.Api.Services;
-using ECommerce.Inventory.Domain.AggregatesModel.Identity;
-using ECommerce.Shared.Common.Helper;
-using ECommerce.Inventory.Infrastructure.Settings;
-using ECommerce.Shared.Data.Extensions;
-using Microsoft.AspNetCore.Identity;
 using ECommerce.Inventory.Data.Repositories.Identity;
-using Microsoft.AspNetCore.HttpOverrides;
-using OpenIddict.Validation.AspNetCore;
+using ECommerce.Inventory.Domain.AggregatesModel;
+using ECommerce.Inventory.Domain.AggregatesModel.Identity;
+using ECommerce.Inventory.Infrastructure.Settings;
 using ECommerce.Inventory.Infrastructure.Services;
-using ECommerce.Shared.Infrastructure.Services;
+
+using ECommerce.Shared.Common.Extensions;
+using ECommerce.Shared.Common.Helper;
+using ECommerce.Shared.Common.Infrastructure.Services;
+
+using ECommerce.Shared.Data.Extensions;
+using ECommerce.Shared.Libs.Extensions;
+using Microsoft.AspNetCore.StaticFiles;
 
 var builder = WebApplication.CreateSlimBuilder(args);
 builder.WebHost.UseKestrelHttpsConfiguration();
@@ -27,6 +31,8 @@ builder.WebHost.ConfigureKestrel(options => options.AllowAlternateSchemes = true
 var Configuration = builder.Configuration;
 
 Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+
+builder.Services.AddMediator();
 
 // Db context
 var connectionString = Configuration.GetConnectionString("DefaultConnection")!;
@@ -39,6 +45,8 @@ var dpCerts = certs[0];
 var identityCerts = certs[1];
 
 var sslCert = await CertificateHelper.GetCertificateFromPathAsync(appSettings.Certs.Ssl);
+
+builder.Services.AddObjectStorageService(appSettings.AwsSettings);
 
 builder.Services
     .AddOptions()
@@ -200,6 +208,8 @@ builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<ICustomerService, CustomerService>();
 builder.Services.AddScoped<IProfileService, ProfileService>();
 builder.Services.AddScoped<IAccountService, AccountService>();
+
+builder.Services.AddSingleton<IObjectStorageService, ObjectStorageService>();
 
 // Common dependencies
 

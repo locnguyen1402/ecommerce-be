@@ -1,6 +1,7 @@
-using ECommerce.Inventory.Domain.AggregatesModel;
-using ECommerce.Shared.Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
+
+using ECommerce.Inventory.Domain.AggregatesModel;
+using ECommerce.Shared.Common.Infrastructure.Services;
 
 namespace ECommerce.Inventory.Api.Services;
 
