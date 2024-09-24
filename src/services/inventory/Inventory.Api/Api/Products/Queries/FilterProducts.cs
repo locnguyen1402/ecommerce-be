@@ -24,8 +24,8 @@ public class FilterProductsQueryHandler : IEndpointHandler
             ProductProjection.ToFilteredProductResponse()
             , keyword
             , pagingQuery
-            , shopCollectionIds?.Where(id => Guid.TryParse(id, out _)).Select(Guid.Parse).ToList()
-            , notInShopCollectionIds?.Where(id => Guid.TryParse(id, out _)).Select(Guid.Parse).ToList()
+            , shopCollectionIds.ToQueryGuidList()
+            , notInShopCollectionIds.ToQueryGuidList()
             );
 
         var items = await productRepository.PaginateAsync(spec, cancellationToken);
