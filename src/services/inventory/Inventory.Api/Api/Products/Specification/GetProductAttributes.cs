@@ -1,8 +1,10 @@
+using System.Linq.Expressions;
+using Microsoft.EntityFrameworkCore;
+
 using ECommerce.Shared.Common.Infrastructure.Specification;
+using ECommerce.Shared.Common.Queries;
 
 using ECommerce.Inventory.Domain.AggregatesModel;
-using ECommerce.Shared.Common.Queries;
-using System.Linq.Expressions;
 
 namespace ECommerce.Inventory.Api.Products.Specifications;
 
@@ -14,9 +16,9 @@ public class GetProductAttributesSpecification : Specification<ProductAttribute>
         PagingQuery pagingQuery
     )
     {
-        if (keyword != null && keyword.Length > 0)
+        if (!string.IsNullOrEmpty(keyword))
         {
-            Builder.Where(x => x.Name.Contains(keyword));
+            Builder.Where(p => EF.Functions.ILike(EF.Functions.Unaccent(p.Name), EF.Functions.Unaccent($"%{keyword}%")));
         }
 
         Builder.Paginate(pagingQuery);
@@ -32,9 +34,9 @@ public class GetProductAttributesSpecification<TResult> : Specification<ProductA
         PagingQuery? pagingQuery = null
     ) : base(selector)
     {
-        if (keyword != null && keyword.Length > 0)
+        if (!string.IsNullOrEmpty(keyword))
         {
-            Builder.Where(x => x.Name.Contains(keyword));
+            Builder.Where(p => EF.Functions.ILike(EF.Functions.Unaccent(p.Name), EF.Functions.Unaccent($"%{keyword}%")));
         }
 
         if (pagingQuery != null)

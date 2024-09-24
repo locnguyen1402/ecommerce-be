@@ -1,6 +1,5 @@
 using System.Linq.Expressions;
 
-using ECommerce.Inventory.Api.Categories.Responses;
 using ECommerce.Inventory.Domain.AggregatesModel;
 
 namespace ECommerce.Inventory.Api.Products.Responses;
@@ -8,12 +7,14 @@ namespace ECommerce.Inventory.Api.Products.Responses;
 public record FilteredProductResponse(
     Guid Id,
     string Name
-) {
+)
+{
     private List<ProductVariant> ProductVariants { get; } = [];
     public int Stock => ProductVariants.Sum(x => x.Stock);
     public decimal Price => ProductVariants.Count > 0 ? ProductVariants.Min(x => x.Price) : 0;
     public FilteredProductResponse(Guid id, string name, List<ProductVariant> productVariants)
-        : this(id, name) {
+        : this(id, name)
+    {
         ProductVariants = productVariants;
     }
 }
@@ -23,7 +24,6 @@ public record AdminProductDetailResponse(
     string Name,
     string Slug,
     string Description
-// List<CategoryResponse> Categories
 )
 {
     private List<ProductAttributeResponse> ProductAttributes { get; } = [];
@@ -33,7 +33,6 @@ public record AdminProductDetailResponse(
         string name,
         string slug,
         string description,
-        // List<CategoryResponse> categories,
         List<ProductAttributeResponse> productAttributes,
         List<ProductVariantResponse> productVariants
         ) : this(id, name, slug, description)
@@ -95,10 +94,6 @@ public static class ProductProjection
             x.Name,
             x.Slug,
             x.Description,
-            // x.Categories
-            //     .AsQueryable()
-            //     .Select(CategoryProjection.ToCategoryResponse())
-            //     .ToList(),
             x.ProductAttributes
                 .AsQueryable()
                 .Select(ProductAttributeProjection.ToProductAttributeResponse())
