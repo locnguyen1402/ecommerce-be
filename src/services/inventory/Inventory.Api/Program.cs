@@ -183,12 +183,9 @@ builder.Services.AddScoped<IShopCollectionRepository, ShopCollectionRepository>(
 builder.Services.AddScoped<IProductPromotionRepository, ProductPromotionRepository>();
 builder.Services.AddScoped<IOrderPromotionRepository, OrderPromotionRepository>();
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
-builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
 builder.Services.AddScoped<IVoucherRepository, VoucherRepository>();
-
-builder.Services.AddScoped<IMerchantService, MerchantService>();
-builder.Services.AddScoped<IProductService, ProductService>();
-builder.Services.AddScoped<ICustomerService, CustomerService>();
+builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
+builder.Services.AddScoped<IContactRepository, ContactRepository>();
 
 builder.Services.AddScoped<IClientRoleRepository, ClientRoleRepository>();
 builder.Services.AddScoped<IPermissionGroupRepository, PermissionGroupRepository>();
@@ -196,8 +193,13 @@ builder.Services.AddScoped<IPermissionRepository, PermissionRepository>();
 builder.Services.AddScoped<IRoleRepository, RoleRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 
-builder.Services.AddScoped<IProfileService, ProfileService>();
 builder.Services.AddTransient<IIdentityService, IdentityService>();
+
+builder.Services.AddScoped<IMerchantService, MerchantService>();
+builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<ICustomerService, CustomerService>();
+builder.Services.AddScoped<IProfileService, ProfileService>();
+builder.Services.AddScoped<IAccountService, AccountService>();
 
 // Common dependencies
 

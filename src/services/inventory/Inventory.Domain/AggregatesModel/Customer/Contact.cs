@@ -4,12 +4,9 @@ using ECommerce.Shared.Common.Enums;
 
 namespace ECommerce.Inventory.Domain.AggregatesModel;
 
-public class Contact(
-    AddressType type
-    , bool isDefault
-) : AuditedAggregateRoot
+public class Contact : AuditedAggregateRoot
 {
-    public AddressType Type { get; private set; } = type;
+    public AddressType Type { get; private set; } = AddressType.UNSPECIFIED;
 
     // Name of contact
     public string? Name { get; private set; }
@@ -19,7 +16,44 @@ public class Contact(
     public string? PhoneNumber { get; private set; }
     public AddressInfo AddressInfo { get; private set; } = null!;
     public string? Notes { get; private set; }
-    public bool IsDefault { get; private set; } = isDefault;
+    public bool IsDefault { get; private set; } = true;
     public Guid CustomerId { get; private set; }
     public virtual Customer Customer { get; private set; } = null!;
+
+    public void UpdateInfo(
+        AddressType type
+        , bool isDefault
+        , string? name
+        , string? contactName
+        , string? phoneNumber
+        , string? notes
+    )
+    {
+        Type = type;
+        Name = name;
+        ContactName = contactName;
+        PhoneNumber = phoneNumber;
+        Notes = notes;
+        IsDefault = isDefault;
+    }
+
+    public void AssignAddress(AddressInfo address)
+    {
+        AddressInfo = address;
+    }
+
+    public void SetContactDefault()
+    {
+        IsDefault = true;
+    }
+
+    public void RemoveContactDefault()
+    {
+        IsDefault = false;
+    }
+
+    public void AssignToCustomer(Guid customerId)
+    {
+        CustomerId = customerId;
+    }
 }

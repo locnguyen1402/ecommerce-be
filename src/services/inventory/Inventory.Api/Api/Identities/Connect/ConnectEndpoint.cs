@@ -4,7 +4,7 @@ using ECommerce.Inventory.Api.Identities.Connect.Queries;
 namespace ECommerce.Inventory.Api.Endpoints;
 
 /// <summary>
-/// Represents the Connect endpoint.
+/// Represents the connect endpoint.
 /// </summary>
 public class ConnectEndpoint(WebApplication app) : MinimalEndpoint(app, "")
 {

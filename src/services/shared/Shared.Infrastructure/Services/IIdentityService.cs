@@ -4,9 +4,8 @@ namespace ECommerce.Shared.Infrastructure.Services;
 
 public interface IIdentityService
 {
-    Guid? TenantId { get; }
     Guid? MerchantId { get; }
-
+    Guid? CustomerId { get; }
     Guid UserId { get; }
     string FirstName { get; }
     string LastName { get; }

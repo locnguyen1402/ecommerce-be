@@ -21,10 +21,40 @@ public class Customer(
     public Gender? Gender { get; private set; } = gender;
     public string? Email { get; private set; } = email;
     public string? PhoneNumber { get; private set; } = phoneNumber;
-    public string? RefUserId { get; private set; }
+    public Guid? RefUserId { get; private set; }
     public CustomerLevelType LevelType { get; private set; } = CustomerLevelType.SILVER;
     private readonly List<Contact> _contacts = [];
     public virtual IReadOnlyCollection<Contact> Contacts => _contacts;
     public readonly List<Order> _orders = [];
     public virtual IReadOnlyCollection<Order> Orders => _orders;
+
+    public void UpdateGeneralInfo(
+        string firstName
+        , string? lastName
+        , string? userName
+        , DateOnly? birthDate
+        , Gender? gender
+        , string? email
+        , string? phoneNumber
+    )
+    {
+        FirstName = firstName;
+        LastName = lastName;
+        UserName = userName;
+        FullName = string.Join(" ", new[] { firstName, lastName }.Where(x => !string.IsNullOrEmpty(x)));
+        BirthDate = birthDate;
+        Gender = gender;
+        Email = email;
+        PhoneNumber = phoneNumber;
+    }
+
+    public void UpdatePhoneNumber(string phoneNumber)
+    {
+        PhoneNumber = phoneNumber;
+    }
+
+    public void SetRefUser(Guid refUserId)
+    {
+        RefUserId = refUserId;
+    }
 }

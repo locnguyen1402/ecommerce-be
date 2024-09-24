@@ -18,14 +18,6 @@ public class IdentityService : IIdentityService
         _httpContextAccessor = httpContextAccessor ?? throw new ArgumentNullException(nameof(httpContextAccessor));
     }
 
-    public Guid? TenantId
-    {
-        get
-        {
-            return Guid.TryParse(_httpContextAccessor.HttpContext?.User?.FindFirst(SecurityClaimTypes.TenantId)?.Value, out var tenantId) ? tenantId : null;
-        }
-    }
-
     public Guid UserId
     {
         get
@@ -81,6 +73,14 @@ public class IdentityService : IIdentityService
         get
         {
             return Guid.TryParse(_httpContextAccessor.HttpContext?.User?.FindFirst(SecurityClaimTypes.MerchantId)?.Value, out var merchantId) ? merchantId : null;
+        }
+    }
+
+    public Guid? CustomerId
+    {
+        get
+        {
+            return Guid.TryParse(_httpContextAccessor.HttpContext?.User?.FindFirst(SecurityClaimTypes.CustomerId)?.Value, out var customerId) ? customerId : null;
         }
     }
 
