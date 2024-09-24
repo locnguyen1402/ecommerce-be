@@ -13,6 +13,8 @@ public class FilterProductsQueryHandler : IEndpointHandler
     public Delegate Handle
     => async (
         string? keyword,
+        string[]? shopCollectionIds,
+        string[]? notInShopCollectionIds,
         PagingQuery pagingQuery,
         IProductRepository productRepository,
         CancellationToken cancellationToken
@@ -22,6 +24,8 @@ public class FilterProductsQueryHandler : IEndpointHandler
             ProductProjection.ToFilteredProductResponse()
             , keyword
             , pagingQuery
+            , shopCollectionIds?.Where(id => Guid.TryParse(id, out _)).Select(Guid.Parse).ToList()
+            , notInShopCollectionIds?.Where(id => Guid.TryParse(id, out _)).Select(Guid.Parse).ToList()
             );
 
         var items = await productRepository.PaginateAsync(spec, cancellationToken);

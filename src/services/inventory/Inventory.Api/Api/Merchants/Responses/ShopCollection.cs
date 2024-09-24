@@ -9,7 +9,8 @@ public record ShopCollectionResponse(
     string Name,
     string Slug,
     string? Description,
-    List<ShopCollectionResponse> Children
+    List<ShopCollectionResponse> Children,
+    int ProductCount
 );
 
 public record ShopCollectionOption(
@@ -36,7 +37,8 @@ public static class ShopCollectionProjection
             x.Name,
             x.Slug,
             x.Description,
-            x.ShopCollections.ToListShopCollectionResponse() ?? new List<ShopCollectionResponse>()
+            x.ShopCollections.ToListShopCollectionResponse() ?? new List<ShopCollectionResponse>(),
+            x.Products.Count
         );
 
     public static Expression<Func<ShopCollection, ShopCollectionOption>> ToShopCollectionOption()

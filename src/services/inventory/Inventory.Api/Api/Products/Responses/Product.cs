@@ -19,6 +19,26 @@ public record FilteredProductResponse(
     }
 }
 
+public record ProductResponse(
+    Guid Id,
+    string Name
+)
+{
+    private List<ProductVariant> ProductVariants { get; } = [];
+    public int Stock => ProductVariants.Sum(x => x.Stock);
+    public decimal Price => ProductVariants.Count > 0 ? ProductVariants.Min(x => x.Price) : 0;
+    public ProductResponse(Guid id, string name, List<ProductVariant> productVariants)
+        : this(id, name)
+    {
+        ProductVariants = productVariants;
+    }
+}
+
+public record ProductOption(
+    Guid Id,
+    string Name
+);
+
 public record AdminProductDetailResponse(
     Guid Id,
     string Name,
@@ -76,6 +96,23 @@ public static class ProductProjection
     {
         return ToAdminProductDetailResponse().Compile().Invoke(product);
     }
+
+    public static Expression<Func<Product, ProductOption>> ToProductOption()
+        => x =>
+        new ProductOption(
+            x.Id,
+            x.Name
+        );
+
+    public static Expression<Func<Product, ProductResponse>> ToProductResponse()
+        => x =>
+        new ProductResponse(
+            x.Id,
+            x.Name,
+            x.ProductVariants
+                .AsQueryable()
+                .ToList()
+        );
 
     public static Expression<Func<Product, FilteredProductResponse>> ToFilteredProductResponse()
         => x =>

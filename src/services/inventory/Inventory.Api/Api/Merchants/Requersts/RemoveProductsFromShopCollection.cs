@@ -2,16 +2,16 @@ using FluentValidation;
 
 namespace ECommerce.Inventory.Api.Merchants.Requests;
 
-public class AddProductsToShopCollectionRequest
+public class RemoveProductsFromShopCollectionRequest
 {
     public Guid ShopCollectionId { get; set; }
     public List<Guid> ProductIds { get; set; } = [];
 }
 
-public class AddProductsToShopCollectionRequestValidator : AbstractValidator<AddProductsToShopCollectionRequest>
+public class RemoveProductsFromShopCollectionRequestValidator : AbstractValidator<RemoveProductsFromShopCollectionRequest>
 {
-    private string PrefixErrorMessage => nameof(AddProductsToShopCollectionRequestValidator);
-    public AddProductsToShopCollectionRequestValidator()
+    private string PrefixErrorMessage => nameof(RemoveProductsFromShopCollectionRequestValidator);
+    public RemoveProductsFromShopCollectionRequestValidator()
     {
         RuleFor(x => x.ShopCollectionId)
             .Must(x => x != Guid.Empty && Guid.TryParse(x.ToString(), out _))

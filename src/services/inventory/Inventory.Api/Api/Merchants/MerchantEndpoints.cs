@@ -2,6 +2,7 @@ using ECommerce.Shared.Common.Infrastructure.Endpoint;
 
 using ECommerce.Inventory.Api.Merchants.Queries;
 using ECommerce.Inventory.Api.Merchants.Commands;
+using ECommerce.Inventory.Api.Products.Queries;
 
 namespace ECommerce.Inventory.Api.Endpoints;
 
@@ -25,6 +26,9 @@ public class MerchantEndpoints(WebApplication app) : MinimalEndpoint(app, "/inve
 
         Builder.MapGet<GetShopCollectionByIdQueryHandler>("/shop-collections/{id:Guid}");
         Builder.MapPut<UpdateShopCollectionCommandHandler>("/shop-collections/{id:Guid}");
-        Builder.MapPut<AddProductsToShopCollectionCommandHandler>("/shop-collections/{id:Guid}/add-products");
+
+        Builder.MapGet<GetProductsInShopCollectionQueryHandler>("/shop-collections/{id:Guid}/products");
+        Builder.MapPut<AddProductsToShopCollectionCommandHandler>("/shop-collections/{id:Guid}/products/add");
+        Builder.MapPut<RemoveProductsFromShopCollectionCommandHandler>("/shop-collections/{id:Guid}/products/remove");
     }
 }

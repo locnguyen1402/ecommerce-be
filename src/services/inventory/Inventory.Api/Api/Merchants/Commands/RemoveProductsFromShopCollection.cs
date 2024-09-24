@@ -9,13 +9,13 @@ using ECommerce.Inventory.Api.Services;
 
 namespace ECommerce.Inventory.Api.Merchants.Commands;
 
-public class AddProductsToShopCollectionCommandHandler : IEndpointHandler
+public class RemoveProductsFromShopCollectionCommandHandler : IEndpointHandler
 {
     public Delegate Handle
     => async (
         Guid id,
-        AddProductsToShopCollectionRequest request,
-        IValidator<AddProductsToShopCollectionRequest> validator,
+        RemoveProductsFromShopCollectionRequest request,
+        IValidator<RemoveProductsFromShopCollectionRequest> validator,
         IMerchantService merchantService,
         IShopCollectionRepository shopCollectionRepository,
         IProductRepository productRepository,
@@ -33,8 +33,14 @@ public class AddProductsToShopCollectionCommandHandler : IEndpointHandler
             return Results.ValidationProblem(validationResult.ToDictionary());
         }
 
+        if (request.ProductIds.Count == 0)
+        {
+            return TypedResults.NoContent();
+        }
+
         var merchantId = await merchantService.GetMerchantIdAsync(cancellationToken);
         var shopCollection = await shopCollectionRepository.Query
+            .Include(p => p.ShopCollectionProducts)
             .FirstOrDefaultAsync(p => p.Id == request.ShopCollectionId && merchantId == p.MerchantId, cancellationToken);
 
         if (shopCollection == null)
@@ -42,11 +48,7 @@ public class AddProductsToShopCollectionCommandHandler : IEndpointHandler
             return Results.NotFound("ShopCollection not found");
         }
 
-        var products = await productRepository.Query
-            .Where(p => request.ProductIds.Contains(p.Id) && merchantId == p.MerchantId)
-            .ToListAsync(cancellationToken);
-
-        shopCollection.AddProducts(products);
+        shopCollection.RemoveProducts(request.ProductIds);
 
         await shopCollectionRepository.UpdateAndSaveChangeAsync(shopCollection, cancellationToken);
 

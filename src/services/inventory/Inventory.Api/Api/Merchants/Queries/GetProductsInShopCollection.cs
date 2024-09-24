@@ -8,11 +8,12 @@ using ECommerce.Inventory.Api.Products.Responses;
 
 namespace ECommerce.Inventory.Api.Products.Queries;
 
-public class GetProductsQueryHandler : IEndpointHandler
+public class GetProductsInShopCollectionQueryHandler : IEndpointHandler
 {
     public Delegate Handle
     => async (
         string? keyword,
+        Guid id,
         PagingQuery pagingQuery,
         IProductRepository productRepository,
         CancellationToken cancellationToken
@@ -22,6 +23,7 @@ public class GetProductsQueryHandler : IEndpointHandler
             ProductProjection.ToProductResponse()
             , keyword
             , pagingQuery
+            , id
             );
 
         var items = await productRepository.PaginateAsync(spec, cancellationToken);

@@ -1,5 +1,7 @@
 using System.Linq.Expressions;
+using Microsoft.EntityFrameworkCore;
 
+using ECommerce.Shared.Common.Helper;
 using ECommerce.Shared.Common.Queries;
 using ECommerce.Shared.Common.Infrastructure.Specification;
 
@@ -12,18 +14,41 @@ public class GetProductsSpecification : Specification<Product>
     public GetProductsSpecification
     (
         string? keyword,
-        PagingQuery? pagingQuery = null
+        PagingQuery? pagingQuery
     )
     {
-        if (keyword != null && keyword.Length > 0)
-        {
-            Builder.Where(x => x.Name.Contains(keyword));
-        }
-
         if (pagingQuery != null)
         {
             Builder.Paginate(pagingQuery);
         }
+
+        Builder.Where(BuildCriteria(keyword, null));
+    }
+
+    public GetProductsSpecification
+    (
+        string? keyword,
+        PagingQuery? pagingQuery,
+        Guid? shopCollectionId
+    ) : this(keyword, pagingQuery)
+    {
+        Builder.Where(BuildCriteria(keyword, shopCollectionId));
+    }
+
+    public static Expression<Func<Product, bool>> BuildCriteria(
+        string? keyword,
+        Guid? shopCollectionId
+    )
+    {
+        Expression<Func<Product, bool>> criteria = p => true;
+
+        if (shopCollectionId.HasValue)
+            criteria = criteria.And(p => p.ShopCollections.Any(scp => scp.Id == shopCollectionId));
+
+        if (!string.IsNullOrEmpty(keyword))
+            criteria = criteria.And(p => EF.Functions.ILike(EF.Functions.Unaccent(p.Name), EF.Functions.Unaccent($"%{keyword}%")));
+
+        return criteria;
     }
 }
 
@@ -33,17 +58,25 @@ public class GetProductsSpecification<TResult> : Specification<Product, TResult>
     (
         Expression<Func<Product, TResult>> selector,
         string? keyword,
-        PagingQuery? pagingQuery = null
+        PagingQuery? pagingQuery
     ) : base(selector)
     {
-        if (keyword != null && keyword.Length > 0)
-        {
-            Builder.Where(x => x.Name.Contains(keyword));
-        }
-
         if (pagingQuery != null)
         {
             Builder.Paginate(pagingQuery);
         }
+
+        Builder.Where(GetProductsSpecification.BuildCriteria(keyword, null));
+    }
+
+    public GetProductsSpecification
+    (
+        Expression<Func<Product, TResult>> selector,
+        string? keyword,
+        PagingQuery? pagingQuery,
+        Guid? shopCollectionId
+    ) : this(selector, keyword, pagingQuery)
+    {
+        Builder.Where(GetProductsSpecification.BuildCriteria(keyword, shopCollectionId));
     }
 }

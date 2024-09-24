@@ -48,16 +48,12 @@ public class ShopCollection(string name, string slug, string? description, Guid?
             }
         }
     }
-    public void AddOrUpdateProducts(List<Product> products)
+    public void AddProducts(List<Product> products)
     {
-        _products.RemoveAll(x => !products.Any(a => a.Id == x.Id));
-
-        foreach (var product in products)
-        {
-            if (!_products.Any(x => x.Id == product.Id))
-            {
-                _products.Add(product);
-            }
-        }
+        _products.AddRange(products);
+    }
+    public void RemoveProducts(List<Guid> productIds)
+    {
+        _shopCollectionProducts.RemoveAll(x => productIds.Contains(x.ProductId));
     }
 }
