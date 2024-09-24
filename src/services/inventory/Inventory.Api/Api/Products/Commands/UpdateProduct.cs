@@ -1,5 +1,5 @@
-using Microsoft.EntityFrameworkCore;
 using FluentValidation;
+using Microsoft.EntityFrameworkCore;
 
 using ECommerce.Shared.Common.Infrastructure.Endpoint;
 
@@ -8,7 +8,6 @@ using ECommerce.Inventory.Api.Products.Specifications;
 using ECommerce.Inventory.Api.Products.Requests;
 using ECommerce.Inventory.Api.Utilities;
 using ECommerce.Inventory.Api.Products.Responses;
-using ECommerce.Inventory.Api.Categories.Specifications;
 
 namespace ECommerce.Inventory.Api.Products.Commands;
 
@@ -41,18 +40,6 @@ public class UpdateProductCommandHandler : IEndpointHandler
             return Results.BadRequest("Slug is already existed");
         }
 
-        // List<Category> selectedCategories = [];
-        // if (request.Categories.Count > 0)
-        // {
-        //     var categoriesSpec = new GetCategoriesByIdsSpecification([.. request.Categories]);
-        //     selectedCategories = (await categoryRepository.GetAsync(categoriesSpec, cancellationToken)).ToList();
-
-        //     if (selectedCategories.Count != request.Categories.Count)
-        //     {
-        //         return Results.BadRequest("Some categories are not found");
-        //     }
-        // }
-
         List<ProductAttribute> selectedAttributes = [];
         if (request.Attributes.Count != 0)
         {
@@ -81,10 +68,37 @@ public class UpdateProductCommandHandler : IEndpointHandler
             request.Name
             , string.IsNullOrEmpty(request.Slug) ? product.Slug : request.Slug
             , request.Description);
-        // product.AddOrUpdateCollections(selectedCategories);
-        product.AddOrUpdateAttributes(selectedAttributes);
 
-        ProductUtils.UpdateVariantsInProduct(product, request.Variants);
+        var inPassHasVariants = product.ProductAttributes.Count > 0 && product.ProductVariants.Count > 0;
+        var inRequestHasVariants = request.Attributes.Count > 0 && request.Variants.Count > 0;
+
+        if (inRequestHasVariants)
+        {
+            if (!inPassHasVariants)
+            {
+                product.RemoveVariant(product.ProductVariants.First());
+            }
+
+            product.AddOrUpdateAttributes(selectedAttributes);
+
+            ProductUtils.UpdateVariantsInProduct(product, request.Variants);
+        }
+        else
+        {
+            if (inPassHasVariants)
+            {
+                product.RemoveVariants([.. product.ProductVariants]);
+                product.AddVariant(request.Stock ?? 0, request.Price ?? 0, []);
+            }
+            else
+            {
+                var defaultVariant = product.ProductVariants.First();
+
+                defaultVariant.UpdateStock(request.Stock ?? defaultVariant.Stock);
+                defaultVariant.UpdatePrice(request.Price ?? defaultVariant.Price);
+            }
+
+        }
 
         await productRepository.UpdateAndSaveChangeAsync(product, cancellationToken);
 

@@ -40,9 +40,11 @@ public class CreateProductCommandHandler : IEndpointHandler
         var slug = string.IsNullOrEmpty(request.Slug) ? request.Name.ToGenerateRandomSlug() : request.Slug;
         var newProduct = new Product(request.Name, slug, request.Description);
 
-        List<ProductAttribute> selectedAttributes = [];
-        if (request.Attributes.Count > 0)
+        var hasProductVariants = request.Attributes.Count > 0 && request.Variants.Count > 0;
+
+        if (hasProductVariants)
         {
+            List<ProductAttribute> selectedAttributes = [];
             var productAttributesSpec = new GetProductAttributesByIdsSpecification([.. request.Attributes]);
             selectedAttributes = (await productAttributeRepository.GetAsync(productAttributesSpec, cancellationToken)).ToList();
 
@@ -52,35 +54,25 @@ public class CreateProductCommandHandler : IEndpointHandler
             }
 
             newProduct.AddOrUpdateAttributes(selectedAttributes);
-        }
 
-        // List<Category> selectedCategories = [];
-        // if (request.Categories.Count > 0)
-        // {
-        //     var categoriesSpec = new GetCategoriesByIdsSpecification([.. request.Categories]);
-        //     selectedCategories = (await categoryRepository.GetAsync(categoriesSpec, cancellationToken)).ToList();
-
-        //     if (selectedCategories.Count != request.Categories.Count)
-        //     {
-        //         return Results.BadRequest("Some categories are not found");
-        //     }
-
-        //     newProduct.AddOrUpdateCollections(selectedCategories);
-        // }
-
-        if (request.Variants.Count != 0)
-        {
-            foreach (var variant in request.Variants)
+            if (request.Variants.Count != 0)
             {
-                var attributeValues = new List<ProductVariantAttributeValue>();
-
-                foreach (var value in variant.Values)
+                foreach (var variant in request.Variants)
                 {
-                    attributeValues.Add(new(value.ProductAttributeId, value.Value, value.AttributeValueId));
-                }
+                    var attributeValues = new List<ProductVariantAttributeValue>();
 
-                newProduct.AddVariant(variant.Stock, variant.Price, attributeValues);
+                    foreach (var value in variant.Values)
+                    {
+                        attributeValues.Add(new(value.ProductAttributeId, value.Value, value.AttributeValueId));
+                    }
+
+                    newProduct.AddVariant(variant.Stock, variant.Price, attributeValues);
+                }
             }
+        }
+        else
+        {
+            newProduct.AddVariant(request.Stock ?? 0, request.Price ?? 0, []);
         }
 
         newProduct.SetMerchant(merchantId);
