@@ -38,10 +38,10 @@ public class CreateOrderCommandHandler : IEndpointHandler
         var updatedProductItems = productService.UpdateStockByProductVariantsAsync(productItems, cancellationToken);
         // TODO: Handle in case of not enough stock 
 
-        var customerId = await customerService.GetCustomerIdAsync(cancellationToken);
+        var customer = await customerService.GetCustomerInfoAsync(cancellationToken);
 
         var newOrder = new Order(
-            customerId,
+            customer.Id,
             request.PhoneNumber
         );
 

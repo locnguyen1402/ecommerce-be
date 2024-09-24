@@ -15,6 +15,9 @@ namespace ECommerce.Inventory.DbMigrator.PostgreSQL.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.AlterDatabase()
+                .Annotation("Npgsql:PostgresExtension:unaccent", ",,");
+
             migrationBuilder.CreateTable(
                 name: "applications",
                 columns: table => new
@@ -92,7 +95,7 @@ namespace ECommerce.Inventory.DbMigrator.PostgreSQL.Migrations
                     gender = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true, defaultValueSql: "'UNSPECIFIED'"),
                     email = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
                     phone_number = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: true),
-                    ref_user_id = table.Column<string>(type: "text", nullable: true),
+                    ref_user_id = table.Column<Guid>(type: "uuid", nullable: true),
                     level_type = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false, defaultValueSql: "'SILVER'"),
                     created_by = table.Column<Guid>(type: "uuid", nullable: true),
                     created_at = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
@@ -216,7 +219,6 @@ namespace ECommerce.Inventory.DbMigrator.PostgreSQL.Migrations
                 {
                     id = table.Column<Guid>(type: "uuid", nullable: false),
                     predefined = table.Column<bool>(type: "boolean", nullable: false),
-                    status = table.Column<byte>(type: "smallint", nullable: false),
                     description = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: true, defaultValueSql: "''"),
                     permissions = table.Column<List<string>>(type: "text[]", nullable: false),
                     enabled = table.Column<bool>(type: "boolean", nullable: false),
@@ -317,7 +319,7 @@ namespace ECommerce.Inventory.DbMigrator.PostgreSQL.Migrations
                 columns: table => new
                 {
                     id = table.Column<Guid>(type: "uuid", nullable: false),
-                    type = table.Column<int>(type: "integer", nullable: false),
+                    type = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false, defaultValueSql: "'UNSPECIFIED'"),
                     name = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: true),
                     contact_name = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: true),
                     phone_number = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: true),
@@ -501,6 +503,7 @@ namespace ECommerce.Inventory.DbMigrator.PostgreSQL.Migrations
                 {
                     id = table.Column<Guid>(type: "uuid", nullable: false),
                     slug = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: false),
+                    sku = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: false),
                     name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     description = table.Column<string>(type: "text", nullable: false),
                     merchant_id = table.Column<Guid>(type: "uuid", nullable: false),

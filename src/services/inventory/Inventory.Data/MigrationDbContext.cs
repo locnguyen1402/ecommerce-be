@@ -1,12 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.DataProtection.EntityFrameworkCore;
 
-using ECommerce.Shared.Common.Infrastructure.Data;
-
 using ECommerce.Inventory.Domain.AggregatesModel;
-using ECommerce.Inventory.Data.EntityConfigurations;
 using ECommerce.Inventory.Domain.AggregatesModel.Identity;
-using ECommerce.Inventory.Data.EntityConfigurations.IdentityEntities;
+using ECommerce.Shared.Data.Extensions;
 
 namespace ECommerce.Inventory.Data;
 
@@ -56,73 +53,11 @@ public class MigrationDbContext(DbContextOptions<MigrationDbContext> options) :
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        // Product & Category
-        modelBuilder.ApplyConfiguration(new CategoryEntityConfiguration());
-        modelBuilder.ApplyConfiguration(new ProductEntityConfiguration());
-        modelBuilder.ApplyConfiguration(new ProductAttributeEntityConfiguration());
-        modelBuilder.ApplyConfiguration(new ProductVariantEntityConfiguration());
-        modelBuilder.ApplyConfiguration(new ProductVariantAttributeValueEntityConfiguration());
-        modelBuilder.ApplyConfiguration(new AttributeValueEntityConfiguration());
+        modelBuilder.ConfigureExtensions();
+        modelBuilder.UseCustomDbFunctions();
+        modelBuilder.UseCustomPostgreSQLDbFunctions();
 
-        // Discount
-        modelBuilder.ApplyConfiguration(new DiscountEntityConfiguration());
-
-        // Merchant & Store
-        modelBuilder.ApplyConfiguration(new MerchantEntityConfiguration());
-        modelBuilder.ApplyConfiguration(new MerchantCategoryEntityConfiguration());
-        modelBuilder.ApplyConfiguration(new StoreEntityConfiguration());
-        modelBuilder.ApplyConfiguration(new ShopCollectionEntityConfiguration());
-
-        // Order
-        modelBuilder.ApplyConfiguration(new OrderEntityConfiguration());
-        modelBuilder.ApplyConfiguration(new OrderItemEntityConfiguration());
-        modelBuilder.ApplyConfiguration(new OrderContactEntityConfiguration());
-        modelBuilder.ApplyConfiguration(new OrderStatusTrackingEntityConfiguration());
-        modelBuilder.ApplyConfiguration(new PaymentMethodTrackingEntityConfiguration());
-
-        // Voucher
-        modelBuilder.ApplyConfiguration(new VoucherEntityConfiguration());
-
-        // Promotion
-        modelBuilder.ApplyConfiguration(new OrderPromotionEntityConfiguration());
-        modelBuilder.ApplyConfiguration(new OrderPromotionItemEntityConfiguration());
-        modelBuilder.ApplyConfiguration(new OrderPromotionSubItemEntityConfiguration());
-        modelBuilder.ApplyConfiguration(new ProductPromotionEntityConfiguration());
-        modelBuilder.ApplyConfiguration(new ProductPromotionItemEntityConfiguration());
-
-        // Customer
-        modelBuilder.ApplyConfiguration(new CustomerEntityConfiguration());
-        modelBuilder.ApplyConfiguration(new ContactEntityConfiguration());
-
-        #region OpnIddict
-
-        modelBuilder.ApplyConfiguration(new ApplicationConfiguration());
-        modelBuilder.ApplyConfiguration(new AuthorizationConfiguration());
-        modelBuilder.ApplyConfiguration(new ScopeConfiguration());
-        modelBuilder.ApplyConfiguration(new TokenConfiguration());
-        modelBuilder.ApplyConfiguration(new ClientRoleConfiguration());
-
-        #endregion
-
-        #region Identity
-
-        modelBuilder.ApplyConfiguration(new RoleConfiguration());
-        modelBuilder.ApplyConfiguration(new RoleClaimConfiguration());
-
-        modelBuilder.ApplyConfiguration(new UserConfiguration());
-        modelBuilder.ApplyConfiguration(new UserClaimConfiguration());
-        modelBuilder.ApplyConfiguration(new UserLoginConfiguration());
-        modelBuilder.ApplyConfiguration(new UserRoleConfiguration());
-        modelBuilder.ApplyConfiguration(new UserTokenConfiguration());
-
-        #endregion
-
-        #region Security
-
-        modelBuilder.ApplyConfiguration(new PermissionGroupConfiguration());
-        modelBuilder.ApplyConfiguration(new PermissionConfiguration());
-        modelBuilder.ApplyConfiguration(new SecurityEventConfiguration());
-
-        #endregion
+        ModelBuilderExtensions.ConfigureInventoryEntitiesExtensions(modelBuilder);
+        ModelBuilderExtensions.ConfigureIdentityEntitiesExtensions(modelBuilder);
     }
 }

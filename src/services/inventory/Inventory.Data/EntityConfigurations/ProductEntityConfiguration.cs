@@ -20,6 +20,10 @@ public class ProductEntityConfiguration : BaseEntityConfiguration<Product>
             .IsRequired()
             .HasMaxLength(150);
 
+        builder.Property(p => p.Sku)
+            .IsRequired()
+            .HasMaxLength(150);
+
         builder.HasMany(p => p.ProductAttributes)
             .WithMany(p => p.Products)
             .UsingEntity<ProductProductAttribute>(

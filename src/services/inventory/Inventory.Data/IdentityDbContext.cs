@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 using ECommerce.Shared.Data.Extensions;
-using ECommerce.Inventory.Data.EntityConfigurations.IdentityEntities;
 
 namespace ECommerce.Inventory.Data;
 
@@ -28,35 +27,6 @@ public class IdentityDbContext(DbContextOptions<IdentityDbContext> options) : Id
         modelBuilder.UseCustomDbFunctions();
         modelBuilder.UseCustomPostgreSQLDbFunctions();
 
-        #region OpnIddict
-
-        modelBuilder.ApplyConfiguration(new ApplicationConfiguration());
-        modelBuilder.ApplyConfiguration(new AuthorizationConfiguration());
-        modelBuilder.ApplyConfiguration(new ScopeConfiguration());
-        modelBuilder.ApplyConfiguration(new TokenConfiguration());
-        modelBuilder.ApplyConfiguration(new ClientRoleConfiguration());
-
-        #endregion
-
-        #region Identity
-
-        modelBuilder.ApplyConfiguration(new RoleConfiguration());
-        modelBuilder.ApplyConfiguration(new RoleClaimConfiguration());
-
-        modelBuilder.ApplyConfiguration(new UserConfiguration());
-        modelBuilder.ApplyConfiguration(new UserClaimConfiguration());
-        modelBuilder.ApplyConfiguration(new UserLoginConfiguration());
-        modelBuilder.ApplyConfiguration(new UserRoleConfiguration());
-        modelBuilder.ApplyConfiguration(new UserTokenConfiguration());
-
-        #endregion
-
-        #region Security
-
-        modelBuilder.ApplyConfiguration(new PermissionGroupConfiguration());
-        modelBuilder.ApplyConfiguration(new PermissionConfiguration());
-        modelBuilder.ApplyConfiguration(new SecurityEventConfiguration());
-
-        #endregion
+        ModelBuilderExtensions.ConfigureIdentityEntitiesExtensions(modelBuilder);
     }
 }

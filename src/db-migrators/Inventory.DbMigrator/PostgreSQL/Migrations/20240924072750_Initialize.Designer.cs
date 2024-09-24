@@ -15,7 +15,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ECommerce.Inventory.DbMigrator.PostgreSQL.Migrations
 {
     [DbContext(typeof(MigrationDbContext))]
-    [Migration("20240923040440_Initialize")]
+    [Migration("20240924072750_Initialize")]
     partial class Initialize
     {
         /// <inheritdoc />
@@ -26,6 +26,7 @@ namespace ECommerce.Inventory.DbMigrator.PostgreSQL.Migrations
                 .HasAnnotation("ProductVersion", "8.0.1")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
+            NpgsqlModelBuilderExtensions.HasPostgresExtension(modelBuilder, "unaccent");
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
             modelBuilder.Entity("Discount_AppliedToCategories", b =>
@@ -226,9 +227,13 @@ namespace ECommerce.Inventory.DbMigrator.PostgreSQL.Migrations
                         .HasColumnType("character varying(20)")
                         .HasColumnName("phone_number");
 
-                    b.Property<int>("Type")
-                        .HasColumnType("integer")
-                        .HasColumnName("type");
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("type")
+                        .HasDefaultValueSql("'UNSPECIFIED'");
 
                     b.Property<DateTimeOffset?>("UpdatedAt")
                         .HasColumnType("timestamp with time zone")
@@ -308,8 +313,8 @@ namespace ECommerce.Inventory.DbMigrator.PostgreSQL.Migrations
                         .HasColumnType("character varying(20)")
                         .HasColumnName("phone_number");
 
-                    b.Property<string>("RefUserId")
-                        .HasColumnType("text")
+                    b.Property<Guid?>("RefUserId")
+                        .HasColumnType("uuid")
                         .HasColumnName("ref_user_id");
 
                     b.Property<DateTimeOffset?>("UpdatedAt")
@@ -815,10 +820,6 @@ namespace ECommerce.Inventory.DbMigrator.PostgreSQL.Migrations
                     b.Property<bool>("Predefined")
                         .HasColumnType("boolean")
                         .HasColumnName("predefined");
-
-                    b.Property<byte>("Status")
-                        .HasColumnType("smallint")
-                        .HasColumnName("status");
 
                     b.Property<DateTimeOffset?>("UpdatedAt")
                         .HasColumnType("timestamp with time zone")
@@ -2193,6 +2194,12 @@ namespace ECommerce.Inventory.DbMigrator.PostgreSQL.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)")
                         .HasColumnName("name");
+
+                    b.Property<string>("Sku")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("character varying(150)")
+                        .HasColumnName("sku");
 
                     b.Property<string>("Slug")
                         .IsRequired()

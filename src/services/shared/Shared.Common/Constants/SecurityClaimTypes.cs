@@ -105,5 +105,6 @@ public static partial class SecurityClaimTypes
     public const string HasOneOfPermissions = "has_one_of_permissions";
     public const string HasAllOfPermissions = "has_all_of_permissions";
     public const string TenantId = "tenant_id";
-    public const string StoreId = "store_id";
+    public const string MerchantId = "merchant_id";
+    public const string CustomerId = "customer_id";
 }

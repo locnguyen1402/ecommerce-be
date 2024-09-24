@@ -13,6 +13,12 @@ public class ContactEntityConfiguration : BaseEntityConfiguration<Contact>
     {
         base.Configure(builder);
 
+        builder
+            .Property(t => t.Type)
+            .HasConversion<string>()
+            .HasMaxLength(50)
+            .HasDefaultValueSql($"'{AddressType.UNSPECIFIED}'");
+
         builder.Property(p => p.Name)
             .HasMaxLength(200);
 

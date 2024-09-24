@@ -10,8 +10,6 @@ public class Role : IdentityRole<Guid>, IAggregateRoot, IEntity<Guid>, ICreation
 {
     public bool Predefined { get; private set; }
 
-    public RoleStatus Status { get; private set; }
-
     public string? Description { get; private set; } = string.Empty;
 
     public List<string> Permissions { get; } = [];
@@ -26,8 +24,6 @@ public class Role : IdentityRole<Guid>, IAggregateRoot, IEntity<Guid>, ICreation
 
     public Role() : base()
     {
-        Status = RoleStatus.NEW;
-
         _userRoles = [];
         _roleClaims = [];
 
@@ -56,32 +52,7 @@ public class Role : IdentityRole<Guid>, IAggregateRoot, IEntity<Guid>, ICreation
 
     public void Describe(string description) => Description = description;
 
-    #region Status
-
-    public RoleStatus[] NextAllowedStatuses => Status switch
-    {
-        RoleStatus.NEW => [RoleStatus.ACTIVE],
-        RoleStatus.ACTIVE => [RoleStatus.DEACTIVATE],
-        RoleStatus.DEACTIVATE => [RoleStatus.ACTIVE],
-        _ => [],
-    };
-
-    public bool IsAllowedToChangeStatus(RoleStatus nextStatus)
-        => NextAllowedStatuses.Contains(nextStatus);
-
-    public bool IsAllowedToUpdateStatus(RoleStatus nextStatus)
-        => NextAllowedStatuses.Contains(nextStatus);
-
-    public bool TryToUpdateStatus(RoleStatus newStatus, string remarks)
-    {
-        if (!IsAllowedToUpdateStatus(newStatus))
-            return false;
-
-        Status = newStatus;
-
-        return true;
-    }
-
+    #region Enable/Disable
     public void Enable()
     {
         Enabled = true;
@@ -91,8 +62,7 @@ public class Role : IdentityRole<Guid>, IAggregateRoot, IEntity<Guid>, ICreation
     {
         Enabled = false;
     }
-
-    #endregion
+    #endregion Enable/Disable
 
     public void UpdatePermissions(IEnumerable<string> permissions)
     {

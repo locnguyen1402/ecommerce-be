@@ -16,12 +16,10 @@ using ECommerce.Inventory.Infrastructure.Settings;
 using ECommerce.Shared.Data.Extensions;
 using Microsoft.AspNetCore.Identity;
 using ECommerce.Inventory.Data.Repositories.Identity;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
 using OpenIddict.Validation.AspNetCore;
+using ECommerce.Inventory.Infrastructure.Services;
+using ECommerce.Shared.Infrastructure.Services;
 
 var builder = WebApplication.CreateSlimBuilder(args);
 builder.WebHost.UseKestrelHttpsConfiguration();
@@ -110,7 +108,7 @@ builder.Services.AddOpenIddict()
     .AddServer(options =>
     {
         options.SetAuthorizationEndpointUris("connect/authorize", "connect/context", "connect/consent")
-            .SetTokenEndpointUris("/connect/token")
+            .SetTokenEndpointUris("connect/token")
             .SetIntrospectionEndpointUris("connect/introspect")
             .SetDeviceEndpointUris("connect/device")
             .SetVerificationEndpointUris("connect/verify")
@@ -118,7 +116,7 @@ builder.Services.AddOpenIddict()
             .SetRevocationEndpointUris("connect/revocation")
             .SetUserinfoEndpointUris("connect/userinfo");
 
-        options.SetIssuer("https://localhost:10002");
+        options.SetIssuer(appSettings.Identity.Authority);
 
         // Enable the authorization code, implicit and the refresh token flows.
         options.AllowAuthorizationCodeFlow()
@@ -185,18 +183,23 @@ builder.Services.AddScoped<IShopCollectionRepository, ShopCollectionRepository>(
 builder.Services.AddScoped<IProductPromotionRepository, ProductPromotionRepository>();
 builder.Services.AddScoped<IOrderPromotionRepository, OrderPromotionRepository>();
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
-builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
 builder.Services.AddScoped<IVoucherRepository, VoucherRepository>();
-
-builder.Services.AddScoped<IMerchantService, MerchantService>();
-builder.Services.AddScoped<IProductService, ProductService>();
-builder.Services.AddScoped<ICustomerService, CustomerService>();
+builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
+builder.Services.AddScoped<IContactRepository, ContactRepository>();
 
 builder.Services.AddScoped<IClientRoleRepository, ClientRoleRepository>();
 builder.Services.AddScoped<IPermissionGroupRepository, PermissionGroupRepository>();
 builder.Services.AddScoped<IPermissionRepository, PermissionRepository>();
 builder.Services.AddScoped<IRoleRepository, RoleRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+
+builder.Services.AddTransient<IIdentityService, IdentityService>();
+
+builder.Services.AddScoped<IMerchantService, MerchantService>();
+builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<ICustomerService, CustomerService>();
+builder.Services.AddScoped<IProfileService, ProfileService>();
+builder.Services.AddScoped<IAccountService, AccountService>();
 
 // Common dependencies
 
