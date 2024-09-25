@@ -19,6 +19,7 @@ public class ProductEndpoints(WebApplication app) : MinimalEndpoint(app, "/inven
 
         Builder.MapGet<GetProductByIdQueryHandler>("/{id:Guid}");
         Builder.MapPut<UpdateProductCommandHandler>("/{id:Guid}");
+        Builder.MapPut<ExtendStockCommandHandler>("/{id:Guid}/variants/{variantId:Guid}/extend-stock");
 
         Builder.MapGet<GetProductBySlugQueryHandler>("/{slug}");
 

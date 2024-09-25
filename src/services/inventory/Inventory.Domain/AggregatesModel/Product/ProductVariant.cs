@@ -32,6 +32,11 @@ public class ProductVariant(int stock, decimal price) : AuditedAggregateRoot
         Stock = stock;
     }
 
+    public void IncreaseStock(int quantity)
+    {
+        Stock += quantity;
+    }
+
     public void DecreaseStock(int quantity)
     {
         Stock -= quantity;
