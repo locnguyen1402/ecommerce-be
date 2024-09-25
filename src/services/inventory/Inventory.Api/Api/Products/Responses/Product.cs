@@ -27,6 +27,8 @@ public record ProductResponse(
     private List<ProductVariant> ProductVariants { get; } = [];
     public int Stock => ProductVariants.Sum(x => x.Stock);
     public decimal Price => ProductVariants.Count > 0 ? ProductVariants.Min(x => x.Price) : 0;
+    public List<ProductVariantResponse> Variants => ProductVariants.Select(x => ProductVariantProjection.ToProductVariantResponse().Compile().Invoke(x)).ToList();
+
     public ProductResponse(Guid id, string name, List<ProductVariant> productVariants)
         : this(id, name)
     {
