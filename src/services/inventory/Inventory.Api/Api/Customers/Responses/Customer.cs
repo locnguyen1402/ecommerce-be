@@ -1,10 +1,12 @@
 using System.Linq.Expressions;
+
 using ECommerce.Inventory.Domain.AggregatesModel;
 using ECommerce.Shared.Common.Enums;
 
 namespace ECommerce.Inventory.Api.Customers.Responses;
 
 public record CustomerResponse(
+    Guid Id,
     string? UserName,
     string FirstName,
     string? LastName,
@@ -13,8 +15,7 @@ public record CustomerResponse(
     Gender Gender,
     string? Email,
     string? PhoneNumber,
-    CustomerLevelType LevelType,
-    List<ContactResponse> Contacts
+    CustomerLevelType LevelType
 );
 
 public record CustomerByUserIdsResponse(
@@ -48,6 +49,7 @@ public static class CustomerProjection
     public static Expression<Func<Customer, CustomerResponse>> ToCustomerResponse()
         => x =>
         new CustomerResponse(
+            x.Id,
             x.UserName,
             x.FirstName,
             x.LastName,
@@ -56,11 +58,7 @@ public static class CustomerProjection
             x.Gender ?? Gender.UNSPECIFIED,
             x.Email,
             x.PhoneNumber,
-            x.LevelType,
-            x.Contacts
-                .AsQueryable()
-                .Select(ContactProjection.ToContactResponse())
-                .ToList()
+            x.LevelType
         );
 
     public static Expression<Func<Customer, CustomerByUserIdsResponse>> ToCustomerByUserIds()

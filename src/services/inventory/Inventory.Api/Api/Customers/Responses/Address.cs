@@ -1,6 +1,8 @@
 using System.Linq.Expressions;
-using ECommerce.Inventory.Api.Customers.Requests;
+
 using ECommerce.Shared.Common.AggregatesModel.Common;
+
+using ECommerce.Inventory.Api.Customers.Requests;
 
 namespace ECommerce.Inventory.Api.Customers.Responses;
 

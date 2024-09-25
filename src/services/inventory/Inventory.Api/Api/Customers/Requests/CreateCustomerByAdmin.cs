@@ -4,7 +4,7 @@ using ECommerce.Shared.Common.Enums;
 
 namespace ECommerce.Inventory.Api.Customers.Requests;
 
-public class CreateCustomerByAdminRequest
+public class AdminCreateCustomerRequest
 {
     public string FirstName { get; set; } = string.Empty;
     public string? LastName { get; set; }
@@ -14,10 +14,10 @@ public class CreateCustomerByAdminRequest
     public string? Email { get; set; }
 }
 
-public class CreateCustomerByAdminRequestValidator : AbstractValidator<CreateCustomerByAdminRequest>
+public class AdminCreateCustomerRequestValidator : AbstractValidator<AdminCreateCustomerRequest>
 {
-    private string PrefixErrorMessage => nameof(CreateCustomerByAdminRequestValidator);
-    public CreateCustomerByAdminRequestValidator()
+    private string PrefixErrorMessage => nameof(AdminCreateCustomerRequestValidator);
+    public AdminCreateCustomerRequestValidator()
     {
         RuleFor(x => x.FirstName)
             .NotEmpty()

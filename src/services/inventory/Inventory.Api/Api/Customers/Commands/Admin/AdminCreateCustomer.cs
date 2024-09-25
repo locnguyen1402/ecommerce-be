@@ -8,12 +8,12 @@ using ECommerce.Inventory.Api.Customers.Requests;
 
 namespace ECommerce.Inventory.Api.Customers.Commands;
 
-public class CreateCustomerByAdminCommandHandler : IEndpointHandler
+public class AdminCreateCustomerCommandHandler : IEndpointHandler
 {
     public Delegate Handle
     => async (
-        CreateCustomerByAdminRequest request,
-        IValidator<CreateCustomerByAdminRequest> validator,
+        AdminCreateCustomerRequest request,
+        IValidator<AdminCreateCustomerRequest> validator,
         ICustomerRepository customerRepository,
         CancellationToken cancellationToken
     ) =>
@@ -22,6 +22,12 @@ public class CreateCustomerByAdminCommandHandler : IEndpointHandler
         if (!validationResult.IsValid)
         {
             return Results.ValidationProblem(validationResult.ToDictionary());
+        }
+
+        if (!string.IsNullOrEmpty(request.PhoneNumber)
+            && await customerRepository.AnyAsync(x => x.PhoneNumber == request.PhoneNumber, cancellationToken))
+        {
+            return Results.Conflict("Phone number already exists");
         }
 
         var customer = new Customer(
