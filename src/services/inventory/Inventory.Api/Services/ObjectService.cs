@@ -1,12 +1,13 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+
 using ECommerce.Inventory.Api.ObjectStorages.Requests;
+using ECommerce.Inventory.Api.ObjectStorageStorages.Responses;
 using ECommerce.Inventory.Domain.AggregatesModel;
 using ECommerce.Inventory.Infrastructure.Settings;
-using ECommerce.Shared.Common.AggregatesModel.Response;
 using ECommerce.Shared.Common.Extensions;
 using ECommerce.Shared.Common.Infrastructure.Services;
 using ECommerce.Shared.Libs.Extensions;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 
 namespace ECommerce.Inventory.Api.Services;
 
@@ -18,14 +19,14 @@ public class ObjectService(
     ILogger<ObjectService> logger
 ) : IObjectService
 {
-    public async Task<IResult> DownloadStreamQueryAsync(Guid id, CancellationToken cancellationToken = default)
+    public async Task<Stream?> DownloadStreamQueryAsync(Guid id, CancellationToken cancellationToken = default)
     {
         var document = await repository.Query
             .Where(t => t.Id == id)
             .SingleOrDefaultAsync(cancellationToken);
 
         if (document == null)
-            return Results.NotFound();
+            return null;
 
         var stream = await objectStorageService.DownloadAsync(
             document.Bucket,
@@ -34,12 +35,9 @@ public class ObjectService(
         );
 
         if (stream == null)
-            return Results.NotFound();
+            return null;
 
-        return Results.File(
-            stream,
-            document.ContentType,
-            $"{document.Name}{document.Extension}");
+        return stream;
     }
 
     public async Task<IResult> FindObjectQueryAsync(Guid id, CancellationToken cancellationToken = default)
@@ -67,14 +65,14 @@ public class ObjectService(
         return Results.Extensions.PaginatedListOk(result);
     }
 
-    public async Task<IResult> GetPresignedUrlQueryAsync(Guid id, int expiration, CancellationToken cancellationToken = default)
+    public async Task<PresignedUrlResponse?> GetPresignedUrlQueryAsync(Guid id, int expiration, CancellationToken cancellationToken = default)
     {
         var document = await repository.Query
            .Where(t => t.Id == id)
            .SingleOrDefaultAsync(cancellationToken);
 
         if (document == null)
-            return Results.NotFound();
+            return null;
 
         var url = objectStorageService.GetPresignedUrl(
             document.Bucket,
@@ -82,13 +80,10 @@ public class ObjectService(
             TimeSpan.FromMinutes(expiration)
         );
 
-        return Results.Ok(new PresignedResponse(
-            document.Id,
-            url
-        ));
+        return document.ToPresignedUrlResponse(url);
     }
 
-    public async Task<IResult> UploadFileAsync(UploadFileRequest request, CancellationToken cancellationToken = default)
+    public async Task<ObjectStorageResponse?> UploadFileAsync(UploadFileRequest request, CancellationToken cancellationToken = default)
     {
         logger.LogInformation("Uploading file to object storage");
 
@@ -133,12 +128,13 @@ public class ObjectService(
            );
 
             objectStorage.Uploaded(uploadResponse.FilePath);
+            objectStorage.Update(objectStorage.Id.ToString(), uploadResponse.Key);
 
             await repository.UpdateAndSaveChangeAsync(objectStorage, cancellationToken);
 
             logger.LogInformation("File uploaded to object storage");
 
-            return Results.Ok(objectStorage);
+            return objectStorage.ToObjectStorageResponse();
         }
         catch (Exception ex)
         {
@@ -148,10 +144,7 @@ public class ObjectService(
 
             await repository.UpdateAndSaveChangeAsync(objectStorage, cancellationToken);
 
-            return Results.UnprocessableEntity(new
-            {
-                Title = ex.Message,
-            });
+            return null;
         }
     }
 }

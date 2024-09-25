@@ -15,7 +15,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ECommerce.Inventory.DbMigrator.PostgreSQL.Migrations
 {
     [DbContext(typeof(MigrationDbContext))]
-    [Migration("20240924141527_Initialize")]
+    [Migration("20240925045311_Initialize")]
     partial class Initialize
     {
         /// <inheritdoc />
@@ -1533,9 +1533,9 @@ namespace ECommerce.Inventory.DbMigrator.PostgreSQL.Migrations
                         .HasColumnName("updated_by");
 
                     b.HasKey("Id")
-                        .HasName("pk_import_history");
+                        .HasName("pk_import_histories");
 
-                    b.ToTable("import_history", (string)null);
+                    b.ToTable("import_histories", (string)null);
                 });
 
             modelBuilder.Entity("ECommerce.Inventory.Domain.AggregatesModel.Merchant", b =>
@@ -1708,9 +1708,9 @@ namespace ECommerce.Inventory.DbMigrator.PostgreSQL.Migrations
                         .HasColumnName("updated_by");
 
                     b.HasKey("Id")
-                        .HasName("pk_object_storage");
+                        .HasName("pk_object_storages");
 
-                    b.ToTable("object_storage", (string)null);
+                    b.ToTable("object_storages", (string)null);
                 });
 
             modelBuilder.Entity("ECommerce.Inventory.Domain.AggregatesModel.Order", b =>

@@ -1,14 +1,15 @@
 using ECommerce.Inventory.Api.ObjectStorages.Requests;
+using ECommerce.Inventory.Api.ObjectStorageStorages.Responses;
 
 namespace ECommerce.Inventory.Api.Services;
 
 public interface IObjectService
 {
-    Task<IResult> UploadFileAsync(
+    Task<ObjectStorageResponse?> UploadFileAsync(
         UploadFileRequest request,
         CancellationToken cancellationToken = default);
 
-    Task<IResult> GetPresignedUrlQueryAsync(
+    Task<PresignedUrlResponse?> GetPresignedUrlQueryAsync(
         Guid id,
         int expiration,
         CancellationToken cancellationToken = default);
@@ -23,7 +24,7 @@ public interface IObjectService
         Guid id,
         CancellationToken cancellationToken = default);
 
-    Task<IResult> DownloadStreamQueryAsync(
+    Task<Stream?> DownloadStreamQueryAsync(
         Guid id,
         CancellationToken cancellationToken = default);
 }

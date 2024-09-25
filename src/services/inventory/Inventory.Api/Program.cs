@@ -23,7 +23,6 @@ using ECommerce.Shared.Common.Infrastructure.Services;
 
 using ECommerce.Shared.Data.Extensions;
 using ECommerce.Shared.Libs.Extensions;
-using Microsoft.AspNetCore.StaticFiles;
 
 var builder = WebApplication.CreateSlimBuilder(args);
 builder.WebHost.UseKestrelHttpsConfiguration();
@@ -200,14 +199,17 @@ builder.Services.AddScoped<IPermissionGroupRepository, PermissionGroupRepository
 builder.Services.AddScoped<IPermissionRepository, PermissionRepository>();
 builder.Services.AddScoped<IRoleRepository, RoleRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
-
-builder.Services.AddTransient<IIdentityService, IdentityService>();
+builder.Services.AddScoped<IImportHistoryRepository, ImportHistoryRepository>();
+builder.Services.AddScoped<IObjectStorageRepository, ObjectStorageRepository>();
 
 builder.Services.AddScoped<IMerchantService, MerchantService>();
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<ICustomerService, CustomerService>();
 builder.Services.AddScoped<IProfileService, ProfileService>();
 builder.Services.AddScoped<IAccountService, AccountService>();
+builder.Services.AddScoped<IObjectService, ObjectService>();
+
+builder.Services.AddTransient<IIdentityService, IdentityService>();
 
 builder.Services.AddSingleton<IObjectStorageService, ObjectStorageService>();
 

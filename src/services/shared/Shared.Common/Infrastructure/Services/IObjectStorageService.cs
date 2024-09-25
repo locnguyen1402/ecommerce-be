@@ -49,12 +49,15 @@ public interface IObjectStorageService
 public record UploadResponse(
     bool Success,
     string Bucket,
+    string Key,
     string FilePath,
     string ContentType,
     IDictionary<string, string> Tags
 )
 {
     public string Bucket { get; init; } = Bucket;
+    public string Key { get; init; } = Key;
+    public string FilePath { get; init; } = FilePath;
     public string ContentType { get; init; } = ContentType;
     public IDictionary<string, string> Tags { get; init; } = Tags;
 }

@@ -159,7 +159,7 @@ namespace ECommerce.Inventory.DbMigrator.PostgreSQL.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "import_history",
+                name: "import_histories",
                 columns: table => new
                 {
                     id = table.Column<Guid>(type: "uuid", nullable: false),
@@ -177,7 +177,7 @@ namespace ECommerce.Inventory.DbMigrator.PostgreSQL.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("pk_import_history", x => x.id);
+                    table.PrimaryKey("pk_import_histories", x => x.id);
                 });
 
             migrationBuilder.CreateTable(
@@ -201,7 +201,7 @@ namespace ECommerce.Inventory.DbMigrator.PostgreSQL.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "object_storage",
+                name: "object_storages",
                 columns: table => new
                 {
                     id = table.Column<Guid>(type: "uuid", nullable: false),
@@ -224,7 +224,7 @@ namespace ECommerce.Inventory.DbMigrator.PostgreSQL.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("pk_object_storage", x => x.id);
+                    table.PrimaryKey("pk_object_storages", x => x.id);
                 });
 
             migrationBuilder.CreateTable(
@@ -1620,13 +1620,13 @@ namespace ECommerce.Inventory.DbMigrator.PostgreSQL.Migrations
                 name: "discount_applied_to_products");
 
             migrationBuilder.DropTable(
-                name: "import_history");
+                name: "import_histories");
 
             migrationBuilder.DropTable(
                 name: "merchant_categories");
 
             migrationBuilder.DropTable(
-                name: "object_storage");
+                name: "object_storages");
 
             migrationBuilder.DropTable(
                 name: "order_contacts");

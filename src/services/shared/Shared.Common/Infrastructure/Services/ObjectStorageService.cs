@@ -2,20 +2,28 @@ using System.Net;
 
 using Amazon.S3;
 using Amazon.S3.Model;
+using ECommerce.Shared.Common.Infrastructure.Settings;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace ECommerce.Shared.Common.Infrastructure.Services;
 
 /// <inheritdoc/>
 public class ObjectStorageService : IObjectStorageService
 {
-    private readonly IAmazonS3 _s3Client; private readonly ILogger<ObjectStorageService> _logger;
+    private readonly IAmazonS3 _s3Client;
+
+    private readonly IOptions<AwsSettings> _options;
+
+    private readonly ILogger<ObjectStorageService> _logger;
 
     public ObjectStorageService(
         IAmazonS3 s3Client,
+        IOptions<AwsSettings> options,
         ILogger<ObjectStorageService> logger)
     {
         _s3Client = s3Client;
+        _options = options;
         _logger = logger;
     }
 
@@ -100,7 +108,9 @@ public class ObjectStorageService : IObjectStorageService
             BucketName = bucket,
             Key = key,
             InputStream = stream,
-            TagSet = new()
+            TagSet = [],
+            ContentType = contentType,
+            DisablePayloadSigning = _options.Value.DisablePayloadSigning
         };
 
         if (!string.IsNullOrEmpty(request.ContentType))
@@ -116,18 +126,39 @@ public class ObjectStorageService : IObjectStorageService
             {
                 _logger.LogInformation($"Successfully uploaded object to bucket {bucket} with key {key}");
 
-                return new UploadResponse(true, bucket, filePath, contentType ?? string.Empty, tags ?? new Dictionary<string, string>());
+                return new UploadResponse(
+                    true
+                    , bucket
+                    , key
+                    , filePath
+                    , contentType ?? string.Empty
+                    , tags ?? new Dictionary<string, string>()
+                );
             }
 
             _logger.LogError($"Failed to upload object to bucket {bucket} with key {key}");
 
-            return new UploadResponse(false, bucket, filePath, contentType ?? string.Empty, tags ?? new Dictionary<string, string>());
+            return new UploadResponse(
+                false
+                , bucket
+                , key
+                , filePath
+                , contentType ?? string.Empty
+                , tags ?? new Dictionary<string, string>()
+            );
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, $"Failed to upload object to bucket {bucket} with key {key}");
 
-            return new UploadResponse(false, bucket, filePath, contentType ?? string.Empty, tags ?? new Dictionary<string, string>());
+            return new UploadResponse(
+                false
+                , bucket
+                , key
+                , filePath
+                , contentType ?? string.Empty
+                , tags ?? new Dictionary<string, string>()
+            );
         }
     }
 

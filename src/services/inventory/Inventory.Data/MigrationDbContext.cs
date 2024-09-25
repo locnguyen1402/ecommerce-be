@@ -37,9 +37,10 @@ public class MigrationDbContext(DbContextOptions<MigrationDbContext> options) :
     public DbSet<OrderPromotionSubItem> OrderPromotionSubItems => Set<OrderPromotionSubItem>();
     public DbSet<ProductPromotion> ProductPromotions => Set<ProductPromotion>();
     public DbSet<ProductPromotionItem> ProductPromotionItems => Set<ProductPromotionItem>();
-
     public DbSet<Customer> Customers => Set<Customer>();
     public DbSet<Contact> Contacts => Set<Contact>();
+    public DbSet<ObjectStorage> ObjectStorages => Set<ObjectStorage>();
+    public DbSet<ImportHistory> ImportHistories => Set<ImportHistory>();
 
     public DbSet<DataProtectionKey> DataProtectionKeys => Set<DataProtectionKey>();
     public DbSet<PermissionGroup> PermissionGroups => Set<PermissionGroup>();

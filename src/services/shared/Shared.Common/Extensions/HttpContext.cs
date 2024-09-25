@@ -11,4 +11,9 @@ public static class HttpContextExtensions
         httpContext.Response.Headers.Append(HeaderConstants.PAGINATION_KEY, source.ToJsonString());
         httpContext.Response.Headers.Append(HeaderConstants.ACCESS_CONTROL_EXPOSE_HEADERS, HeaderConstants.PAGINATION_KEY);
     }
+
+    public static void SetContentDispositionResponseHeader(this HttpContext httpContext)
+    {
+        httpContext.Response.Headers.Append(HeaderConstants.ACCESS_CONTROL_EXPOSE_HEADERS, HeaderConstants.CONTENT_DISPOSITION);
+    }
 }
