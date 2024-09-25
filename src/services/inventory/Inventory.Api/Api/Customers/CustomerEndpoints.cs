@@ -20,6 +20,7 @@ public class CustomerEndpoints(WebApplication app) : MinimalEndpoint(app, "/inve
         adminGroup.MapGet<AdminGetCustomersQueryHandler>("/");
         adminGroup.MapPost<AdminCreateCustomerCommandHandler>("/");
 
+        adminGroup.MapGet<GetCustomerByIdQueryHandler>("/{id:Guid}");
         adminGroup.MapPut<UpdateCustomerCommandHandler>("/{id:Guid}");
 
         adminGroup.MapGet<AdminGetContactsByCustomerIdQueryHandler>("/{id:Guid}/contacts");
