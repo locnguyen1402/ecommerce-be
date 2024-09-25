@@ -24,18 +24,14 @@ public class CreateCustomerByAdminCommandHandler : IEndpointHandler
             return Results.ValidationProblem(validationResult.ToDictionary());
         }
 
-        var fullName = request.FullName;
-        var lastName = string.Empty;
-
         var customer = new Customer(
-                fullName
-                , lastName
-                , request.PhoneNumber
-                , request.BirthDate
-                , request.Gender
-                , request.Email
-                , request.PhoneNumber
-            );
+            request.FirstName
+            , request.LastName
+            , request.BirthDate
+            , request.Gender
+            , request.Email
+            , request.PhoneNumber
+        );
 
         await customerRepository.AddAndSaveChangeAsync(customer, cancellationToken);
 

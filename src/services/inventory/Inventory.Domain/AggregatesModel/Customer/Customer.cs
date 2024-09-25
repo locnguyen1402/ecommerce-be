@@ -6,14 +6,13 @@ namespace ECommerce.Inventory.Domain.AggregatesModel;
 public class Customer(
     string firstName
     , string? lastName
-    , string? userName
     , DateOnly? birthDate
     , Gender? gender
     , string? email
     , string? phoneNumber
 ) : AuditedAggregateRoot
 {
-    public string? UserName { get; private set; } = userName;
+    public string? UserName { get; private set; }
     public string FirstName { get; private set; } = firstName;
     public string? LastName { get; private set; } = lastName;
     public string FullName { get; private set; } = string.Join(" ", new[] { firstName, lastName }.Where(x => !string.IsNullOrEmpty(x)));
@@ -29,28 +28,32 @@ public class Customer(
     public virtual IReadOnlyCollection<Order> Orders => _orders;
 
     public void UpdateGeneralInfo(
-        string firstName
-        , string? lastName
-        , string? userName
-        , DateOnly? birthDate
+        DateOnly? birthDate
         , Gender? gender
         , string? email
         , string? phoneNumber
     )
     {
-        FirstName = firstName;
-        LastName = lastName;
-        UserName = userName;
-        FullName = string.Join(" ", new[] { firstName, lastName }.Where(x => !string.IsNullOrEmpty(x)));
         BirthDate = birthDate;
         Gender = gender;
         Email = email;
         PhoneNumber = phoneNumber;
     }
+    public void UpdateName(string firstName, string? lastName)
+    {
+        FirstName = firstName;
+        LastName = lastName;
+        FullName = string.Join(" ", new[] { firstName, lastName }.Where(x => !string.IsNullOrEmpty(x)));
+    }
 
     public void UpdatePhoneNumber(string phoneNumber)
     {
         PhoneNumber = phoneNumber;
+    }
+
+    public void SetUserName(string userName)
+    {
+        UserName = userName;
     }
 
     public void SetRefUser(Guid refUserId)

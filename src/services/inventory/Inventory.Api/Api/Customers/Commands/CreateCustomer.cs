@@ -38,13 +38,14 @@ public class CreateCustomerCommandHandler : IEndpointHandler
 
         var customer = new Customer(
             phoneNumber
-            , string.Empty
+            , null
+            , null
+            , null
+            , null
             , phoneNumber
-            , null
-            , null
-            , null
-            , null
         );
+
+        customer.SetUserName(phoneNumber);
 
         try
         {
