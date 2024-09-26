@@ -1,6 +1,7 @@
 using System.Linq.Expressions;
 
 using ECommerce.Inventory.Domain.AggregatesModel;
+using ECommerce.Inventory.Infrastructure.Templates.MassUpdates.Products;
 
 namespace ECommerce.Inventory.Api.Products.Responses;
 
@@ -99,6 +100,11 @@ public static class ProductProjection
         return ToAdminProductDetailResponse().Compile().Invoke(product);
     }
 
+    public static ImportBaseInfoTemplate ToImportBaseInfoTemplateResponse(this Product product)
+    {
+        return ToImportBaseInfoTemplateResponse().Compile().Invoke(product);
+    }
+
     public static Expression<Func<Product, ProductOption>> ToProductOption()
         => x =>
         new ProductOption(
@@ -141,5 +147,14 @@ public static class ProductProjection
                 .AsQueryable()
                 .Select(ProductVariantProjection.ToProductVariantResponse())
                 .ToList()
+        );
+
+    public static Expression<Func<Product, ImportBaseInfoTemplate>> ToImportBaseInfoTemplateResponse()
+        => x =>
+        new ImportBaseInfoTemplate(
+            x.Sku,
+            x.Name,
+            x.Description,
+            x.Slug
         );
 }

@@ -1,16 +1,16 @@
+using Microsoft.AspNetCore.Mvc;
 using FluentValidation;
 
+using ECommerce.Shared.Common.Constants;
 using ECommerce.Shared.Common.Infrastructure.Endpoint;
-
-using ECommerce.Inventory.Domain.AggregatesModel;
-using ECommerce.Inventory.Api.Services;
-using ECommerce.Inventory.Api.Importing.Requests;
 using ECommerce.Shared.Common.Infrastructure.Services;
 using ECommerce.Shared.Common.Extensions;
-using ECommerce.Inventory.Api.ObjectStorages.Requests;
 using ECommerce.Shared.Common.Enums;
-using ECommerce.Shared.Common.Constants;
-using Microsoft.AspNetCore.Mvc;
+
+using ECommerce.Inventory.Api.Importing.Requests;
+using ECommerce.Inventory.Api.ObjectStorages.Requests;
+using ECommerce.Inventory.Api.Services;
+using ECommerce.Inventory.Domain.AggregatesModel;
 
 namespace ECommerce.Inventory.Api.Importing.Commands;
 
@@ -84,9 +84,8 @@ public class ImportDocumentCommandHandler : IEndpointHandler
     {
         return documentType switch
         {
-            ImportDocumentType.MASS_UPDATE_BASE_INFO => DocumentPathConstant.PATH_IMPORTING_MASS_UPDATE_BASE_INFO,
-            ImportDocumentType.MASS_UPDATE_SALES_INFO => DocumentPathConstant.PATH_IMPORTING_MASS_UPDATE_SALES_INFO,
-            ImportDocumentType.MASS_UPDATE_STATUS => DocumentPathConstant.PATH_IMPORTING_MASS_UPDATE_STATUS,
+            ImportDocumentType.MASS_UPDATE_PRODUCT_BASE_INFO => DocumentPathConstant.PATH_IMPORTING_MASS_UPDATE_PRODUCT_BASE_INFO,
+            ImportDocumentType.MASS_UPDATE_PRODUCT_SALES_INFO => DocumentPathConstant.PATH_IMPORTING_MASS_UPDATE_PRODUCT_SALES_INFO,
             _ => throw new ArgumentOutOfRangeException(nameof(documentType), documentType, null)
         };
     }

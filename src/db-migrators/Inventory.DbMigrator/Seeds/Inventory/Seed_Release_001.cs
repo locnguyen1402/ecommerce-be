@@ -512,12 +512,7 @@ namespace ECommerce.Inventory.DbMigrator.Seeds.Inventory
         private static async Task InitMerchants(IServiceProvider serviceProvider)
         {
             var merchants = new MerchantInfo[] {
-                new("POLOMANOR", "polomaner", "POLOMANOR Mall", "polomanor-mall"),
-                new("GUTEK", "gutek", "GUTEK Mall", "gutek-mall"),
-                new("Sói gear", "soi-gear", "Sói gear Yêu thích", "soi-gear-yeu-thich"),
-                new("Trang sức bạc Miuu Silver", "trang-suc-bac-miuu-silver", "Miuu Silver Mall", "miuu-silver-mall"),
-                new("Gấu bông vân anh", "gau-bong-van-anh", "Gấu bông vân anh yêu thích", "gau-bong-van-anh-yeu-thich"),
-                new("Romano Vietnam", "romano-vietnam", "Romano Vietnam Mall", "romano-vietnam-mall")
+                new("POLOMANOR", "polomaner", "POLOMANOR Mall", "polomanor-mall")
             };
 
             await InitMerchants(serviceProvider, merchants);

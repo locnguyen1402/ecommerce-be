@@ -1,9 +1,10 @@
 using Microsoft.EntityFrameworkCore;
 
-using ECommerce.Inventory.Domain.AggregatesModel;
 using ECommerce.Shared.Common.Enums;
 using ECommerce.Shared.Common.Extensions;
 using ECommerce.Shared.Common.Infrastructure.Endpoint;
+
+using ECommerce.Inventory.Domain.AggregatesModel;
 
 namespace ECommerce.Inventory.Api.Importing.Queries;
 
@@ -60,12 +61,10 @@ public class GetImportHistoriesQueryHandler : IEndpointHandler
     {
         switch (type)
         {
-            case ImportDocumentType.MASS_UPDATE_BASE_INFO:
-                return query.Where(t => t.DocumentType == ImportDocumentType.MASS_UPDATE_BASE_INFO);
-            case ImportDocumentType.MASS_UPDATE_SALES_INFO:
-                return query.Where(t => t.DocumentType == ImportDocumentType.MASS_UPDATE_SALES_INFO);
-            case ImportDocumentType.MASS_UPDATE_STATUS:
-                return query.Where(t => t.DocumentType == ImportDocumentType.MASS_UPDATE_STATUS);
+            case ImportDocumentType.MASS_UPDATE_PRODUCT_BASE_INFO:
+                return query.Where(t => t.DocumentType == ImportDocumentType.MASS_UPDATE_PRODUCT_BASE_INFO);
+            case ImportDocumentType.MASS_UPDATE_PRODUCT_SALES_INFO:
+                return query.Where(t => t.DocumentType == ImportDocumentType.MASS_UPDATE_PRODUCT_SALES_INFO);
             default:
                 return query.Where(t => t.DocumentType != ImportDocumentType.UNSPECIFIED);
         }
