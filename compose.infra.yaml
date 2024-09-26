@@ -1,6 +1,33 @@
 version: "3.9"
 
 services:
+  rabbitmq: # sudo chown -R 1001:1001 ./deploy/local/volumes/rabbitmq
+    image: bitnami/rabbitmq:3.12
+    volumes:
+      - ./deploy/local/volumes/rabbitmq:/bitnami/rabbitmq/mnesia
+      - ./deploy/local/configs/infrastructure/rabbitmq.conf:/bitnami/rabbitmq/conf/custom.conf:ro
+      - ./deploy/local/certs/ssl/chain.crt:/opt/bitnami/rabbitmq/certs/ca_certificate.pem:ro
+      - ./deploy/local/certs/ssl/infrastructure-services/tls.crt:/opt/bitnami/rabbitmq/certs/server_certificate.pem:ro
+      - ./deploy/local/certs/ssl/infrastructure-services/key.pem:/opt/bitnami/rabbitmq/certs/server_key.pem:ro
+    ports:
+      - 5671:5671
+      - 5672:5672
+      - 15672:15672
+      - 15692:15692
+    container_name: rabbitmq
+    environment:
+      - RABBITMQ_USERNAME=administrator
+      - RABBITMQ_PASSWORD=P#ssw0rd
+      - RABBITMQ_SECURE_PASSWORD=yes
+      - RABBITMQ_MANAGEMENT_ALLOW_WEB_ACCESS=true
+    deploy:
+      resources:
+        limits:
+          cpus: "0.25"
+          memory: 256M
+    networks:
+      - ecommerce-platform
+
   postgresql:
     image: postgres:16-alpine
     volumes:

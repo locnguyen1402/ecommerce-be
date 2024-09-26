@@ -1,17 +1,19 @@
 using System.Reflection;
 
+using Microsoft.AspNetCore.Http.Json;
 using Microsoft.EntityFrameworkCore;
-using Npgsql;
-
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
+
+using Amazon.S3;
+using Amazon;
 
 using FluentValidation;
 using FluentValidation.AspNetCore;
+
+using Npgsql;
+
 using ECommerce.Shared.Common.Constants;
-using Microsoft.AspNetCore.Http.Json;
-using Microsoft.Extensions.Options;
-using Amazon.S3;
-using Amazon;
 using ECommerce.Shared.Common.Infrastructure.Settings;
 using ECommerce.Shared.Common.Data.Interceptors;
 

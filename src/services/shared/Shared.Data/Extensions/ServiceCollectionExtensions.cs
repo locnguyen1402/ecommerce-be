@@ -1,8 +1,11 @@
+using Npgsql;
+
 using System.Security.Cryptography.X509Certificates;
 
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.DataProtection.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
@@ -10,6 +13,26 @@ namespace ECommerce.Shared.Data.Extensions;
 
 public static class ServiceCollectionExtensions
 {
+    public static IHostApplicationBuilder ConfigPooledDbContext<TDbContext, TDbContextFactory>(
+        this IHostApplicationBuilder builder,
+        string connectionName,
+        int poolSize = 1024)
+        where TDbContext : DbContext
+        where TDbContextFactory : class, IDbContextFactory<TDbContext>
+    {
+        var connectionString = builder.Configuration.GetConnectionString(connectionName)!;
+        var dataSourceBuilder = new NpgsqlSlimDataSourceBuilder(connectionString);
+
+        dataSourceBuilder.EnableDynamicJson(jsonbClrTypes: [typeof(IReadOnlyCollection<string>)]);
+        dataSourceBuilder.EnableArrays();
+
+        var dataSource = dataSourceBuilder.Build();
+
+        builder.AddPooledDbContext<TDbContext, TDbContextFactory>(options => options.UseDatabase(dataSource), poolSize);
+
+        return builder;
+    }
+
     public static IServiceCollection AddDataProtectionContext<TDbContext>(
         this IServiceCollection services,
         string applicationName,

@@ -1,12 +1,16 @@
 using System.Text;
 
-using Microsoft.EntityFrameworkCore;
-
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
 
+using Microsoft.EntityFrameworkCore;
+
+using MassTransit;
+
 using OpenIddict.Validation.AspNetCore;
 using static OpenIddict.Abstractions.OpenIddictConstants;
+
+using RabbitMQ.Client;
 
 using ECommerce.Inventory.Api.Services;
 using ECommerce.Inventory.Data;
@@ -17,10 +21,12 @@ using ECommerce.Inventory.Domain.AggregatesModel.Identity;
 using ECommerce.Inventory.Infrastructure.Settings;
 using ECommerce.Inventory.Infrastructure.Services;
 
-using ECommerce.Shared.Common.Extensions;
-using ECommerce.Shared.Common.Helper;
+using ECommerce.Shared.Common.Constants;
 using ECommerce.Shared.Common.Infrastructure.Services;
-
+using ECommerce.Shared.Common.Extensions;
+using ECommerce.Shared.Common.EventBus.Data;
+using ECommerce.Shared.Common.EventBus.Extensions;
+using ECommerce.Shared.Common.Helper;
 using ECommerce.Shared.Data.Extensions;
 using ECommerce.Shared.Libs.Extensions;
 
@@ -38,6 +44,8 @@ var connectionString = Configuration.GetConnectionString("DefaultConnection")!;
 
 builder.Services.Configure<AppSettings>(builder.Configuration.GetSection(nameof(AppSettings)));
 var appSettings = builder.Configuration.GetSection(nameof(AppSettings)).Get<AppSettings>()!;
+
+var eventBusConnectionString = builder.Configuration.GetConnectionString(SchemaConstants.EVENT_BUS_CONNECTION)!;
 
 var certs = await CertificateHelper.GetCertificatesFromPathsAsync(appSettings.Certs.DataProtection, appSettings.Certs.EncryptSigning);
 var dpCerts = certs[0];
@@ -66,8 +74,9 @@ if (!builder.Environment.IsProduction())
 }
 
 builder.Services.ConfigDbContext<InventoryDbContext>(connectionString, typeof(Program).Assembly.ToString());
-
 builder.Services.ConfigDbContext<IdentityDbContext>(connectionString, typeof(Program).Assembly.ToString());
+
+builder.ConfigPooledDbContext<EventBusDbContext, EventBusDbContextFactory>(SchemaConstants.EVENT_BUS_DB_CONNECTION);
 
 builder.Services.AddDataProtectionContext<IdentityDbContext>(appSettings.AppInstance, 90, dpCerts);
 
@@ -213,8 +222,62 @@ builder.Services.AddTransient<IIdentityService, IdentityService>();
 
 builder.Services.AddSingleton<IObjectStorageService, ObjectStorageService>();
 
-// Common dependencies
+#region MassTransit
+var connectionFactory = new ConnectionFactory
+{
+    Uri = new Uri(eventBusConnectionString),
+};
 
+builder.Services.AddMassTransit(x =>
+{
+    x.AddEntityFrameworkOutbox<EventBusDbContext>(o =>
+    {
+        o.UsePostgres();
+        o.UseBusOutbox(bo =>
+        {
+            bo.DisableDeliveryService();
+        });
+
+        o.DisableInboxCleanupService();
+    });
+
+    x.SetKebabCaseEndpointNameFormatter();
+
+    x.UsingRabbitMq((context, cfg) =>
+    {
+        cfg.Host(connectionFactory.HostName, (ushort)connectionFactory.Port, connectionFactory.VirtualHost, h =>
+        {
+            // Check config password on rabbitmq
+            h.Username(connectionFactory.UserName);
+            h.Password(connectionFactory.Password);
+
+            h.UseSsl(ssl =>
+            {
+                ssl.ServerName = "rabbitmq";
+                ssl.Certificate = sslCert;
+            });
+        });
+
+        // cfg.UseDelayedMessageScheduler();
+
+        // TODO: add publish event in here
+        // cfg.Publish<SendSmsIntegrationEvent>(p =>
+        // {
+        //     p.Durable = true;
+        //     p.AutoDelete = false;
+        //     p.ExchangeType = "fanout";
+        // });
+
+        // configure any remaining consumers, sagas, etc.
+        cfg.ConfigureEndpoints(context);
+    });
+
+});
+
+builder.Services.AddIntegrationEvents<EventBusDbContext>();
+#endregion MassTransit
+
+#region common dependencies
 builder.Services
     .ConfigureJson()
     .AddAutoMapper()
@@ -223,6 +286,7 @@ builder.Services
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.ConfigureSwaggerGen();
+#endregion common dependencies
 
 var app = builder.Build();
 

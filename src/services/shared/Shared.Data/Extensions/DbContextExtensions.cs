@@ -1,5 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
+using Npgsql;
+
+using ECommerce.Shared.Common.Constants;
+using ECommerce.Shared.Common.Data.Interceptors;
+
 namespace ECommerce.Shared.Data.Extensions;
 
 public static class DbContextExtensions
@@ -15,7 +20,9 @@ public static class DbContextExtensions
                 // sqlOptions.EnableRetryOnFailure(maxRetryCount: SchemaConstants.MAX_RETRY_COUNT, maxRetryDelay: TimeSpan.FromSeconds(SchemaConstants.COMMAND_TIMEOUT), errorCodesToAdd: null);
             });
 
-        return options.ConfigureCommonSettings();
+        options.ConfigureCommonSettings();
+
+        return options;
     }
 
     private static DbContextOptionsBuilder ConfigureCommonSettings(this DbContextOptionsBuilder options)
@@ -27,6 +34,24 @@ public static class DbContextExtensions
         // #endif
 
         // options.ReplaceService<IHistoryRepository, CustomHistoryRepository>();
+
+        return options;
+    }
+
+    public static DbContextOptionsBuilder UseDatabase(this DbContextOptionsBuilder options, NpgsqlDataSource dataSource)
+    {
+        options.UseNpgsql(
+            dataSource,
+            sqlOptions =>
+            {
+                sqlOptions.CommandTimeout((int)TimeSpan.FromMinutes(SchemaConstants.COMMAND_TIMEOUT).TotalSeconds);
+                sqlOptions.MigrationsHistoryTable(DatabaseSchemaConstants.MIGRATIONS_TABLE);
+                sqlOptions.EnableRetryOnFailure(maxRetryCount: SchemaConstants.MAX_RETRY_COUNT, maxRetryDelay: TimeSpan.FromSeconds(SchemaConstants.COMMAND_TIMEOUT), errorCodesToAdd: null);
+            });
+
+        options.ConfigureCommonSettings();
+
+        options.AddInterceptors(new SaveChangesInterceptor());
 
         return options;
     }

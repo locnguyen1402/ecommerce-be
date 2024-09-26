@@ -29,6 +29,16 @@
   </ItemGroup>
   <!-- END: AWS dependencies -->
 
+  <!-- BEGIN: EventBus dependencies -->
+  <ItemGroup>
+    <PackageReference Include="MassTransit" />
+    <PackageReference Include="MassTransit.Abstractions" />
+    <PackageReference Include="MassTransit.EntityFrameworkCore" />
+    <PackageReference Include="MassTransit.Prometheus" />
+    <PackageReference Include="MassTransit.RabbitMQ" />
+  </ItemGroup>
+  <!-- END: EventBus dependencies -->
+
   <ItemGroup>
     <ProjectReference Include="..\Shared.Libs\Shared.Libs.csproj" />
   </ItemGroup>
