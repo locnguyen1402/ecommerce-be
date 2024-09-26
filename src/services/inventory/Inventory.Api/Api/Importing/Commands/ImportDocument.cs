@@ -86,7 +86,6 @@ public class ImportDocumentCommandHandler : IEndpointHandler
         {
             ImportDocumentType.MASS_UPDATE_PRODUCT_BASE_INFO => DocumentPathConstant.PATH_IMPORTING_MASS_UPDATE_PRODUCT_BASE_INFO,
             ImportDocumentType.MASS_UPDATE_PRODUCT_SALES_INFO => DocumentPathConstant.PATH_IMPORTING_MASS_UPDATE_PRODUCT_SALES_INFO,
-            ImportDocumentType.MASS_UPDATE_PRODUCT_STATUS => DocumentPathConstant.PATH_IMPORTING_MASS_UPDATE_PRODUCT_STATUS,
             _ => throw new ArgumentOutOfRangeException(nameof(documentType), documentType, null)
         };
     }

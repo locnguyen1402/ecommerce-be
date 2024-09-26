@@ -1,63 +1,64 @@
-// using ECommerce.Shared.Common.Enums;
-// using ECommerce.Shared.Common.Infrastructure.Endpoint;
+using ECommerce.Shared.Common.DocumentProcessing;
+using ECommerce.Shared.Common.Enums;
+using ECommerce.Shared.Common.Extensions;
+using ECommerce.Shared.Common.Infrastructure.Endpoint;
 
-// namespace ECommerce.Inventory.Api.Importing.Queries;
+using ECommerce.Inventory.Api.Services;
 
-// /// <summary>
-// /// inheritdoc
-// /// </summary>
-// public class DownloadTemplateQuery : IEndpointHandler
-// {
-//     /// <summary>
-//     /// inheritdoc
-//     /// </summary>
-//     public Delegate Handler
-//     => async (
-//         ImportDocumentType type,
-//         //IXlsxProcessing xlsxProcessing,
-//         HttpContext httpContext,
-//         CancellationToken cancellationToken
-//     ) =>
-//     {
-//         httpContext.SetContentDispositionResponseHeader();
+namespace ECommerce.Inventory.Api.Importing.Queries;
 
-//         if (type == ImportDocumentType.AGREEMENTS)
-//         {
-//             var fileStream = xlsxProcessing.ExportXlsxSteam(new List<ImportAgreementsTemplate>(), "Template");
+/// <summary>
+/// inheritdoc
+/// </summary>
+public class DownloadTemplateQuery : IEndpointHandler
+{
+    /// <summary>
+    /// inheritdoc
+    /// </summary>
+    public Delegate Handle
+    => async (
+        string type,
+        string? keyword,
+        string[]? shopCollectionIds,
+        string[]? notInShopCollectionIds,
+        IProductService productService,
+        IXlsxProcessing xlsxProcessing,
+        HttpContext httpContext,
+        CancellationToken cancellationToken
+    ) =>
+    {
+        httpContext.SetContentDispositionResponseHeader();
 
-//             return TypedResults.Stream(fileStream, "application/octet-stream", "AgreementTemplate.xlsx");
-//         }
+        var parsedType = Enum.TryParse<ImportDocumentType>(type, true, out var importDocumentType) ? importDocumentType : ImportDocumentType.UNSPECIFIED;
 
-//         if (type == ImportDocumentType.PAYMENT_HISTORIES)
-//         {
-//             var fileStream = xlsxProcessing.ExportXlsxSteam(new List<ImportPaymentHistoryTemplate>(), "Template");
+        if (parsedType == ImportDocumentType.MASS_UPDATE_PRODUCT_BASE_INFO)
+        {
+            var dataTemplate = await productService.GetImportBaseInfoTemplateAsync(
+                keyword
+                , shopCollectionIds.ToQueryGuidList()
+                , notInShopCollectionIds.ToQueryGuidList()
+                , cancellationToken);
 
-//             return TypedResults.Stream(fileStream, "application/octet-stream", "PaymentHistoryTemplate.xlsx");
-//         }
+            var fileStream = xlsxProcessing.ExportXlsxSteam(dataTemplate, "Template");
 
-//         if (type == ImportDocumentType.ASSIGN_AGREEMENTS_EMPLOYEES || type == ImportDocumentType.UNASSIGN_AGREEMENTS_EMPLOYEES)
-//         {
-//             var fileStream = xlsxProcessing.ExportXlsxSteam(new List<ImportAgreementEmployeeTemplate>(), "Template");
+            return TypedResults.Stream(fileStream, "application/octet-stream", "ImportBaseInfoTemplate.xlsx");
+        }
 
-//             return TypedResults.Stream(fileStream, "application/octet-stream", type == ImportDocumentType.ASSIGN_AGREEMENTS_EMPLOYEES ? "AssignAgreementsEmployeesTemplate.xlsx" : "UnassignAgreementsEmployeesTemplate.xlsx");
-//         }
+        if (parsedType == ImportDocumentType.MASS_UPDATE_PRODUCT_SALES_INFO)
+        {
+            var dataTemplate = await productService.GetImportSalesInfoTemplateAsync(
+                keyword
+                , shopCollectionIds.ToQueryGuidList()
+                , notInShopCollectionIds.ToQueryGuidList()
+                , cancellationToken);
 
-//         if (type == ImportDocumentType.ASSIGN_CAMPAIGN_AGREEMENTS || type == ImportDocumentType.UNASSIGN_CAMPAIGN_AGREEMENTS)
-//         {
-//             var fileStream = xlsxProcessing.ExportXlsxSteam(new List<ImportCampaignAgreementTemplate>(), "Template");
+            var fileStream = xlsxProcessing.ExportXlsxSteam(dataTemplate, "Template");
 
-//             return TypedResults.Stream(fileStream, "application/octet-stream", type == ImportDocumentType.ASSIGN_CAMPAIGN_AGREEMENTS ? "AssignCampaignAgreementsTemplate.xlsx" : "UnassignCampaignAgreementsTemplate.xlsx");
-//         }
+            return TypedResults.Stream(fileStream, "application/octet-stream", "ImportSalesInfoTemplate.xlsx");
+        }
 
-//         if (type == ImportDocumentType.EMPLOYEES)
-//         {
-//             var fileStream = xlsxProcessing.ExportXlsxSteam(new List<ImportEmployeesTemplate>(), "Template");
+        return Results.BadRequest(new { title = "Invalid Import Template Type" });
+    };
 
-//             return TypedResults.Stream(fileStream, "application/octet-stream", "EmployeeTemplate.xlsx");
-//         }
-
-//         return Results.BadRequest(new { title = "Invalid Import Template Type" });
-//     };
-
-// }
+}
 

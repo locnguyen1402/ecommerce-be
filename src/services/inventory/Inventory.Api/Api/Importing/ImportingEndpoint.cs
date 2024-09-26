@@ -17,6 +17,8 @@ public class ImportingEndpoint(WebApplication app) : MinimalEndpoint(app, "/inve
             .Accepts<ImportDocumentRequest>("multipart/form-data")
             .DisableAntiforgery();
 
+        Builder.MapGet<DownloadTemplateQuery>("/templates/{type}/download");
+
         Builder.MapGet<DownloadStreamQueryHandler>("/{id:guid}/download");
         Builder.MapGet<GetImportHistoriesQueryHandler>("/");
         Builder.MapGet<GetImportHistoryDetailQueryHandler>("/{id:guid}");

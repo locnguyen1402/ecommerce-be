@@ -65,8 +65,6 @@ public class GetImportHistoriesQueryHandler : IEndpointHandler
                 return query.Where(t => t.DocumentType == ImportDocumentType.MASS_UPDATE_PRODUCT_BASE_INFO);
             case ImportDocumentType.MASS_UPDATE_PRODUCT_SALES_INFO:
                 return query.Where(t => t.DocumentType == ImportDocumentType.MASS_UPDATE_PRODUCT_SALES_INFO);
-            case ImportDocumentType.MASS_UPDATE_PRODUCT_STATUS:
-                return query.Where(t => t.DocumentType == ImportDocumentType.MASS_UPDATE_PRODUCT_STATUS);
             default:
                 return query.Where(t => t.DocumentType != ImportDocumentType.UNSPECIFIED);
         }

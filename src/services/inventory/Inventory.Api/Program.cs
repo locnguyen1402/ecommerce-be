@@ -29,6 +29,7 @@ using ECommerce.Shared.Common.EventBus.Extensions;
 using ECommerce.Shared.Common.Helper;
 using ECommerce.Shared.Data.Extensions;
 using ECommerce.Shared.Libs.Extensions;
+using ECommerce.Shared.Common.DocumentProcessing;
 
 var builder = WebApplication.CreateSlimBuilder(args);
 builder.WebHost.UseKestrelHttpsConfiguration();
@@ -273,6 +274,8 @@ builder.Services.AddMassTransit(x =>
     });
 
 });
+
+builder.Services.AddDocumentProcessing();
 
 builder.Services.AddIntegrationEvents<EventBusDbContext>();
 #endregion MassTransit

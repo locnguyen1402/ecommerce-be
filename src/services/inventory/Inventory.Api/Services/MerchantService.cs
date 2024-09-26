@@ -5,12 +5,10 @@ namespace ECommerce.Inventory.Api.Services;
 
 public class MerchantService(IMerchantRepository merchantRepository) : IMerchantService
 {
-    private readonly IMerchantRepository _merchantRepository = merchantRepository ?? throw new ArgumentNullException(nameof(merchantRepository));
-
     public async Task<Guid> GetMerchantIdAsync(CancellationToken cancellationToken = default)
     {
         // TODO: Add Identity to get current merchantId
-        var merchant = await _merchantRepository.Query
+        var merchant = await merchantRepository.Query
             .OrderByDescending(x => x.CreatedAt)
             .ThenBy(x => x.Name)
         .FirstOrDefaultAsync(cancellationToken);
@@ -25,7 +23,7 @@ public class MerchantService(IMerchantRepository merchantRepository) : IMerchant
 
     public async Task<Store> GetStoreInfoAsync(CancellationToken cancellationToken = default)
     {
-        var store = await _merchantRepository.Query
+        var store = await merchantRepository.Query
            .Include(x => x.Stores)
            .OrderByDescending(x => x.CreatedAt)
            .ThenBy(x => x.Name)
