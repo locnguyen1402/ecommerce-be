@@ -10,17 +10,23 @@ using ECommerce.Inventory.Api.Customers.Responses;
 
 namespace ECommerce.Inventory.Api.Customers.Commands;
 
-public class CreateContactByAdminCommandHandler : IEndpointHandler
+public class AdminCreateContactCommandHandler : IEndpointHandler
 {
     public Delegate Handle
     => async (
-        CreateContactByAdminRequest request,
-        IValidator<CreateContactByAdminRequest> validator,
+        Guid id,
+        AdminCreateContactRequest request,
+        IValidator<AdminCreateContactRequest> validator,
         ICustomerService customerService,
         IContactRepository contactRepository,
         CancellationToken cancellationToken
     ) =>
     {
+        if(id != request.CustomerId)
+        {
+            return Results.BadRequest();
+        }
+
         var validationResult = await validator.ValidateAsync(request, cancellationToken);
         if (!validationResult.IsValid)
         {

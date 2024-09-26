@@ -1,6 +1,8 @@
 using System.Linq.Expressions;
-using ECommerce.Inventory.Domain.AggregatesModel;
+
 using ECommerce.Shared.Common.Enums;
+
+using ECommerce.Inventory.Domain.AggregatesModel;
 
 namespace ECommerce.Inventory.Api.Customers.Responses;
 

@@ -1,10 +1,11 @@
+using ECommerce.Shared.Common.Infrastructure.Endpoint;
+
 using ECommerce.Inventory.Api.Customers.Commands;
 using ECommerce.Inventory.Api.Customers.Queries;
-using ECommerce.Shared.Common.Infrastructure.Endpoint;
 
 namespace ECommerce.Inventory.Api.Endpoints;
 
-public class CustomerEndpoints(WebApplication app) : MinimalEndpoint(app, "/inventory/customers")
+public class CustomerEndpoints(WebApplication app) : MinimalEndpoint(app, "/inventory")
 {
     public override void Configure(RouteGroupBuilder builder)
     {
@@ -12,24 +13,32 @@ public class CustomerEndpoints(WebApplication app) : MinimalEndpoint(app, "/inve
     }
     public override void MapEndpoints()
     {
-        // Customers
-        Builder.MapPost<CreateCustomerByAdminCommandHandler>("/by-admin");
-        Builder.MapPut<UpdateCustomerCommandHandler>("/{id:Guid}");
-        Builder.MapPost<CreateCustomerCommandHandler>("/");
-        Builder.MapPost<CreateCustomerConfirmOtpCommandHandler>("/confirm-otp");
+        var clientGroup = Builder.MapGroup("/customers");
+        var adminGroup = Builder.MapGroup("/admin/customers");
 
-        Builder.MapGet<GetCustomersByAdminQueryHandler>("/");
-        Builder.MapGet<GetCustomerByIdQueryHandler>("/{id:Guid}");
+        // Admin
+        adminGroup.MapGet<AdminGetCustomersQueryHandler>("/");
+        adminGroup.MapPost<AdminCreateCustomerCommandHandler>("/");
 
-        // Contacts
-        Builder.MapPost<CreateContactCommandHandler>("/contacts");
-        Builder.MapPost<CreateContactByAdminCommandHandler>("/contacts-by-admin");
-        Builder.MapPut<UpdateContactCommandHandler>("/contacts/{id:Guid}");
-        Builder.MapPut<SetDefaultContactCommandHandler>("/contacts/{id:Guid}/default");
-        Builder.MapDelete<DeleteContactCommandHandler>("/contacts/{id:Guid}");
+        adminGroup.MapGet<GetCustomerByIdQueryHandler>("/{id:Guid}");
+        adminGroup.MapPut<UpdateCustomerCommandHandler>("/{id:Guid}");
 
-        Builder.MapGet<GetContactByIdQueryHandler>("/contacts/{id:Guid}");
-        Builder.MapGet<GetContactsQueryHandler>("/contacts");
-        Builder.MapGet<GetContactsByAdminQueryHandler>("/{customerId:Guid}/contacts");
+        adminGroup.MapGet<AdminGetContactsByCustomerIdQueryHandler>("/{id:Guid}/contacts");
+        adminGroup.MapPost<AdminCreateContactCommandHandler>("/{id:Guid}/contacts");
+
+        // Client
+        clientGroup.MapGet<GetCustomerByIdQueryHandler>("/{id:Guid}");
+        clientGroup.MapPut<UpdateCustomerCommandHandler>("/{id:Guid}");
+
+        clientGroup.MapPost<CreateCustomerCommandHandler>("/");
+        clientGroup.MapPost<CreateCustomerConfirmOtpCommandHandler>("/confirm-otp");
+
+        clientGroup.MapGet<GetContactsQueryHandler>("/contacts");
+        clientGroup.MapPost<CreateContactCommandHandler>("/contacts");
+        clientGroup.MapPut<UpdateContactCommandHandler>("/contacts/{id:Guid}");
+        clientGroup.MapDelete<DeleteContactCommandHandler>("/contacts/{id:Guid}");
+        clientGroup.MapPut<SetDefaultContactCommandHandler>("/contacts/{id:Guid}/default");
+
+        // Builder.MapGet<GetContactByIdQueryHandler>("/contacts/{id:Guid}");
     }
 }

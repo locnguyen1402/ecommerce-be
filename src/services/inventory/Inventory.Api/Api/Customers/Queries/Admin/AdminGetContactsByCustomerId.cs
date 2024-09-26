@@ -8,24 +8,19 @@ using ECommerce.Inventory.Api.Customers.Responses;
 
 namespace ECommerce.Inventory.Api.Customers.Queries;
 
-public class GetContactsByAdminQueryHandler : IEndpointHandler
+public class AdminGetContactsByCustomerIdQueryHandler : IEndpointHandler
 {
     public Delegate Handle
     => async (
-        Guid customerId,
+        Guid id,
         PagingQuery pagingQuery,
         IContactRepository repository,
         CancellationToken cancellationToken
     ) =>
     {
-        if (customerId == Guid.Empty)
-        {
-            return Results.BadRequest("Invalid customer id");
-        }
-
         var spec = new GetContactsByCustomerIdSpecification<ContactResponse>(
             ContactProjection.ToContactResponse()
-            , customerId
+            , id
             , pagingQuery
             );
 

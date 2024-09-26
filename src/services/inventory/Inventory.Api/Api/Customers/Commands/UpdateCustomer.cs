@@ -38,14 +38,9 @@ public class UpdateCustomerCommandHandler : IEndpointHandler
             return Results.NotFound("Customer not found");
         }
 
-        var fullName = request.FullName;
-        var lastName = string.Empty;
-
+        customer.UpdateName(request.FirstName, request.LastName);
         customer.UpdateGeneralInfo(
-            fullName
-            , lastName
-            , request.PhoneNumber
-            , request.BirthDate
+            request.BirthDate
             , request.Gender
             , request.Email
             , request.PhoneNumber

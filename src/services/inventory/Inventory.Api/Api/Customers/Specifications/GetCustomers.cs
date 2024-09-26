@@ -25,7 +25,7 @@ public class GetCustomersSpecification : Specification<Customer>
         }
     }
 
-    private static Expression<Func<Customer, bool>> BuildCriteria(string? keyword)
+    public static Expression<Func<Customer, bool>> BuildCriteria(string? keyword)
     {
         Expression<Func<Customer, bool>> criteria = p => true;
 
@@ -50,27 +50,11 @@ public class GetCustomersSpecification<TResult> : Specification<Customer, TResul
         PagingQuery? pagingQuery = null
     ) : base(selector)
     {
-        Builder.Where(BuildCriteria(keyword));
+        Builder.Where(GetCustomersSpecification.BuildCriteria(keyword));
 
         if (pagingQuery != null)
         {
             Builder.Paginate(pagingQuery);
         }
-    }
-
-
-    private static Expression<Func<Customer, bool>> BuildCriteria(string? keyword)
-    {
-        Expression<Func<Customer, bool>> criteria = p => true;
-
-        if (!string.IsNullOrEmpty(keyword))
-        {
-            criteria = criteria.And(p => EF.Functions.ILike(EF.Functions.Unaccent(p.FullName.Trim().ToLower()), EF.Functions.Unaccent($"%{keyword.Trim().ToLower()}%"))
-                || (p.Email != null && EF.Functions.ILike(EF.Functions.Unaccent(p.Email.Trim().ToLower()), EF.Functions.Unaccent($"%{keyword.Trim().ToLower()}%")))
-                || (p.PhoneNumber != null && EF.Functions.ILike(p.PhoneNumber, $"%{keyword}%"))
-            );
-        }
-
-        return criteria;
     }
 }

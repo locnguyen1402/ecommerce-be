@@ -1,24 +1,33 @@
-using ECommerce.Shared.Common.Enums;
 using FluentValidation;
+
+using ECommerce.Shared.Common.Enums;
 
 namespace ECommerce.Inventory.Api.Customers.Requests;
 
-public class CreateCustomerByAdminRequest
+public class AdminCreateCustomerRequest
 {
-    public string FullName { get; set; } = string.Empty;
+    public string FirstName { get; set; } = string.Empty;
+    public string? LastName { get; set; }
     public DateOnly? BirthDate { get; set; }
     public Gender Gender { get; set; } = Gender.UNSPECIFIED;
     public string? PhoneNumber { get; set; }
     public string? Email { get; set; }
 }
 
-public class CreateCustomerByAdminRequestValidator : AbstractValidator<CreateCustomerByAdminRequest>
+public class AdminCreateCustomerRequestValidator : AbstractValidator<AdminCreateCustomerRequest>
 {
-    private string PrefixErrorMessage => nameof(CreateCustomerByAdminRequestValidator);
-    public CreateCustomerByAdminRequestValidator()
+    private string PrefixErrorMessage => nameof(AdminCreateCustomerRequestValidator);
+    public AdminCreateCustomerRequestValidator()
     {
-        RuleFor(x => x.FullName)
+        RuleFor(x => x.FirstName)
             .NotEmpty()
-            .MaximumLength(250);
+            .MaximumLength(200);
+
+        RuleFor(x => x.LastName)
+            .MaximumLength(200);
+
+        RuleFor(x => x.Email)
+            .EmailAddress()
+            .When(x => !string.IsNullOrEmpty(x.Email));
     }
 }
