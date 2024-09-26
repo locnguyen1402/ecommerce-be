@@ -23,9 +23,10 @@ public class FilterProductsQueryHandler : IEndpointHandler
         var spec = new FilterProductsSpecification<FilteredProductResponse>(
             ProductProjection.ToFilteredProductResponse()
             , keyword
-            , pagingQuery
+            , null
             , shopCollectionIds.ToQueryGuidList()
             , notInShopCollectionIds.ToQueryGuidList()
+            , pagingQuery
             );
 
         var items = await productRepository.PaginateAsync(spec, cancellationToken);

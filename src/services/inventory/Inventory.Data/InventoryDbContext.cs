@@ -42,6 +42,10 @@ public class InventoryDbContext(DbContextOptions<InventoryDbContext> options) : 
 
     public DbSet<ImportHistory> ImportHistories => Set<ImportHistory>();
 
+    public DbSet<Province> Provinces => Set<Province>();
+    public DbSet<District> Districts => Set<District>();
+    public DbSet<Ward> Wards => Set<Ward>();
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ConfigureExtensions();

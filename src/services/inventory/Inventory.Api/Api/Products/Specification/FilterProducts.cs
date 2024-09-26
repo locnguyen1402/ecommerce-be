@@ -13,11 +13,12 @@ public class FilterProductsSpecification : Specification<Product>
 {
     public FilterProductsSpecification
     (
-        string? keyword,
-        PagingQuery? pagingQuery = null
+        string? keyword
+        , Guid? merchantId
+        , PagingQuery? pagingQuery = null
     )
     {
-        Builder.Where(BuildCriteria(keyword, null, null));
+        Builder.Where(BuildCriteria(keyword, merchantId, null, null));
 
         if (pagingQuery != null)
         {
@@ -28,11 +29,15 @@ public class FilterProductsSpecification : Specification<Product>
     public static Expression<Func<Product, bool>> BuildCriteria
     (
         string? keyword
+        , Guid? merchantId
         , List<Guid>? shopCollectionIds
         , List<Guid>? notInShopCollectionIds
     )
     {
         Expression<Func<Product, bool>> criteria = p => true;
+
+        if (merchantId != null)
+            criteria = criteria.And(p => p.MerchantId == merchantId);
 
         if (!string.IsNullOrEmpty(keyword))
             criteria = criteria.And(p => EF.Functions.ILike(EF.Functions.Unaccent(p.Name), EF.Functions.Unaccent($"%{keyword}%")));
@@ -54,10 +59,11 @@ public class FilterProductsSpecification<TResult> : Specification<Product, TResu
     (
         Expression<Func<Product, TResult>> selector,
         string? keyword,
+        Guid? merchantId,
         PagingQuery? pagingQuery = null
     ) : base(selector)
     {
-        Builder.Where(FilterProductsSpecification.BuildCriteria(keyword, null, null));
+        Builder.Where(FilterProductsSpecification.BuildCriteria(keyword, merchantId, null, null));
 
         if (pagingQuery != null)
         {
@@ -69,11 +75,12 @@ public class FilterProductsSpecification<TResult> : Specification<Product, TResu
     (
         Expression<Func<Product, TResult>> selector,
         string? keyword,
-        PagingQuery? pagingQuery,
+        Guid? merchantId,
         List<Guid>? shopCollectionIds,
-        List<Guid>? notInShopCollectionIds
-    ) : this(selector, keyword, pagingQuery)
+        List<Guid>? notInShopCollectionIds,
+        PagingQuery? pagingQuery
+    ) : this(selector, keyword, merchantId, pagingQuery)
     {
-        Builder.Where(FilterProductsSpecification.BuildCriteria(keyword, shopCollectionIds, notInShopCollectionIds));
+        Builder.Where(FilterProductsSpecification.BuildCriteria(keyword, merchantId, shopCollectionIds, notInShopCollectionIds));
     }
 }

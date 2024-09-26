@@ -10,12 +10,14 @@ public interface IProductService
 
     Task<List<ImportBaseInfoTemplate>> GetImportBaseInfoTemplateAsync(
         string? keyword
+        , Guid? merchantId
         , List<Guid>? shopCollectionIds
         , List<Guid>? notInShopCollectionIds
         , CancellationToken cancellationToken = default);
 
     Task<List<ImportSalesInfoTemplate>> GetImportSalesInfoTemplateAsync(
         string? keyword
+        , Guid? merchantId
         , List<Guid>? shopCollectionIds
         , List<Guid>? notInShopCollectionIds
         , CancellationToken cancellationToken = default);

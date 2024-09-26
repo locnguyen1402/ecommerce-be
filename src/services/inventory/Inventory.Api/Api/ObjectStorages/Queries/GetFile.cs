@@ -1,3 +1,4 @@
+using ECommerce.Shared.Common.Extensions;
 using ECommerce.Shared.Common.Infrastructure.Endpoint;
 using ECommerce.Shared.Common.Infrastructure.Services;
 using Microsoft.AspNetCore.StaticFiles;
@@ -12,18 +13,32 @@ public class GetFileQueryHandler : IEndpointHandler
     public Delegate Handle
     => async (
         string bucket
-        , string prefix
-        , string year
-        , string month
-        , string day
         , string key
         , string ext
+        , HttpRequest request
         , IObjectStorageService objectStorageService
+        , HttpContext httpContext
         , CancellationToken cancellationToken = default
     ) =>
     {
+
+        // Get prefix from query parameter
+        string? prefix = request.Query["prefix"];
+
+        if (string.IsNullOrEmpty(prefix))
+        {
+            return Results.BadRequest("Prefix is missing.");
+        }
+
+        var decodedPrefix = Uri.UnescapeDataString(prefix);
+
+        var filePath = $"{decodedPrefix}/{key}.{ext}";
+
         var fileStream = await objectStorageService.DownloadAsync(
-       bucket, $"{prefix}/{year}/{month}/{day}/{key}.{ext}", cancellationToken);
+            bucket
+            , filePath
+            , cancellationToken
+        );
 
         if (fileStream == null)
             return Results.NotFound();
@@ -35,6 +50,8 @@ public class GetFileQueryHandler : IEndpointHandler
             throw new ArgumentOutOfRangeException($"Unable to find Content Type for file name {key}.{ext}");
         }
 
-        return Results.Stream(fileStream, contentType);
+        httpContext.SetContentDispositionResponseHeader();
+
+        return TypedResults.Stream(fileStream, contentType);
     };
 }

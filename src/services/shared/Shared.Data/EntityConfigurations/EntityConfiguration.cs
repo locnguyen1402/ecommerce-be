@@ -26,6 +26,9 @@ public abstract class EntityConfiguration<TEntity> : BaseEntityConfiguration<TEn
         if (interfaces.Any(p => p == typeof(IUpdateAuditing)))
             builder.MapUpdateAuditing();
 
+        if (interfaces.Any(p => p == typeof(IDeletionAuditing)))
+            builder.MapDeletionAuditing();
+
         if (interfaces.Any(x => x == typeof(IExtraProperties<>)))
             builder.Property("ExtraProperties")
                 .HasColumnType("jsonb");

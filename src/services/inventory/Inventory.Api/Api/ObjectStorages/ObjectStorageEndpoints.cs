@@ -12,6 +12,6 @@ public class ObjectStorageEndpoints(WebApplication app) : MinimalEndpoint(app, "
     }
     public override void MapEndpoints()
     {
-        Builder.MapGet<GetFileQueryHandler>("/{bucket}/{prefix}/{year}/{month}/{day}/{key}.{ext}");
+        Builder.MapGet<GetFileQueryHandler>("/{bucket}/{key}.{ext}");
     }
 }

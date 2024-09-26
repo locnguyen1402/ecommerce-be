@@ -4,8 +4,9 @@ using ECommerce.Shared.Common.Extensions;
 using ECommerce.Shared.Common.Infrastructure.Endpoint;
 
 using ECommerce.Inventory.Api.Services;
+using ECommerce.Shared.Common.Infrastructure.Services;
 
-namespace ECommerce.Inventory.Api.Importing.Queries;
+namespace ECommerce.Inventory.Api.Products.Queries;
 
 /// <summary>
 /// inheritdoc
@@ -18,9 +19,11 @@ public class DownloadTemplateQuery : IEndpointHandler
     public Delegate Handle
     => async (
         string type,
+        Guid? merchantId,
         string? keyword,
         string[]? shopCollectionIds,
         string[]? notInShopCollectionIds,
+        IIdentityService identityService,
         IProductService productService,
         IXlsxProcessing xlsxProcessing,
         HttpContext httpContext,
@@ -29,12 +32,15 @@ public class DownloadTemplateQuery : IEndpointHandler
     {
         httpContext.SetContentDispositionResponseHeader();
 
+        merchantId = merchantId != null ? merchantId : identityService.MerchantId;
+
         var parsedType = Enum.TryParse<ImportDocumentType>(type, true, out var importDocumentType) ? importDocumentType : ImportDocumentType.UNSPECIFIED;
 
         if (parsedType == ImportDocumentType.MASS_UPDATE_PRODUCT_BASE_INFO)
         {
             var dataTemplate = await productService.GetImportBaseInfoTemplateAsync(
                 keyword
+                , merchantId
                 , shopCollectionIds.ToQueryGuidList()
                 , notInShopCollectionIds.ToQueryGuidList()
                 , cancellationToken);
@@ -48,6 +54,7 @@ public class DownloadTemplateQuery : IEndpointHandler
         {
             var dataTemplate = await productService.GetImportSalesInfoTemplateAsync(
                 keyword
+                , merchantId
                 , shopCollectionIds.ToQueryGuidList()
                 , notInShopCollectionIds.ToQueryGuidList()
                 , cancellationToken);

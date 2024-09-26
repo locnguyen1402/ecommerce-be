@@ -10,8 +10,6 @@ namespace ECommerce.Inventory.Api.Services;
 public class ProductService(
     IProductRepository productRepository
     , IProductVariantRepository productVariantRepository
-    , IMerchantRepository merchantRepository
-    , IIdentityService identityService
 ) : IProductService
 {
     public async Task<IDictionary<Guid, bool>> UpdateStockByProductVariantsAsync(IDictionary<Guid, int> orderItems, CancellationToken cancellationToken = default)
@@ -43,26 +41,18 @@ public class ProductService(
 
     public async Task<List<ImportBaseInfoTemplate>> GetImportBaseInfoTemplateAsync(
         string? keyword
+        , Guid? merchantId
         , List<Guid>? shopCollectionIds
         , List<Guid>? notInShopCollectionIds
         , CancellationToken cancellationToken = default)
     {
-        var merchantId = identityService.MerchantId;
-
-        // TODO: remove these lines after integrate with identity service
-        var merchant = await merchantRepository.Query
-            .OrderByDescending(x => x.CreatedAt)
-            .ThenBy(x => x.Name)
-        .FirstOrDefaultAsync(cancellationToken);
-
-        merchantId ??= merchant?.Id;
-
         var spec = new FilterProductsSpecification<ImportBaseInfoTemplate>(
             ProductProjection.ToImportBaseInfoTemplateResponse()
             , keyword
-            , null
+            , merchantId
             , shopCollectionIds
             , notInShopCollectionIds
+            , null
         );
 
         var products = await productRepository.GetAsync(spec, cancellationToken);
@@ -75,26 +65,18 @@ public class ProductService(
 
     public async Task<List<ImportSalesInfoTemplate>> GetImportSalesInfoTemplateAsync(
         string? keyword
+        , Guid? merchantId
         , List<Guid>? shopCollectionIds
         , List<Guid>? notInShopCollectionIds
         , CancellationToken cancellationToken = default)
     {
-        var merchantId = identityService.MerchantId;
-
-        // TODO: remove these lines after integrate with identity service
-        var merchant = await merchantRepository.Query
-            .OrderByDescending(x => x.CreatedAt)
-            .ThenBy(x => x.Name)
-        .FirstOrDefaultAsync(cancellationToken);
-
-        merchantId ??= merchant?.Id;
-
         var spec = new FilterProductVariantsSpecification<ImportSalesInfoTemplate>(
             ProductVariantProjection.ToImportSalesInfoTemplateResponse()
             , keyword
-            , null
+            , merchantId
             , shopCollectionIds
             , notInShopCollectionIds
+            , null
         );
 
         var products = await productVariantRepository.GetAsync(spec, cancellationToken);

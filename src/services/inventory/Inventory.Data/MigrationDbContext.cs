@@ -41,6 +41,9 @@ public class MigrationDbContext(DbContextOptions<MigrationDbContext> options) :
     public DbSet<Contact> Contacts => Set<Contact>();
     public DbSet<ObjectStorage> ObjectStorages => Set<ObjectStorage>();
     public DbSet<ImportHistory> ImportHistories => Set<ImportHistory>();
+    public DbSet<Province> Provinces => Set<Province>();
+    public DbSet<District> Districts => Set<District>();
+    public DbSet<Ward> Wards => Set<Ward>();
 
     public DbSet<DataProtectionKey> DataProtectionKeys => Set<DataProtectionKey>();
     public DbSet<PermissionGroup> PermissionGroups => Set<PermissionGroup>();

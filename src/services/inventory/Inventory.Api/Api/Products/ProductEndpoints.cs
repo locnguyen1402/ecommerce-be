@@ -26,5 +26,7 @@ public class ProductEndpoints(WebApplication app) : MinimalEndpoint(app, "/inven
         Builder.MapGet<GetProductAttributesQueryHandler>("/attributes");
         Builder.MapPost<CreateProductAttributeCommandHandler>("/attributes");
         Builder.MapPut<UpdateProductAttributeCommandHandler>("/attributes/{id:Guid}");
+
+        Builder.MapGet<DownloadTemplateQuery>("/templates/{type}/download");
     }
 }

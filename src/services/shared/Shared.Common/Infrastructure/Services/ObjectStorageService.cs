@@ -74,7 +74,7 @@ public class ObjectStorageService : IObjectStorageService
             {
                 _logger.LogInformation($"Successfully downloaded object from bucket {bucket} with file path {filePath}");
 
-                using var responseStream = new MemoryStream();
+                var responseStream = new MemoryStream();
                 await response.ResponseStream.CopyToAsync(responseStream, cancellationToken);
                 responseStream.Seek(0, SeekOrigin.Begin);
 

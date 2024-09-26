@@ -15,18 +15,18 @@ public static class ModelBuilderExtensions
         modelBuilder.ApplyConfiguration(new ProductVariantEntityConfiguration());
         modelBuilder.ApplyConfiguration(new ProductVariantAttributeValueEntityConfiguration());
         modelBuilder.ApplyConfiguration(new AttributeValueEntityConfiguration());
-        #endregion
+        #endregion Product & Category
 
         #region Discount
         modelBuilder.ApplyConfiguration(new DiscountEntityConfiguration());
-        #endregion
+        #endregion Discount
 
         #region Merchant & Store
         modelBuilder.ApplyConfiguration(new MerchantEntityConfiguration());
         modelBuilder.ApplyConfiguration(new MerchantCategoryEntityConfiguration());
         modelBuilder.ApplyConfiguration(new StoreEntityConfiguration());
         modelBuilder.ApplyConfiguration(new ShopCollectionEntityConfiguration());
-        #endregion
+        #endregion Merchant & Store
 
         #region Order
         modelBuilder.ApplyConfiguration(new OrderEntityConfiguration());
@@ -34,11 +34,11 @@ public static class ModelBuilderExtensions
         modelBuilder.ApplyConfiguration(new OrderContactEntityConfiguration());
         modelBuilder.ApplyConfiguration(new OrderStatusTrackingEntityConfiguration());
         modelBuilder.ApplyConfiguration(new PaymentMethodTrackingEntityConfiguration());
-        #endregion
+        #endregion Order
 
         #region Voucher
         modelBuilder.ApplyConfiguration(new VoucherEntityConfiguration());
-        #endregion
+        #endregion Voucher
 
         #region Promotion
         modelBuilder.ApplyConfiguration(new OrderPromotionEntityConfiguration());
@@ -46,20 +46,26 @@ public static class ModelBuilderExtensions
         modelBuilder.ApplyConfiguration(new OrderPromotionSubItemEntityConfiguration());
         modelBuilder.ApplyConfiguration(new ProductPromotionEntityConfiguration());
         modelBuilder.ApplyConfiguration(new ProductPromotionItemEntityConfiguration());
-        #endregion
+        #endregion Promotion
 
         #region Customer
         modelBuilder.ApplyConfiguration(new CustomerEntityConfiguration());
         modelBuilder.ApplyConfiguration(new ContactEntityConfiguration());
-        #endregion
+        #endregion Customer
 
         #region ObjectStorage
         modelBuilder.ApplyConfiguration(new ObjectStorageEntityConfiguration());
-        #endregion
+        #endregion ObjectStorage
 
         #region ImportHistory
         modelBuilder.ApplyConfiguration(new ImportHistoryEntityConfiguration());
-        #endregion
+        #endregion ImportHistory
+
+        #region Location
+        modelBuilder.ApplyConfiguration(new ProvinceEntityConfiguration());
+        modelBuilder.ApplyConfiguration(new DistrictEntityConfiguration());
+        modelBuilder.ApplyConfiguration(new WardEntityConfiguration());
+        #endregion Location
     }
 
     public static void ConfigureIdentityEntitiesExtensions(this ModelBuilder modelBuilder)
@@ -70,7 +76,7 @@ public static class ModelBuilderExtensions
         modelBuilder.ApplyConfiguration(new ScopeConfiguration());
         modelBuilder.ApplyConfiguration(new TokenConfiguration());
         modelBuilder.ApplyConfiguration(new ClientRoleConfiguration());
-        #endregion
+        #endregion OpnIddict
 
         #region Identity
         modelBuilder.ApplyConfiguration(new RoleConfiguration());
@@ -80,12 +86,12 @@ public static class ModelBuilderExtensions
         modelBuilder.ApplyConfiguration(new UserLoginConfiguration());
         modelBuilder.ApplyConfiguration(new UserRoleConfiguration());
         modelBuilder.ApplyConfiguration(new UserTokenConfiguration());
-        #endregion
+        #endregion Identity
 
         #region Security
         modelBuilder.ApplyConfiguration(new PermissionGroupConfiguration());
         modelBuilder.ApplyConfiguration(new PermissionConfiguration());
         modelBuilder.ApplyConfiguration(new SecurityEventConfiguration());
-        #endregion
+        #endregion Security
     }
 }

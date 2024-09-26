@@ -23,8 +23,9 @@ public static class AuditingExtensions
             .HasConversion<Guid?>();
     }
 
-    public static void MapDeletionAuditing(this EntityTypeBuilder<IDeletionAuditing> builder)
+    public static void MapDeletionAuditing<TEntity>(this EntityTypeBuilder<TEntity> builder) where TEntity : class, IEntity
     {
-        builder.HasQueryFilter(t => EF.Property<DateTimeOffset?>(t, nameof(IDeletionAuditing.DeletedAt)) == null);
+        builder.Property(p => ((IDeletionAuditing)p).DeletedBy)
+            .HasConversion<Guid?>();
     }
 }

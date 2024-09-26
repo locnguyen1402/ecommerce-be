@@ -211,6 +211,9 @@ builder.Services.AddScoped<IRoleRepository, RoleRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IImportHistoryRepository, ImportHistoryRepository>();
 builder.Services.AddScoped<IObjectStorageRepository, ObjectStorageRepository>();
+builder.Services.AddScoped<IProvinceRepository, ProvinceRepository>();
+builder.Services.AddScoped<IDistrictRepository, DistrictRepository>();
+builder.Services.AddScoped<IWardRepository, WardRepository>();
 
 builder.Services.AddScoped<IMerchantService, MerchantService>();
 builder.Services.AddScoped<IProductService, ProductService>();
