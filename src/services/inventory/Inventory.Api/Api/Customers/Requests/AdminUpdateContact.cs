@@ -3,9 +3,10 @@ using FluentValidation;
 
 namespace ECommerce.Inventory.Api.Customers.Requests;
 
-public class UpdateContactByAdminRequest
+public class AdminUpdateContactRequest
 {
     public Guid Id { get; set; }
+    public Guid CustomerId { get; set; }
     public AddressType AddressType { get; set; } = AddressType.HOME;
     public string? Name { get; set; }
     public string? ContactName { get; set; }
@@ -15,10 +16,10 @@ public class UpdateContactByAdminRequest
     public AddressRequest AddressInfo { get; set; } = null!;
 }
 
-public class UpdateContactByAdminRequestValidator : AbstractValidator<UpdateContactByAdminRequest>
+public class AdminUpdateContactRequestValidator : AbstractValidator<AdminUpdateContactRequest>
 {
-    private string PrefixErrorMessage => nameof(UpdateContactByAdminRequestValidator);
-    public UpdateContactByAdminRequestValidator()
+    private string PrefixErrorMessage => nameof(AdminUpdateContactRequestValidator);
+    public AdminUpdateContactRequestValidator()
     {
         RuleFor(x => x.Id)
             .Must(x => x != Guid.Empty && Guid.TryParse(x.ToString(), out _))

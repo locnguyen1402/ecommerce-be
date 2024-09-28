@@ -8,14 +8,14 @@ namespace ECommerce.Inventory.Api.Customers.Responses;
 
 public record AddressResponse(
     Guid ProvinceId,
-    string ProvinceName,
     string ProvinceCode,
+    string ProvinceName,
     Guid DistrictId,
-    string DistrictName,
     string DistrictCode,
+    string DistrictName,
     Guid WardId,
-    string WardName,
     string WardCode,
+    string WardName,
     string AddressLine1,
     string? AddressLine2,
     string? AddressLine3,

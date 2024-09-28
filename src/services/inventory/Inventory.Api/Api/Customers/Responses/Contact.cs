@@ -7,6 +7,7 @@ using ECommerce.Inventory.Domain.AggregatesModel;
 namespace ECommerce.Inventory.Api.Customers.Responses;
 
 public record ContactResponse(
+    Guid Id,
     AddressType Type,
     string? Name,
     string? ContactName,
@@ -31,6 +32,7 @@ public static class ContactProjection
     public static Expression<Func<Contact, ContactResponse>> ToContactResponse()
         => x =>
         new ContactResponse(
+            x.Id,
             x.Type,
             x.Name,
             x.ContactName,
