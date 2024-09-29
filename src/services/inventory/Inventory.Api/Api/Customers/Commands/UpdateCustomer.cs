@@ -43,7 +43,6 @@ public class UpdateCustomerCommandHandler : IEndpointHandler
             request.BirthDate
             , request.Gender
             , request.Email
-            , request.PhoneNumber
         );
 
         await customerRepository.UpdateAndSaveChangeAsync(customer, cancellationToken);

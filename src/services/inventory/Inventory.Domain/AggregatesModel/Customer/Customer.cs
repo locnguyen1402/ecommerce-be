@@ -31,13 +31,11 @@ public class Customer(
         DateOnly? birthDate
         , Gender? gender
         , string? email
-        , string? phoneNumber
     )
     {
         BirthDate = birthDate;
         Gender = gender;
         Email = email;
-        PhoneNumber = phoneNumber;
     }
     public void UpdateName(string firstName, string? lastName)
     {
