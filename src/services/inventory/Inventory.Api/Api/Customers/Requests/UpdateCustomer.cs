@@ -1,5 +1,6 @@
-using ECommerce.Shared.Common.Enums;
 using FluentValidation;
+
+using ECommerce.Shared.Common.Enums;
 
 namespace ECommerce.Inventory.Api.Customers.Requests;
 
@@ -10,7 +11,6 @@ public class UpdateCustomerRequest
     public string? LastName { get; set; }
     public DateOnly? BirthDate { get; set; }
     public Gender Gender { get; set; } = Gender.UNSPECIFIED;
-    public string? PhoneNumber { get; set; }
     public string? Email { get; set; }
 }
 
