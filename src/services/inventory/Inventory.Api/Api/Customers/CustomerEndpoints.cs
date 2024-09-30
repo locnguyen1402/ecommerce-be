@@ -27,6 +27,7 @@ public class CustomerEndpoints(WebApplication app) : MinimalEndpoint(app, "/inve
         adminGroup.MapPost<AdminCreateContactCommandHandler>("/{id:Guid}/contacts");
 
         adminGroup.MapPut<AdminUpdateContactCommandHandler>("/{id:Guid}/contacts/{contactId:Guid}");
+        adminGroup.MapDelete<AdminDeleteContactCommandHandler>("/{id:Guid}/contacts/{contactId:Guid}");
 
         // Client
         clientGroup.MapGet<GetCustomerByIdQueryHandler>("/{id:Guid}");

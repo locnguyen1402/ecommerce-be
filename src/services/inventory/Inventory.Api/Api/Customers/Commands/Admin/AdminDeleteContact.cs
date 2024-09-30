@@ -1,35 +1,28 @@
 using ECommerce.Shared.Common.Infrastructure.Endpoint;
-using ECommerce.Shared.Common.Infrastructure.Services;
 
 using ECommerce.Inventory.Domain.AggregatesModel;
 using ECommerce.Inventory.Api.Customers.Specifications;
 
 namespace ECommerce.Inventory.Api.Customers.Commands;
 
-public class DeleteContactCommandHandler : IEndpointHandler
+public class AdminDeleteContactCommandHandler : IEndpointHandler
 {
     public Delegate Handle
     => async (
         Guid id,
+        Guid contactId,
         IContactRepository repository,
-        IIdentityService identityService,
         CancellationToken cancellationToken
     ) =>
     {
-        var customerId = identityService.CustomerId;
-        if (customerId == null || customerId == Guid.Empty)
-        {
-            return Results.BadRequest("Customer not found");
-        }
-
-        var spec = new GetContactByIdSpecification(id, (Guid)customerId);
+        var spec = new GetContactByIdSpecification(contactId, id);
 
         Contact? contact = await repository
             .FindAsync(spec, cancellationToken);
 
         if (contact is null)
         {
-            return Results.BadRequest($"Contact with id {id} not found");
+            return Results.BadRequest($"Contact with id {contactId} not found");
         }
 
         // if (contact.IsDefault)
@@ -38,6 +31,7 @@ public class DeleteContactCommandHandler : IEndpointHandler
         //     var remainingContact = await repository.Query
         //         .Where(x => x.CustomerId == customerId && x.Id != contact.Id)
         //         .FirstOrDefaultAsync(cancellationToken);
+
         //     if (remainingContact != null)
         //     {
         //         remainingContact.SetContactDefault();
