@@ -15,6 +15,15 @@ public class GetContactByIdSpecification : Specification<Contact>
     {
         Builder.Where(p => p.Id == id);
     }
+
+    public GetContactByIdSpecification
+    (
+        Guid id,
+        Guid customerId
+    )
+    {
+        Builder.Where(p => p.Id == id && p.CustomerId == customerId);
+    }
 }
 
 public class GetContactByIdSpecification<TResult> : Specification<Contact, TResult>
