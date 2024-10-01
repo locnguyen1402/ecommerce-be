@@ -7,6 +7,99 @@ namespace ECommerce.Shared.Libs.Extensions;
 
 public static class StringExtensions
 {
+    private static readonly Dictionary<string, string> foreignCharacters = new()
+    {
+        { "äæǽ", "ae" },
+        { "öœ", "oe" },
+        { "ü", "ue" },
+        { "Ä", "Ae" },
+        { "Ü", "Ue" },
+        { "Ö", "Oe" },
+        { "ÀÁÂÃÄÅǺĀĂĄǍΑΆẢẠẦẪẨẬẰẮẴẲẶА", "A" },
+        { "àáâãåǻāăąǎªαάảạầấẫẩậằắẵẳặа", "a" },
+        { "Б", "B" },
+        { "б", "b" },
+        { "ÇĆĈĊČ", "C" },
+        { "çćĉċč", "c" },
+        { "Д", "D" },
+        { "д", "d" },
+        { "ÐĎĐΔ", "Dj" },
+        { "ðďđδ", "dj" },
+        { "ÈÉÊËĒĔĖĘĚΕΈẼẺẸỀẾỄỂỆЕЭ", "E" },
+        { "èéêëēĕėęěέεẽẻẹềếễểệеэ", "e" },
+        { "Ф", "F" },
+        { "ф", "f" },
+        { "ĜĞĠĢΓГҐ", "G" },
+        { "ĝğġģγгґ", "g" },
+        { "ĤĦ", "H" },
+        { "ĥħ", "h" },
+        { "ÌÍÎÏĨĪĬǏĮİΗΉΊΙΪỈỊИЫ", "I" },
+        { "ìíîïĩīĭǐįıηήίιϊỉịиыї", "i" },
+        { "Ĵ", "J" },
+        { "ĵ", "j" },
+        { "ĶΚК", "K" },
+        { "ķκк", "k" },
+        { "ĹĻĽĿŁΛЛ", "L" },
+        { "ĺļľŀłλл", "l" },
+        { "М", "M" },
+        { "м", "m" },
+        { "ÑŃŅŇΝН", "N" },
+        { "ñńņňŉνн", "n" },
+        { "ÒÓÔÕŌŎǑŐƠØǾΟΌΩΏỎỌỒỐỖỔỘỜỚỠỞỢО", "O" },
+        { "òóôõōŏǒőơøǿºοόωώỏọồốỗổộờớỡởợо", "o" },
+        { "П", "P" },
+        { "п", "p" },
+        { "ŔŖŘΡР", "R" },
+        { "ŕŗřρр", "r" },
+        { "ŚŜŞȘŠΣС", "S" },
+        { "śŝşșšſσςс", "s" },
+        { "ȚŢŤŦτТ", "T" },
+        { "țţťŧт", "t" },
+        { "ÙÚÛŨŪŬŮŰŲƯǓǕǗǙǛŨỦỤỪỨỮỬỰУ", "U" },
+        { "ùúûũūŭůűųưǔǖǘǚǜυύϋủụừứữửựу", "u" },
+        { "ÝŸŶΥΎΫỲỸỶỴЙ", "Y" },
+        { "ýÿŷỳỹỷỵй", "y" },
+        { "В", "V" },
+        { "в", "v" },
+        { "Ŵ", "W" },
+        { "ŵ", "w" },
+        { "ŹŻŽΖЗ", "Z" },
+        { "źżžζз", "z" },
+        { "ÆǼ", "AE" },
+        { "ß", "ss" },
+        { "Ĳ", "IJ" },
+        { "ĳ", "ij" },
+        { "Œ", "OE" },
+        { "ƒ", "f" },
+        { "ξ", "ks" },
+        { "π", "p" },
+        { "β", "v" },
+        { "μ", "m" },
+        { "ψ", "ps" },
+        { "Ё", "Yo" },
+        { "ё", "yo" },
+        { "Є", "Ye" },
+        { "є", "ye" },
+        { "Ї", "Yi" },
+        { "Ж", "Zh" },
+        { "ж", "zh" },
+        { "Х", "Kh" },
+        { "х", "kh" },
+        { "Ц", "Ts" },
+        { "ц", "ts" },
+        { "Ч", "Ch" },
+        { "ч", "ch" },
+        { "Ш", "Sh" },
+        { "ш", "sh" },
+        { "Щ", "Shch" },
+        { "щ", "shch" },
+        { "ЪъЬь", "" },
+        { "Ю", "Yu" },
+        { "ю", "yu" },
+        { "Я", "Ya" },
+        { "я", "ya" },
+    };
+
     public static string ToSnakeCase(this string input, bool useUpperCase = false)
     {
         if (string.IsNullOrEmpty(input))
@@ -94,36 +187,79 @@ public static class StringExtensions
         return Encoding.ASCII.GetString(bytes);
     }
 
-    private static string RemoveDiacritics(this string text)
+    public static string RemoveDiacritics(this string text)
     {
-        var normalizedString = text.Normalize(NormalizationForm.FormKD);
-        var stringBuilder = new StringBuilder();
+        if (string.IsNullOrEmpty(text))
+            return text;
 
-        foreach (var c in normalizedString)
+        ReadOnlySpan<char> normalizedString = text.Normalize(NormalizationForm.FormKD);
+
+        // Use stackalloc for small strings (less than 1000 characters), otherwise heap allocation.
+        Span<char> span = text.Length < 1000
+            ? stackalloc char[text.Length] // Stack allocation for smaller strings
+            : new char[text.Length];       // Heap allocation for larger strings
+
+        int i = 0;
+
+        foreach (char c in normalizedString)
         {
-            var unicodeCategory = CharUnicodeInfo.GetUnicodeCategory(c);
+            bool replaced = false;
 
-            switch (unicodeCategory)
+            if (CharUnicodeInfo.GetUnicodeCategory(c) == UnicodeCategory.NonSpacingMark)
+                continue;
+
+            foreach (var entry in foreignCharacters)
             {
-                case UnicodeCategory.LowercaseLetter:
-                case UnicodeCategory.UppercaseLetter:
-                case UnicodeCategory.OtherLetter:
-                case UnicodeCategory.DecimalDigitNumber:
-                    // Keep letters and digits
-                    stringBuilder.Append(c);
+                if (entry.Key.IndexOf(c) != -1)
+                {
+                    foreach (char replacement in entry.Value)
+                    {
+                        span[i++] = replacement;
+                    }
+                    replaced = true;
                     break;
-                case UnicodeCategory.NonSpacingMark:
-                    // Remove diacritics
-                    break;
-                default:
-                    // Replace all other chars with dash
-                    stringBuilder.Append(' ');
-                    break;
+                }
+            }
+
+            if (!replaced)
+            {
+                span[i++] = c;
             }
         }
 
-        return stringBuilder.ToString().Normalize(NormalizationForm.FormC);
+        return new string(span[..i]).Normalize(NormalizationForm.FormC);
     }
+
+    // private static string RemoveDiacritics(this string text)
+    // {
+    //     var normalizedString = text.Normalize(NormalizationForm.FormD);
+    //     var stringBuilder = new StringBuilder();
+
+    //     foreach (var c in normalizedString)
+    //     {
+    //         var unicodeCategory = CharUnicodeInfo.GetUnicodeCategory(c);
+
+    //         switch (unicodeCategory)
+    //         {
+    //             case UnicodeCategory.LowercaseLetter:
+    //             case UnicodeCategory.UppercaseLetter:
+    //             case UnicodeCategory.OtherLetter:
+    //             case UnicodeCategory.DecimalDigitNumber:
+    //                 // Keep letters and digits
+    //                 stringBuilder.Append(c);
+    //                 break;
+    //             case UnicodeCategory.NonSpacingMark:
+    //                 // Remove diacritics
+    //                 break;
+    //             default:
+    //                 // Replace all other chars with dash
+    //                 stringBuilder.Append(' ');
+    //                 break;
+    //         }
+    //     }
+
+    //     return stringBuilder.ToString().Normalize(NormalizationForm.FormC);
+    // }
 
     public static bool Like(this string value, string pattern)
     {
@@ -291,7 +427,8 @@ public static class StringExtensions
         chars.Insert(rand.Next(0, chars.Count),
             randomChars[2][rand.Next(0, randomChars[2].Length)]);
 
-        for (int i = chars.Count; chars.Distinct().Count() < SchemaConstants.MAX_CODE_LENGTH; i++)
+        for (int i = chars.Count; i < SchemaConstants.MAX_CODE_LENGTH ||
+            chars.Distinct().Count() < SchemaConstants.MAX_CODE_LENGTH; i++)
         {
             string rcs = randomChars[rand.Next(0, randomChars.Length)];
             chars.Insert(rand.Next(0, chars.Count),
