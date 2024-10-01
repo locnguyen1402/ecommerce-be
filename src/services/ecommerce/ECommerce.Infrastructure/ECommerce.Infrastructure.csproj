@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <AssemblyName>ECommerce.Infrastructure</AssemblyName>
+    <RootNamespace>ECommerce.Infrastructure</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.DataProtection.EntityFrameworkCore" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" />
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" />
+    <PackageReference Include="OpenIddict.AspNetCore" />
+  </ItemGroup>
+
+  <!-- BEGIN: Dependencies -->
+  <ItemGroup>
+    <ProjectReference Include="../ECommerce.Domain/ECommerce.Domain.csproj" />
+  </ItemGroup>
+  <!-- END: Dependencies -->
+
+</Project>

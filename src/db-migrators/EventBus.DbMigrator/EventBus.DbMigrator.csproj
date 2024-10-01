@@ -24,8 +24,8 @@
     <ProjectReference Include="../../services/shared/Shared.Common/Shared.Common.csproj" />
     <ProjectReference Include="../../services/shared/Shared.Data/Shared.Data.csproj" />
 
-    <ProjectReference Include="../../services/inventory/Inventory.Domain/Inventory.Domain.csproj" />
-    <ProjectReference Include="../../services/inventory/Inventory.Data/Inventory.Data.csproj" />
+    <ProjectReference Include="../../services/ecommerce/ECommerce.Domain/ECommerce.Domain.csproj" />
+    <ProjectReference Include="../../services/ecommerce/ECommerce.Data/ECommerce.Data.csproj" />
   </ItemGroup>
 
 </Project>

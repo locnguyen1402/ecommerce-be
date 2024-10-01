@@ -7,15 +7,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{C1F40907-914
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "services", "services", "{538E3224-205D-492F-8CF3-AF25BF938101}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "inventory", "inventory", "{889D966A-CDCE-4801-ACEC-B1018F9EFA7A}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ecommerce", "ecommerce", "{889D966A-CDCE-4801-ACEC-B1018F9EFA7A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Inventory.Api", "src\services\inventory\Inventory.Api\Inventory.Api.csproj", "{F95AEB64-B696-4C7C-BBBF-CE085D6A9DC7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ECommerce.Api", "src\services\ecommerce\ECommerce.Api\ECommerce.Api.csproj", "{F95AEB64-B696-4C7C-BBBF-CE085D6A9DC7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Inventory.Data", "src\services\inventory\Inventory.Data\Inventory.Data.csproj", "{3FE4D90B-0630-47D6-B1DF-604D9FD4DC9A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ECommerce.Data", "src\services\ecommerce\ECommerce.Data\ECommerce.Data.csproj", "{3FE4D90B-0630-47D6-B1DF-604D9FD4DC9A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Inventory.Domain", "src\services\inventory\Inventory.Domain\Inventory.Domain.csproj", "{DB92BA77-03C8-41D6-A290-0FB24D2E445A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ECommerce.Domain", "src\services\ecommerce\ECommerce.Domain\ECommerce.Domain.csproj", "{DB92BA77-03C8-41D6-A290-0FB24D2E445A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Inventory.Infrastructure", "src\services\inventory\Inventory.Infrastructure\Inventory.Infrastructure.csproj", "{41153785-9FB0-499A-B6B2-DF5D5137D492}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ECommerce.Infrastructure", "src\services\ecommerce\ECommerce.Infrastructure\ECommerce.Infrastructure.csproj", "{41153785-9FB0-499A-B6B2-DF5D5137D492}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "shared", "shared", "{68DBB61C-71FB-49EC-908A-BDEED69E1733}"
 EndProject
