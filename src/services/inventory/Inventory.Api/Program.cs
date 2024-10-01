@@ -58,6 +58,7 @@ builder.Services.AddObjectStorageService(appSettings.AwsSettings);
 
 builder.Services
     .AddOptions()
+    .AddProblemDetails()
     .AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
 builder.Services.AddResponseCaching();
@@ -302,6 +303,8 @@ if (app.Environment.IsDevelopment())
     app.UseDeveloperExceptionPage();
 }
 
+app.UseGlobalExceptionHandler(appSettings.AppInstance);
+
 if (!app.Environment.IsDevelopment())
 {
     app.UseHsts();
@@ -314,6 +317,7 @@ app.UseStaticFiles();
 // Enable CORS
 app.UseRouting();
 app.UseCors(builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
