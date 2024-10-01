@@ -67,6 +67,7 @@ public class UpdateProductCommandHandler : IEndpointHandler
         product.UpdateGeneralInfo(
             request.Name
             , string.IsNullOrEmpty(request.Slug) ? product.Slug : request.Slug
+            , request.Sku
             , request.Description);
 
         var inPassHasVariants = product.ProductAttributes.Count > 0 && product.ProductVariants.Count > 0;
@@ -88,7 +89,7 @@ public class UpdateProductCommandHandler : IEndpointHandler
             if (inPassHasVariants)
             {
                 product.RemoveVariants([.. product.ProductVariants]);
-                product.AddVariant(request.Stock ?? 0, request.Price ?? 0, []);
+                product.AddVariant(request.Stock ?? 0, request.Price ?? 0, string.Empty, []);
             }
             else
             {

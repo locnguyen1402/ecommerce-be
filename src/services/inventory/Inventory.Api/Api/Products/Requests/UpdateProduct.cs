@@ -7,6 +7,7 @@ public class UpdateProductRequest
     public Guid Id { get; set; }
     public string Name { get; set; } = string.Empty;
     public string? Slug { get; set; } = string.Empty;
+    public string? Sku { get; set; } = string.Empty;
     public string? Description { get; set; }
     public HashSet<Guid> Attributes { get; set; } = [];
     public int? Stock { get; set; }
@@ -30,6 +31,9 @@ public class UpdateProductRequestValidator : AbstractValidator<UpdateProductRequ
 
         RuleFor(x => x.Slug)
             .MaximumLength(200);
+
+        RuleFor(x => x.Sku)
+            .MaximumLength(100);
 
         RuleFor(x => x.Stock)
             .GreaterThanOrEqualTo(0);

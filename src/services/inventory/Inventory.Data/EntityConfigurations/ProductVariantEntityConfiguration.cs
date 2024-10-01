@@ -16,10 +16,19 @@ public class ProductVariantEntityConfiguration : BaseEntityConfiguration<Product
             .IsRequired()
             .HasDefaultValue(0);
 
+        builder.ToTable(t => t.HasCheckConstraint("CK_ProductVariant_Stock", "\"stock\" >= 0"));
+
         builder.Property(p => p.Price)
             .IsRequired()
             .HasPrecision(19, 2)
             .HasDefaultValue(0);
+
+        builder.Property(p => p.Code)
+            .IsRequired()
+            .HasMaxLength(50);
+
+        builder.Property(p => p.Sku)
+            .HasMaxLength(100);
 
         builder.HasOne(p => p.Product)
             .WithMany(p => p.ProductVariants)

@@ -1,9 +1,12 @@
 using ECommerce.Shared.Common.AggregatesModel.Auditing;
+using ECommerce.Shared.Libs.Extensions;
 
 namespace ECommerce.Inventory.Domain.AggregatesModel;
 
 public class ProductVariant(int stock, decimal price) : AuditedAggregateRoot
 {
+    public string Code { get; private set; } = StringExtensions.ToGenerateRandomCode();
+    public string Sku { get; private set; } = string.Empty;
     public int Stock { get; private set; } = stock;
     public decimal Price { get; private set; } = price;
     public Guid ProductId { get; private set; }
@@ -14,6 +17,11 @@ public class ProductVariant(int stock, decimal price) : AuditedAggregateRoot
     public virtual IReadOnlyCollection<OrderItem> OrderItems => _orderItems;
     public readonly List<ProductPromotionItem> _productPromotionItems = [];
     public virtual IReadOnlyCollection<ProductPromotionItem> ProductPromotionItems => _productPromotionItems;
+
+    public void UpdateGeneralInfo(string? sku)
+    {
+        Sku = sku ?? string.Empty;
+    }
 
     public void UpdatePrice(decimal price)
     {

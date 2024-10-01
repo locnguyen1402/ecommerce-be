@@ -269,4 +269,34 @@ public static class StringExtensions
             return DateTime.Now.ToString("yyyyMMddhhmmss") + num.ToString();
         return text + DateTime.Now.ToString("yyyyMMddhhmmss") + num.ToString();
     }
+
+    public static string ToGenerateRandomCode()
+    {
+        string[] randomChars = [
+                "ABCDEFGHJKLMNOPQRSTUVWXYZ",    // UPPERCASE
+                "abcdefghijkmnopqrstuvwxyz",    // lowercase
+                "0123456789",                   // digits
+            ];
+
+        Random rand = new(Environment.TickCount);
+        List<char> chars = new();
+
+        chars.Insert(rand.Next(0, chars.Count),
+            randomChars[0][rand.Next(0, randomChars[0].Length)]);
+
+        chars.Insert(rand.Next(0, chars.Count),
+            randomChars[1][rand.Next(0, randomChars[1].Length)]);
+
+        chars.Insert(rand.Next(0, chars.Count),
+            randomChars[2][rand.Next(0, randomChars[2].Length)]);
+
+        for (int i = chars.Count; chars.Distinct().Count() < 10; i++)
+        {
+            string rcs = randomChars[rand.Next(0, randomChars.Length)];
+            chars.Insert(rand.Next(0, chars.Count),
+                rcs[rand.Next(0, rcs.Length)]);
+        }
+
+        return new string(chars.ToArray());
+    }
 }

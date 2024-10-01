@@ -30,7 +30,7 @@ public static class ProductUtils
                 attributeValues.Add(new(value.ProductAttributeId, value.Value, value.AttributeValueId));
             }
 
-            product.AddVariant(variant.Stock, variant.Price, attributeValues);
+            product.AddVariant(variant.Stock, variant.Price, variant.Sku, attributeValues);
         }
         else
         {

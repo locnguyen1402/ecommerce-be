@@ -1,10 +1,13 @@
+using ECommerce.Shared.Libs.Extensions;
+
 namespace ECommerce.Inventory.Domain.AggregatesModel;
 
-public class Product(string name, string slug, string? description) : EntityWithDiscounts
+public class Product(string name, string slug, string? sku, string? description) : EntityWithDiscounts
 {
     public string Slug { get; private set; } = slug;
+    public string Code { get; private set; } = StringExtensions.ToGenerateRandomCode();
     // TODO: config unique following by business rule of warehouse
-    public string Sku { get; private set; } = string.Empty;
+    public string Sku { get; private set; } = sku ?? string.Empty;
     public string Name { get; private set; } = name;
     public string Description { get; private set; } = description ?? string.Empty;
     // public decimal Price => ProductVariants.Min(x => x.Price);
@@ -34,11 +37,12 @@ public class Product(string name, string slug, string? description) : EntityWith
     public Guid MerchantId { get; private set; }
     public virtual Merchant Merchant { get; private set; } = null!;
 
-    public void UpdateGeneralInfo(string name, string slug, string? description)
+    public void UpdateGeneralInfo(string name, string slug, string? sku, string? description)
     {
         Name = name;
         Slug = slug;
         Description = description ?? string.Empty;
+        Sku = sku ?? string.Empty;
     }
     public void AddAttribute(ProductAttribute attribute)
     {
@@ -73,9 +77,11 @@ public class Product(string name, string slug, string? description) : EntityWith
             }
         }
     }
-    public void AddVariant(int stock, decimal price, List<ProductVariantAttributeValue> attributeValues)
+    public void AddVariant(int stock, decimal price, string? sku, List<ProductVariantAttributeValue> attributeValues)
     {
         var variant = new ProductVariant(stock, price);
+
+        variant.UpdateGeneralInfo(sku);
 
         foreach (var value in attributeValues)
         {

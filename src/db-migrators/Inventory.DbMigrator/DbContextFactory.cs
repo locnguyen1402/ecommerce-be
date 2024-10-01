@@ -20,10 +20,10 @@ public class DbContextFactory : IDesignTimeDbContextFactory<MigrationDbContext>
 
     /*
      * cd db-migrators/Inventory.DbMigrator
-     * dotnet ef migrations add AddDirectories -c ECommerce.Inventory.Data.MigrationDbContext -o PostgreSQL/Migrations
+     * dotnet ef migrations add UpdateProductSkuAndCode -c ECommerce.Inventory.Data.MigrationDbContext -o PostgreSQL/Migrations
      *
      * dotnet ef migrations script -i -c ECommerce.Inventory.Data.MigrationDbContext -o PostgreSQL/Scripts/000_Snapshot.sql
      *
-     * dotnet ef migrations script -i -c ECommerce.Inventory.Data.MigrationDbContext Initialize AddDirectories -o PostgreSQL/Scripts/002_AddDirectories.sql
+     * dotnet ef migrations script -i -c ECommerce.Inventory.Data.MigrationDbContext AddDirectories UpdateProductSkuAndCode -o PostgreSQL/Scripts/003_UpdateProductSkuAndCode.sql
      */
 }

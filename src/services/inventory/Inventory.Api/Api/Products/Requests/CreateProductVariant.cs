@@ -8,6 +8,7 @@ public class CreateProductVariantRequest
 {
     public int Stock { get; set; }
     public decimal Price { get; set; }
+    public string? Sku { get; set; } = string.Empty;
     public HashSet<CreateProductVariantAttributeRequest> Values { get; set; } = [];
     public HashSet<Guid> ProductAttributeIds => Values.Select(x => x.ProductAttributeId).ToHashSet();
 
@@ -36,6 +37,9 @@ public class CreateProductVariantRequestValidator : AbstractValidator<CreateProd
 
         RuleFor(x => x.Price)
             .GreaterThanOrEqualTo(0);
+
+        RuleFor(x => x.Sku)
+            .MaximumLength(100);
 
         RuleFor(x => x.Values)
             .Must((b, x) => b.ProductAttributeIds.Count == x.Count)

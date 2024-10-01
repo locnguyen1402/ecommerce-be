@@ -38,7 +38,7 @@ public class CreateProductCommandHandler : IEndpointHandler
         var merchantId = await merchantService.GetMerchantIdAsync(cancellationToken);
 
         var slug = string.IsNullOrEmpty(request.Slug) ? request.Name.ToGenerateRandomSlug() : request.Slug;
-        var newProduct = new Product(request.Name, slug, request.Description);
+        var newProduct = new Product(request.Name, slug, request.Sku, request.Description);
 
         var hasProductVariants = request.Attributes.Count > 0 && request.Variants.Count > 0;
 
@@ -66,13 +66,13 @@ public class CreateProductCommandHandler : IEndpointHandler
                         attributeValues.Add(new(value.ProductAttributeId, value.Value, value.AttributeValueId));
                     }
 
-                    newProduct.AddVariant(variant.Stock, variant.Price, attributeValues);
+                    newProduct.AddVariant(variant.Stock, variant.Price, variant.Sku, attributeValues);
                 }
             }
         }
         else
         {
-            newProduct.AddVariant(request.Stock ?? 0, request.Price ?? 0, []);
+            newProduct.AddVariant(request.Stock ?? 0, request.Price ?? 0, string.Empty, []);
         }
 
         newProduct.SetMerchant(merchantId);
