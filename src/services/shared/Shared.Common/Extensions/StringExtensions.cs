@@ -1,6 +1,7 @@
 using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
+using ECommerce.Shared.Common.Constants;
 
 namespace ECommerce.Shared.Libs.Extensions;
 
@@ -290,7 +291,7 @@ public static class StringExtensions
         chars.Insert(rand.Next(0, chars.Count),
             randomChars[2][rand.Next(0, randomChars[2].Length)]);
 
-        for (int i = chars.Count; chars.Distinct().Count() < 10; i++)
+        for (int i = chars.Count; chars.Distinct().Count() < SchemaConstants.MAX_CODE_LENGTH; i++)
         {
             string rcs = randomChars[rand.Next(0, randomChars.Length)];
             chars.Insert(rand.Next(0, chars.Count),

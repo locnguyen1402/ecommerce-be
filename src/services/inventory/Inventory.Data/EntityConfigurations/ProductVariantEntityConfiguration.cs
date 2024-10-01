@@ -27,6 +27,13 @@ public class ProductVariantEntityConfiguration : BaseEntityConfiguration<Product
             .IsRequired()
             .HasMaxLength(50);
 
+        builder.Property(p => p.Code)
+            .IsRequired()
+            .HasMaxLength(50);
+
+        builder.HasIndex(p => p.Code)
+            .IsUnique();
+
         builder.Property(p => p.Sku)
             .HasMaxLength(100);
 

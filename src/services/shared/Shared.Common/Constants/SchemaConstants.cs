@@ -21,4 +21,5 @@ public sealed partial class SchemaConstants
     public const double COMMAND_TIMEOUT = 30;
     public const int MAX_RETRY_COUNT = 3;
     public const short MAX_STRING_COLUMN_LENGTH = 2000;
+    public const int MAX_CODE_LENGTH = 10;
 }
