@@ -427,13 +427,15 @@ public static class StringExtensions
         chars.Insert(rand.Next(0, chars.Count),
             randomChars[2][rand.Next(0, randomChars[2].Length)]);
 
-        for (int i = chars.Count; i < SchemaConstants.MAX_CODE_LENGTH ||
-            chars.Distinct().Count() < SchemaConstants.MAX_CODE_LENGTH; i++)
+        while (chars.Count < SchemaConstants.MAX_CODE_LENGTH)
         {
             string rcs = randomChars[rand.Next(0, randomChars.Length)];
+
             chars.Insert(rand.Next(0, chars.Count),
                 rcs[rand.Next(0, rcs.Length)]);
         }
+
+        chars = [.. chars.OrderBy(x => rand.Next())];
 
         return new string(chars.ToArray());
     }
