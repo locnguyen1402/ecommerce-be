@@ -485,3 +485,6 @@ wwwwroot
 
 # dump data
 data-faker/data
+
+# deploy 
+src/deploy/local/**

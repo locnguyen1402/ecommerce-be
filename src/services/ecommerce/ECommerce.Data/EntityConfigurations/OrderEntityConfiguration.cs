@@ -1,0 +1,92 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
+using ECommerce.Domain.AggregatesModel;
+using ECommerce.Shared.Common.Infrastructure.EntityConfigurations;
+using ECommerce.Shared.Common.Enums;
+
+namespace ECommerce.Data.EntityConfigurations;
+
+public class OrderEntityConfiguration : BaseEntityConfiguration<Order>
+{
+    public override void Configure(EntityTypeBuilder<Order> builder)
+    {
+        base.Configure(builder);
+
+        builder.Property(p => p.CustomerId)
+            .IsRequired();
+
+        builder.HasIndex(i => i.CustomerId);
+
+        builder.Property(p => p.MerchantId)
+            .IsRequired();
+
+        builder.HasIndex(i => i.MerchantId);
+
+        builder.Property(p => p.OrderNumber)
+            .IsRequired()
+            .HasMaxLength(200);
+
+        builder.HasIndex(i => i.OrderNumber)
+            .IsUnique();
+
+        builder.Property(p => p.PhoneNumber)
+            .IsRequired()
+            .HasMaxLength(20);
+
+        builder
+            .Property(t => t.Status)
+            .IsRequired()
+            .HasConversion<string>()
+            .HasMaxLength(50)
+            .HasDefaultValueSql($"'{OrderStatus.TO_PAY}'");
+
+        builder
+            .Property(t => t.PaymentStatus)
+            .IsRequired()
+            .HasConversion<string>()
+            .HasMaxLength(50)
+            .HasDefaultValueSql($"'{PaymentStatus.UNPAID}'");
+
+        builder
+            .Property(t => t.PaymentMethod)
+            .IsRequired()
+            .HasConversion<string>()
+            .HasMaxLength(50)
+            .HasDefaultValueSql($"'{PaymentMethod.UNSPECIFIED}'");
+
+        builder
+            .Property(p => p.TotalPrice)
+            .IsRequired()
+            .HasPrecision(19, 2);
+
+        builder
+            .Property(p => p.VatPrice)
+            .HasPrecision(19, 2);
+
+        builder
+            .Property(p => p.VatPercent)
+            .HasPrecision(6, 2);
+
+        builder
+            .Property(p => p.TotalItemPrice)
+            .HasPrecision(19, 2);
+
+        builder
+            .Property(p => p.DeliveryFee)
+            .HasPrecision(19, 2);
+
+        builder.Property(p => p.Notes)
+            .HasMaxLength(500);
+
+        builder.HasOne(p => p.Customer)
+            .WithMany(c => c.Orders)
+            .HasForeignKey(c => c.CustomerId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.HasOne(p => p.Merchant)
+            .WithMany(c => c.Orders)
+            .HasForeignKey(c => c.MerchantId)
+            .OnDelete(DeleteBehavior.Cascade);
+    }
+}

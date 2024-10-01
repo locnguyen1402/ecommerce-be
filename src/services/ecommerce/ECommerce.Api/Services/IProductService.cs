@@ -1,0 +1,24 @@
+using ECommerce.Infrastructure.Templates.MassUpdates.Products;
+
+namespace ECommerce.Api.Services;
+
+public interface IProductService
+{
+    Task<IDictionary<Guid, bool>> UpdateStockByProductVariantsAsync(
+        IDictionary<Guid, int> productVariants,
+        CancellationToken cancellationToken = default);
+
+    Task<List<ImportBaseInfoTemplate>> GetImportBaseInfoTemplateAsync(
+        string? keyword
+        , Guid? merchantId
+        , List<Guid>? shopCollectionIds
+        , List<Guid>? notInShopCollectionIds
+        , CancellationToken cancellationToken = default);
+
+    Task<List<ImportSalesInfoTemplate>> GetImportSalesInfoTemplateAsync(
+        string? keyword
+        , Guid? merchantId
+        , List<Guid>? shopCollectionIds
+        , List<Guid>? notInShopCollectionIds
+        , CancellationToken cancellationToken = default);
+}

@@ -1,19 +1,19 @@
 version: "3.9"
 
 services:
-  inventory:
+  ecommerce:
     build:
       context: .
       dockerfile: containerfile.dev
       args:
-        - APP_PATH=inventory
-        - APP_NAME=Inventory.Api
-    container_name: inventory
+        - APP_PATH=ecommerce
+        - APP_NAME=ECommerce.Api
+    container_name: ecommerce
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
     labels:
       - app=ecommerce
-      - name=inventory
+      - name=ecommerce
     ports:
       - 10002:80
     deploy:
