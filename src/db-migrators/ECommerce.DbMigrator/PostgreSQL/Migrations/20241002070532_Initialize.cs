@@ -181,6 +181,29 @@ namespace ECommerce.DbMigrator.PostgreSQL.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "inbox_state",
+                columns: table => new
+                {
+                    id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    message_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    consumer_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    lock_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    row_version = table.Column<byte[]>(type: "bytea", rowVersion: true, nullable: true),
+                    received = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    receive_count = table.Column<int>(type: "integer", nullable: false),
+                    expiration_time = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    consumed = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    delivered = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    last_sequence_number = table.Column<long>(type: "bigint", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_inbox_state", x => x.id);
+                    table.UniqueConstraint("ak_inbox_state_message_id_consumer_id", x => new { x.message_id, x.consumer_id });
+                });
+
+            migrationBuilder.CreateTable(
                 name: "merchants",
                 columns: table => new
                 {
@@ -228,6 +251,54 @@ namespace ECommerce.DbMigrator.PostgreSQL.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "outbox_message",
+                columns: table => new
+                {
+                    sequence_number = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    enqueue_time = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    sent_time = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    headers = table.Column<string>(type: "text", nullable: true),
+                    properties = table.Column<string>(type: "text", nullable: true),
+                    inbox_message_id = table.Column<Guid>(type: "uuid", nullable: true),
+                    inbox_consumer_id = table.Column<Guid>(type: "uuid", nullable: true),
+                    outbox_id = table.Column<Guid>(type: "uuid", nullable: true),
+                    message_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    content_type = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: false),
+                    message_type = table.Column<string>(type: "text", nullable: false),
+                    body = table.Column<string>(type: "text", nullable: false),
+                    conversation_id = table.Column<Guid>(type: "uuid", nullable: true),
+                    correlation_id = table.Column<Guid>(type: "uuid", nullable: true),
+                    initiator_id = table.Column<Guid>(type: "uuid", nullable: true),
+                    request_id = table.Column<Guid>(type: "uuid", nullable: true),
+                    source_address = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
+                    destination_address = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
+                    response_address = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
+                    fault_address = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
+                    expiration_time = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_outbox_message", x => x.sequence_number);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "outbox_state",
+                columns: table => new
+                {
+                    outbox_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    lock_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    row_version = table.Column<byte[]>(type: "bytea", rowVersion: true, nullable: true),
+                    created = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    delivered = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    last_sequence_number = table.Column<long>(type: "bigint", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_outbox_state", x => x.outbox_id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "permission_groups",
                 columns: table => new
                 {
@@ -260,6 +331,25 @@ namespace ECommerce.DbMigrator.PostgreSQL.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("pk_product_attributes", x => x.id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "provinces",
+                columns: table => new
+                {
+                    id = table.Column<Guid>(type: "uuid", nullable: false),
+                    name = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false, defaultValueSql: "''"),
+                    code = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false, defaultValueSql: "''"),
+                    created_by = table.Column<Guid>(type: "uuid", nullable: true),
+                    created_at = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    updated_by = table.Column<Guid>(type: "uuid", nullable: true),
+                    updated_at = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true),
+                    deleted_by = table.Column<Guid>(type: "uuid", nullable: true),
+                    deleted_at = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_provinces", x => x.id);
                 });
 
             migrationBuilder.CreateTable(
@@ -552,7 +642,8 @@ namespace ECommerce.DbMigrator.PostgreSQL.Migrations
                 {
                     id = table.Column<Guid>(type: "uuid", nullable: false),
                     slug = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: false),
-                    sku = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: false),
+                    code = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    sku = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     description = table.Column<string>(type: "text", nullable: false),
                     merchant_id = table.Column<Guid>(type: "uuid", nullable: false),
@@ -715,6 +806,32 @@ namespace ECommerce.DbMigrator.PostgreSQL.Migrations
                         principalTable: "product_attributes",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "districts",
+                columns: table => new
+                {
+                    id = table.Column<Guid>(type: "uuid", nullable: false),
+                    province_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    name = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false, defaultValueSql: "''"),
+                    code = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false, defaultValueSql: "''"),
+                    created_by = table.Column<Guid>(type: "uuid", nullable: true),
+                    created_at = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    updated_by = table.Column<Guid>(type: "uuid", nullable: true),
+                    updated_at = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true),
+                    deleted_by = table.Column<Guid>(type: "uuid", nullable: true),
+                    deleted_at = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_districts", x => x.id);
+                    table.ForeignKey(
+                        name: "fk_districts_provinces_province_id",
+                        column: x => x.province_id,
+                        principalTable: "provinces",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -1055,6 +1172,8 @@ namespace ECommerce.DbMigrator.PostgreSQL.Migrations
                 columns: table => new
                 {
                     id = table.Column<Guid>(type: "uuid", nullable: false),
+                    code = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    sku = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     stock = table.Column<int>(type: "integer", nullable: false, defaultValue: 0),
                     price = table.Column<decimal>(type: "numeric(19,2)", precision: 19, scale: 2, nullable: false, defaultValue: 0m),
                     product_id = table.Column<Guid>(type: "uuid", nullable: false),
@@ -1066,6 +1185,7 @@ namespace ECommerce.DbMigrator.PostgreSQL.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("pk_product_variants", x => x.id);
+                    table.CheckConstraint("CK_ProductVariant_Stock", "\"stock\" >= 0");
                     table.ForeignKey(
                         name: "fk_product_variants_products_product_id",
                         column: x => x.product_id,
@@ -1130,6 +1250,33 @@ namespace ECommerce.DbMigrator.PostgreSQL.Migrations
                         principalTable: "vouchers",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "wards",
+                columns: table => new
+                {
+                    id = table.Column<Guid>(type: "uuid", nullable: false),
+                    district_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    name = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false, defaultValueSql: "''"),
+                    code = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false, defaultValueSql: "''"),
+                    zip_code = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true, defaultValueSql: "''"),
+                    created_by = table.Column<Guid>(type: "uuid", nullable: true),
+                    created_at = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    updated_by = table.Column<Guid>(type: "uuid", nullable: true),
+                    updated_at = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true),
+                    deleted_by = table.Column<Guid>(type: "uuid", nullable: true),
+                    deleted_at = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_wards", x => x.id);
+                    table.ForeignKey(
+                        name: "fk_wards_districts_district_id",
+                        column: x => x.district_id,
+                        principalTable: "districts",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -1357,6 +1504,16 @@ namespace ECommerce.DbMigrator.PostgreSQL.Migrations
                 column: "discount_id");
 
             migrationBuilder.CreateIndex(
+                name: "ix_districts_province_id",
+                table: "districts",
+                column: "province_id");
+
+            migrationBuilder.CreateIndex(
+                name: "ix_inbox_state_delivered",
+                table: "inbox_state",
+                column: "delivered");
+
+            migrationBuilder.CreateIndex(
                 name: "ix_merchant_categories_category_id",
                 table: "merchant_categories",
                 column: "category_id");
@@ -1434,6 +1591,33 @@ namespace ECommerce.DbMigrator.PostgreSQL.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "ix_outbox_message_enqueue_time",
+                table: "outbox_message",
+                column: "enqueue_time");
+
+            migrationBuilder.CreateIndex(
+                name: "ix_outbox_message_expiration_time",
+                table: "outbox_message",
+                column: "expiration_time");
+
+            migrationBuilder.CreateIndex(
+                name: "ix_outbox_message_inbox_message_id_inbox_consumer_id_sequence_",
+                table: "outbox_message",
+                columns: new[] { "inbox_message_id", "inbox_consumer_id", "sequence_number" },
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "ix_outbox_message_outbox_id_sequence_number",
+                table: "outbox_message",
+                columns: new[] { "outbox_id", "sequence_number" },
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "ix_outbox_state_created",
+                table: "outbox_state",
+                column: "created");
+
+            migrationBuilder.CreateIndex(
                 name: "ix_payment_method_trackings_order_id",
                 table: "payment_method_trackings",
                 column: "order_id");
@@ -1486,9 +1670,21 @@ namespace ECommerce.DbMigrator.PostgreSQL.Migrations
                 column: "product_attribute_id");
 
             migrationBuilder.CreateIndex(
+                name: "ix_product_variants_code",
+                table: "product_variants",
+                column: "code",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "ix_product_variants_product_id",
                 table: "product_variants",
                 column: "product_id");
+
+            migrationBuilder.CreateIndex(
+                name: "ix_products_code",
+                table: "products",
+                column: "code",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "ix_products_merchant_id",
@@ -1599,6 +1795,11 @@ namespace ECommerce.DbMigrator.PostgreSQL.Migrations
                 name: "ix_vouchers_merchant_id",
                 table: "vouchers",
                 column: "merchant_id");
+
+            migrationBuilder.CreateIndex(
+                name: "ix_wards_district_id",
+                table: "wards",
+                column: "district_id");
         }
 
         /// <inheritdoc />
@@ -1623,6 +1824,9 @@ namespace ECommerce.DbMigrator.PostgreSQL.Migrations
                 name: "import_histories");
 
             migrationBuilder.DropTable(
+                name: "inbox_state");
+
+            migrationBuilder.DropTable(
                 name: "merchant_categories");
 
             migrationBuilder.DropTable(
@@ -1642,6 +1846,12 @@ namespace ECommerce.DbMigrator.PostgreSQL.Migrations
 
             migrationBuilder.DropTable(
                 name: "order_status_trackings");
+
+            migrationBuilder.DropTable(
+                name: "outbox_message");
+
+            migrationBuilder.DropTable(
+                name: "outbox_state");
 
             migrationBuilder.DropTable(
                 name: "payment_method_trackings");
@@ -1692,6 +1902,9 @@ namespace ECommerce.DbMigrator.PostgreSQL.Migrations
                 name: "voucher_product");
 
             migrationBuilder.DropTable(
+                name: "wards");
+
+            migrationBuilder.DropTable(
                 name: "discounts");
 
             migrationBuilder.DropTable(
@@ -1731,6 +1944,9 @@ namespace ECommerce.DbMigrator.PostgreSQL.Migrations
                 name: "vouchers");
 
             migrationBuilder.DropTable(
+                name: "districts");
+
+            migrationBuilder.DropTable(
                 name: "customers");
 
             migrationBuilder.DropTable(
@@ -1741,6 +1957,9 @@ namespace ECommerce.DbMigrator.PostgreSQL.Migrations
 
             migrationBuilder.DropTable(
                 name: "applications");
+
+            migrationBuilder.DropTable(
+                name: "provinces");
 
             migrationBuilder.DropTable(
                 name: "merchants");

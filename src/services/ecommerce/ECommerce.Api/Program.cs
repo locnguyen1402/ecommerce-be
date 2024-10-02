@@ -24,7 +24,6 @@ using ECommerce.Infrastructure.Services;
 using ECommerce.Shared.Common.Constants;
 using ECommerce.Shared.Common.Infrastructure.Services;
 using ECommerce.Shared.Common.Extensions;
-using ECommerce.Shared.Common.EventBus.Data;
 using ECommerce.Shared.Common.EventBus.Extensions;
 using ECommerce.Shared.Common.Helper;
 using ECommerce.Shared.Data.Extensions;
@@ -78,7 +77,7 @@ if (!builder.Environment.IsProduction())
 builder.Services.ConfigDbContext<ECommerceDbContext>(connectionString, typeof(Program).Assembly.ToString());
 builder.Services.ConfigDbContext<IdentityDbContext>(connectionString, typeof(Program).Assembly.ToString());
 
-builder.ConfigPooledDbContext<EventBusDbContext, EventBusDbContextFactory>(SchemaConstants.EVENT_BUS_DB_CONNECTION);
+builder.ConfigPooledDbContext<MigrationDbContext, MigrationDbContextFactory>(SchemaConstants.EVENT_BUS_DB_CONNECTION);
 
 builder.Services.AddDataProtectionContext<IdentityDbContext>(appSettings.AppInstance, 90, dpCerts);
 
@@ -235,7 +234,7 @@ var connectionFactory = new ConnectionFactory
 
 builder.Services.AddMassTransit(x =>
 {
-    x.AddEntityFrameworkOutbox<EventBusDbContext>(o =>
+    x.AddEntityFrameworkOutbox<MigrationDbContext>(o =>
     {
         o.UsePostgres();
         o.UseBusOutbox(bo =>
@@ -256,11 +255,11 @@ builder.Services.AddMassTransit(x =>
             h.Username(connectionFactory.UserName);
             h.Password(connectionFactory.Password);
 
-            h.UseSsl(ssl =>
-            {
-                ssl.ServerName = "rabbitmq";
-                ssl.Certificate = sslCert;
-            });
+            // h.UseSsl(ssl =>
+            // {
+            //     ssl.ServerName = "rabbitmq";
+            //     ssl.Certificate = sslCert;
+            // });
         });
 
         // cfg.UseDelayedMessageScheduler();
@@ -281,7 +280,7 @@ builder.Services.AddMassTransit(x =>
 
 builder.Services.AddDocumentProcessing();
 
-builder.Services.AddIntegrationEvents<EventBusDbContext>();
+builder.Services.AddIntegrationEvents<MigrationDbContext>();
 #endregion MassTransit
 
 #region common dependencies

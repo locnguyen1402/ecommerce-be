@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.DataProtection.EntityFrameworkCore;
 using ECommerce.Domain.AggregatesModel;
 using ECommerce.Domain.AggregatesModel.Identity;
 using ECommerce.Shared.Data.Extensions;
+using MassTransit;
 
 namespace ECommerce.Data;
 
@@ -60,6 +61,11 @@ public class MigrationDbContext(DbContextOptions<MigrationDbContext> options) :
         modelBuilder.ConfigureExtensions();
         modelBuilder.UseCustomDbFunctions();
         modelBuilder.UseCustomPostgreSQLDbFunctions();
+
+        // Configs Event Bus
+        modelBuilder.AddInboxStateEntity();
+        modelBuilder.AddOutboxMessageEntity();
+        modelBuilder.AddOutboxStateEntity();
 
         ModelBuilderExtensions.ConfigureECommerceEntitiesExtensions(modelBuilder);
         ModelBuilderExtensions.ConfigureIdentityEntitiesExtensions(modelBuilder);
